@@ -1,10 +1,12 @@
-FROM oven/bun:debian
+FROM mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm
 
-ARG USERNAME=bun
+ARG USERNAME=node
 
-# Config Bun
-ENV PATH="~/.bun/bin:${PATH}"
-RUN ln -s /usr/local/bin/bun /usr/local/bin/node
+# Config pnpm
+RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh -
+
+# Set alias
+RUN alias pn=pnpm
 
 # Update packages
 RUN if [ "debian" == "alpine" ] ; then apk update ; else apt-get update ; fi
