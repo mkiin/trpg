@@ -5,9 +5,6 @@ ARG USERNAME=node
 # Config pnpm
 RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh -
 
-# Set alias
-RUN alias pn=pnpm
-
 # Update packages
 RUN if [ "debian" == "alpine" ] ; then apk update ; else apt-get update ; fi
 
