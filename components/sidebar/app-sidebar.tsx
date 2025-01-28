@@ -11,12 +11,12 @@ import {
   SidebarMenuItem,
   SidebarRail,
   SidebarSeparator,
-  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { AppIcon, Home, UserRoundCog } from "@/components/icons";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { SidebarToggle } from "./sidebar-toggle";
 
 const items = [
   {
@@ -40,9 +40,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <div className="flex justify-between">
               <AppIcon />
-              {state !== "collapsed" && (
-                <SidebarTrigger className="hover:bg-gray-150" />
-              )}
+              {state !== "collapsed" && <SidebarToggle className="h-fit w-7" />}
             </div>
           </SidebarMenuItem>
         </SidebarMenu>

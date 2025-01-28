@@ -1,4 +1,4 @@
-export default function SessionLayout({
+export default function ChatLayout({
   children,
 }: {
   children: React.ReactNode;

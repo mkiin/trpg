@@ -9,14 +9,13 @@ export default function Header() {
         <AppIcon />
       </Link>
       <div className="flex gap-4">
-        <Link href={"/"}>
-          <Button className="h-7">Home</Button>
-        </Link>
-        <Link href={"/"}>
-          <Button variant={"outline"} className="h-7">
-            Home
-          </Button>
-        </Link>
+        <Button variant={"default"} size={"default"} className="h-6" asChild>
+          <Link href={"/"}>ログイン</Link>
+        </Button>
+
+        <Button variant={"outline"} size={"sm"} className="h-7" asChild>
+          <Link href={"/"}>新規登録</Link>
+        </Button>
       </div>
     </header>
   );
