@@ -19,3 +19,7 @@ export const models: Array<Model> = [
     description: "Gemini 1.5 Pro model",
   },
 ] as const;
+
+export type ModelId = (typeof models)[number]["id"];
+
+export const DEFAULT_MODEL_NAME = "gemini-2.0-flash-exp";
