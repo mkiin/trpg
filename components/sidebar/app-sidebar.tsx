@@ -13,12 +13,16 @@ import {
   SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { AppIcon, HomeIcon, UserSettingsIcon } from "@/components/icons";
-import { Button } from "../ui/button";
+import {
+  AppIcon,
+  PlusIcon,
+  HomeIcon,
+  UserSettingsIcon,
+} from "@/components/icons";
 import Link from "next/link";
 import { SidebarToggle } from "./sidebar-toggle";
 import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
+import React from "react";
 
 const items = [
   {
@@ -33,20 +37,18 @@ const items = [
   },
 ];
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+function PureAppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { state } = useSidebar();
-  const isMobile = useIsMobile();
   return (
     <Sidebar variant="sidebar" collapsible="icon" {...props}>
       <SidebarHeader>
-        <div className="flex justify-between items-center w-full">
-          <AppIcon />
-          <SidebarToggle
-            className={cn(
-              "w-7 h-fit",
-              state !== "collapsed" || isMobile ? null : "hidden"
-            )}
-          />
+        <div className="flex justify-between items-center w-full space-x-2">
+          <div className="h-8 w-8 flex-shrink-0">
+            <AppIcon />
+          </div>
+          <div className="group-[[data-state=collapsed]]:hidden h-8 w-8">
+            <SidebarToggle className="h-8 w-8" />
+          </div>
         </div>
       </SidebarHeader>
       <SidebarContent>
@@ -54,13 +56,30 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem className="mb-3">
-                {state !== "collapsed" && (
-                  <SidebarMenuButton asChild>
-                    <Button>
-                      <span>新規セッション</span>
-                    </Button>
-                  </SidebarMenuButton>
-                )}
+                <SidebarMenuButton asChild>
+                  <Link
+                    href={"/chat"}
+                    className={cn(
+                      "flex font-bold bg-primary text-secondary items-center group",
+                      state !== "collapsed" ? "justify-center" : ""
+                    )}>
+                    <PlusIcon
+                      className={cn(
+                        "flex-shrink-0 transition-opacity duration-200",
+                        state !== "collapsed" ? "hidden" : "opacity-100"
+                      )}
+                    />
+                    <div
+                      className={cn(
+                        "flex-shrink-0 transition-all duration-200",
+                        state !== "collapsed"
+                          ? "opacity-100 w-auto" // 文字を表示
+                          : "opacity-0 w-0 overflow-hidden " // 文字を非表示
+                      )}>
+                      <span className="">新規セッション</span>
+                    </div>
+                  </Link>
+                </SidebarMenuButton>
               </SidebarMenuItem>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
@@ -84,3 +103,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     </Sidebar>
   );
 }
+
+export const AppSidebar = React.memo(PureAppSidebar);

@@ -4,16 +4,9 @@ import { TextInput } from "./text-input";
 import { useChat } from "ai/react";
 import type { Message } from "ai";
 import { Messages } from "@/features/message/messages";
+import { ChatProps } from "../types";
 
-export function Chat({
-  id,
-  initialMessages,
-  selectedModelId,
-}: {
-  id: string;
-  initialMessages: Array<Message>;
-  selectedModelId: string;
-}) {
+export function Chat({ id, initialMessages, selectedModelId }: ChatProps) {
   const {
     messages,
     setMessages,
@@ -31,13 +24,13 @@ export function Chat({
   });
   return (
     <>
-      {/* <Messages
+      <Messages
         chatId={id}
         isLoading={isLoading}
         messages={messages}
         setMessages={setMessages}
         reload={reload}
-      /> */}
+      />
       <TextInput
         chatId={id}
         input={input}

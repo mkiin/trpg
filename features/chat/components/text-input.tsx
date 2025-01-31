@@ -2,12 +2,22 @@
 
 import type { Message, ChatRequestOptions } from "ai";
 import type React from "react";
-import { useCallback, type Dispatch, type SetStateAction, memo } from "react";
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
+import { useForm } from "@conform-to/react";
 import { ArrowUpIcon, StopIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-
+import { SendButtonProps, StopButtonProps, TextInputProps } from "../types";
+import { useWindowSize } from "usehooks-ts";
+import { ArrowRight, ArrowUp } from "lucide-react";
 function PureTextInput({
   chatId,
   input,
@@ -17,41 +27,43 @@ function PureTextInput({
   setMessages,
   handleSubmit,
   stop,
-}: {
-  chatId: string;
-  input: string;
-  isLoading: boolean;
-  handleInputChange: (
-    event:
-      | React.ChangeEvent<HTMLTextAreaElement>
-      | React.ChangeEvent<HTMLInputElement>
-  ) => void;
-  stop: () => void;
-  messages: Array<Message>;
-  setMessages: Dispatch<SetStateAction<Array<Message>>>;
-  handleSubmit: (
-    event?: {
-      preventDefault?: () => void;
-    },
-    chatRequestOptions?: ChatRequestOptions
-  ) => void;
-  className?: string;
-}) {
-  const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInput(event.target.value);
+  className,
+}: TextInputProps & { className?: string }) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const adjustHeight = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${
+        textareaRef.current.scrollHeight + 2
+      }px`;
+    }
   };
+
+  const wrapHandleOnChange = useCallback(
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      handleInputChange(event);
+    },
+    [handleInputChange]
+  );
 
   const submitForm = useCallback(() => {
     window.history.replaceState({}, "", `/chat/${chatId}`);
     handleSubmit();
   }, [chatId, handleSubmit]);
 
+  const [form, fields] = useForm({
+    onSubmit: submitForm,
+  });
+
   return (
-    <div className="fixed bottom-0 w-full max-w-md mb-8 border border-gray-300 rounded shadow-xl">
+    <form id={form.id} className="relative flex  w-full md:max-w-3xl">
       <Textarea
+        ref={textareaRef}
         placeholder="Send a message..."
         value={input}
-        onChange={handleInputChange}
+        className="min-h-[100px] pr-12 bg-muted resize-none"
+        onChange={wrapHandleOnChange}
         onKeyDown={(event) => {
           if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();
@@ -63,7 +75,7 @@ function PureTextInput({
           }
         }}
       />
-      {/* <div className="absolute bottom-0 right-0 p-2 w-fit flex flex-row justify-end">
+      <div className="absolute bottom-0 right-0 p-2 w-fit flex flex-row justify-end">
         {isLoading ? (
           <StopButton
             stop={stop}
@@ -73,8 +85,8 @@ function PureTextInput({
         ) : (
           <SendButton input={input} submitForm={submitForm} />
         )}
-      </div> */}
-    </div>
+      </div>
+    </form>
   );
 }
 
@@ -84,39 +96,13 @@ export const TextInput = memo(PureTextInput, (prevProps, nextProps) => {
   return true;
 });
 
-function PureStopButton({
-  stop,
-  messages,
-  setMessages,
-}: {
-  stop: () => void;
-  messages: Array<Message>;
-  setMessages: Dispatch<SetStateAction<Array<Message>>>;
-}) {
-  return (
-    <Button
-      className="rounded-full p-1.5 h-fit border dark:border-zinc-600"
-      onClick={(event) => {
-        event.preventDefault();
-        stop();
-        setMessages(messages);
-      }}>
-      <StopIcon size={14} />
-    </Button>
-  );
-}
-const StopButton = memo(PureStopButton);
-
 function PureSendButton({
   submitForm,
   input,
-}: {
-  submitForm: () => void;
-  input: string;
-}) {
+}: SendButtonProps & { submitForm: () => void }) {
   return (
     <Button
-      className="rounded-full p-1.5 h-fit border dark:border-zinc-600"
+      className=""
       onClick={(event) => {
         event.preventDefault();
         submitForm();
@@ -131,3 +117,17 @@ const SendButton = memo(PureSendButton, (prevProps, nextProps) => {
   if (prevProps.input !== nextProps.input) return false;
   return true;
 });
+
+function PureStopButton({ stop, messages, setMessages }: StopButtonProps) {
+  return (
+    <Button
+      onClick={(event) => {
+        event.preventDefault();
+        stop();
+        setMessages(messages);
+      }}>
+      <StopIcon size={16} className="" />
+    </Button>
+  );
+}
+const StopButton = memo(PureStopButton);

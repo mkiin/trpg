@@ -1,3 +1,5 @@
+import ChatPageHeader from "./chat-page-header";
+
 export default function ChatLayout({
   children,
 }: {
@@ -5,7 +7,8 @@ export default function ChatLayout({
 }) {
   return (
     <>
-      <main>{children}</main>
+      <ChatPageHeader />
+      <main className="flex flex-1 flex-col gap-4 p-4">{children}</main>
     </>
   );
 }

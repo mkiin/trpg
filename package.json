@@ -19,6 +19,8 @@
   "dependencies": {
     "@ai-sdk/google": "^1.1.7",
     "@ai-sdk/google-vertex": "^2.1.5",
+    "@conform-to/react": "^1.2.2",
+    "@conform-to/zod": "^1.2.2",
     "@hono/zod-validator": "^0.4.2",
     "@radix-ui/react-dialog": "^1.1.5",
     "@radix-ui/react-separator": "^1.1.1",

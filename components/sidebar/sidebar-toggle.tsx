@@ -9,8 +9,9 @@ import {
 
 import { SidebarLeftIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
+import React from "react";
 
-export function SidebarToggle({
+function PureSidebarToggle({
   className,
   ref,
   ...props
@@ -18,18 +19,14 @@ export function SidebarToggle({
   const { toggleSidebar } = useSidebar();
 
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          ref={ref}
-          onClick={toggleSidebar}
-          variant="outline"
-          className={cn("h-fit w-7", className)}
-          {...props}>
-          <SidebarLeftIcon size={16} />
-        </Button>
-      </TooltipTrigger>
-      <TooltipContent align="start">Toggle Sidebar</TooltipContent>
-    </Tooltip>
+    <Button
+      onClick={toggleSidebar}
+      variant="outline"
+      className={cn("h-fit w-7", className)}
+      {...props}>
+      <SidebarLeftIcon size={16} />
+    </Button>
   );
 }
+
+export const SidebarToggle = React.memo(PureSidebarToggle);
