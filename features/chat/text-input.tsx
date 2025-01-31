@@ -11,17 +11,21 @@ import { cn } from "@/lib/utils";
 function PureTextInput({
   chatId,
   input,
-  setInput,
+  handleInputChange,
   isLoading,
-  stop,
   messages,
   setMessages,
   handleSubmit,
+  stop,
 }: {
   chatId: string;
   input: string;
-  setInput: (value: string) => void;
   isLoading: boolean;
+  handleInputChange: (
+    event:
+      | React.ChangeEvent<HTMLTextAreaElement>
+      | React.ChangeEvent<HTMLInputElement>
+  ) => void;
   stop: () => void;
   messages: Array<Message>;
   setMessages: Dispatch<SetStateAction<Array<Message>>>;
@@ -43,16 +47,11 @@ function PureTextInput({
   }, [chatId, handleSubmit]);
 
   return (
-    <div className="relative w-full flex flex-col gap-4">
+    <div className="fixed bottom-0 w-full max-w-md mb-8 border border-gray-300 rounded shadow-xl">
       <Textarea
         placeholder="Send a message..."
         value={input}
-        onChange={handleInput}
-        className={cn(
-          "min-h-[24px] max-h-[calc(75dvh)] overflow-hidden resize-none rounded-2xl !text-base bg-muted pb-10 dark:border-zinc-700"
-        )}
-        rows={2}
-        autoFocus
+        onChange={handleInputChange}
         onKeyDown={(event) => {
           if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();
@@ -64,7 +63,7 @@ function PureTextInput({
           }
         }}
       />
-      <div className="absolute bottom-0 right-0 p-2 w-fit flex flex-row justify-end">
+      {/* <div className="absolute bottom-0 right-0 p-2 w-fit flex flex-row justify-end">
         {isLoading ? (
           <StopButton
             stop={stop}
@@ -74,7 +73,7 @@ function PureTextInput({
         ) : (
           <SendButton input={input} submitForm={submitForm} />
         )}
-      </div>
+      </div> */}
     </div>
   );
 }

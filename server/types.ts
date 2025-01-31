@@ -1,7 +1,6 @@
-import { db } from "@/lib/db/index";
+import type { Session, User } from "better-auth";
 
-export type Env = {
-  Variables: {
-    db: typeof db;
-  };
+export type ContextVariables = {
+  session: Session | null;
+  user: User | null;
 };

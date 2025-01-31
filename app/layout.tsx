@@ -16,6 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" className="dark" style={{ colorScheme: "dark" }}>
+      <head>
+        <script src="https://unpkg.com/react-scan/dist/auto.global.js" async />
+      </head>
       <body className={cn("bg-background font-sans antialiased", geistSans)}>
         <ThemeProvider
           attribute="class"

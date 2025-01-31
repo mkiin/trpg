@@ -13,37 +13,41 @@ import {
   SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { AppIcon, Home, UserRoundCog } from "@/components/icons";
+import { AppIcon, HomeIcon, UserSettingsIcon } from "@/components/icons";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { SidebarToggle } from "./sidebar-toggle";
+import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const items = [
   {
     title: "Session",
-    url: "/session",
-    icon: Home,
+    url: "/chat",
+    icon: HomeIcon,
   },
   {
     title: "CharacterSheet",
     url: "/character-sheet",
-    icon: UserRoundCog,
+    icon: UserSettingsIcon,
   },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { state } = useSidebar();
+  const isMobile = useIsMobile();
   return (
     <Sidebar variant="sidebar" collapsible="icon" {...props}>
       <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <div className="flex justify-between">
-              <AppIcon />
-              {state !== "collapsed" && <SidebarToggle className="h-fit w-7" />}
-            </div>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <div className="flex justify-between items-center w-full">
+          <AppIcon />
+          <SidebarToggle
+            className={cn(
+              "w-7 h-fit",
+              state !== "collapsed" || isMobile ? null : "hidden"
+            )}
+          />
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

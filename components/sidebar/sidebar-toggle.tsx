@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
-
-import { type SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
+import { useSidebar } from "@/components/ui/sidebar";
 import {
   Tooltip,
   TooltipContent,
@@ -11,17 +11,20 @@ import { SidebarLeftIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 
 export function SidebarToggle({
+  className,
+  ref,
   ...props
-}: ComponentProps<typeof SidebarTrigger>) {
+}: ComponentProps<typeof Button> & { ref?: React.ElementRef<typeof Button> }) {
   const { toggleSidebar } = useSidebar();
 
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
+          ref={ref}
           onClick={toggleSidebar}
           variant="outline"
-          className="w-8 h-8"
+          className={cn("h-fit w-7", className)}
           {...props}>
           <SidebarLeftIcon size={16} />
         </Button>

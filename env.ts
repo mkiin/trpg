@@ -12,6 +12,7 @@ export const env = createEnv({
     GOOGLE_PRIVATE_KEY_ID: z.string(),
     GOOGLE_VERTEX_LOCATION: z.string(),
     GOOGLE_VERTEX_PROJECT: z.string(),
+    GOOGLE_GENERATIVE_AI_API_KEY: z.string(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url(),
@@ -27,5 +28,6 @@ export const env = createEnv({
     GOOGLE_PRIVATE_KEY_ID: process.env.GOOGLE_PRIVATE_KEY_ID,
     GOOGLE_VERTEX_LOCATION: process.env.GOOGLE_VERTEX_LOCATION,
     GOOGLE_VERTEX_PROJECT: process.env.GOOGLE_VERTEX_PROJECT,
+    GOOGLE_GENERATIVE_AI_API_KEY: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
   },
 });

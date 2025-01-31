@@ -14,12 +14,14 @@ export default async function ChatPage() {
 
   return (
     <>
-      <Chat
-        key={id}
-        id={id}
-        initialMessages={[]}
-        selectedModelId={selectedModelId}
-      />
+      <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
+        <Chat
+          key={id}
+          id={id}
+          initialMessages={[]}
+          selectedModelId={selectedModelId}
+        />
+      </div>
     </>
   );
 }

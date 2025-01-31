@@ -1,23 +1,26 @@
-import factory from "../../factory";
 import { zValidator } from "@hono/zod-validator";
 import { stream } from "hono/streaming";
 
 import { createChatSchema } from "./schema";
-import { createDataStream, smoothStream, streamText } from "ai";
+import { createDataStream, streamText } from "ai";
 
-import { customModel } from "@/lib/ai";
-import { generateUUID, getMostRecentUserMessage } from "@/lib/utils";
-import { vertex } from "@ai-sdk/google-vertex";
+import { google, vertex } from "@/lib/ai";
+import { getMostRecentUserMessage } from "@/lib/utils";
+import { Hono } from "hono";
+import { ContextVariables } from "@/server/types";
 
-const chatRoute = factory.createApp();
+const chatRoute = new Hono<{
+  Variables: ContextVariables;
+}>();
 
 chatRoute.get("/", async (c) => {
   return c.json({ message: "hello" });
 });
 
-chatRoute.post("/", async (c) => {
-  const receiveData = c.req;
+chatRoute.post("/", zValidator("json", createChatSchema), async (c) => {
+  const receiveData = c.req.valid("json");
   const { id, messages, modelId } = receiveData;
+  console.log("receiveData", receiveData);
 
   const userMessages = getMostRecentUserMessage(messages);
 
@@ -31,8 +34,6 @@ chatRoute.post("/", async (c) => {
   //   await saveChat({ id, userId, title });
   // }
 
-  const userMessageId = generateUUID();
-
   // await saveMessages({
   //   messages: [
   //     { ...userMessages, id: userMessageId, createdAt: new Date(), chatId: id },
@@ -41,23 +42,23 @@ chatRoute.post("/", async (c) => {
 
   const dataStream = createDataStream({
     execute: async (dataStreamWriter) => {
-      dataStreamWriter.writeData({
-        type: "user-message-id",
-        content: userMessageId,
-      });
+      dataStreamWriter.writeData("initialized call");
+
       const result = streamText({
-        model: vertex(modelId),
-        system: "Invent a new holiday and describe its traditions.",
+        model: vertex(""),
         messages: messages,
-        maxSteps: 5,
-        experimental_transform: smoothStream({ chunking: "word" }),
       });
+
       result.mergeIntoDataStream(dataStreamWriter);
     },
     onError: (error) => {
+      // Error messages are masked by default for security reasons.
+      // If you want to expose the error message to the client, you can do so here:
       return error instanceof Error ? error.message : String(error);
     },
   });
+
+  // Mark the response as a v1 data stream:
   c.header("X-Vercel-AI-Data-Stream", "v1");
   c.header("Content-Type", "text/plain; charset=utf-8");
 

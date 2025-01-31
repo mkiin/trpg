@@ -1,9 +1,18 @@
 import { z } from "zod";
-import { CoreMessage } from "ai";
-import type { ModelId } from "@/lib/ai/models";
 
 export const createChatSchema = z.object({
   id: z.string(),
-  messages: z.record(z.any()).transform((v) => v as CoreMessage[]),
-  modelId: z.string().refine((v) => v as ModelId),
+  messages: z.array(
+    z.object({
+      role: z.enum(["user", "assistant"]),
+      content: z.string(),
+      id: z.string().optional(),
+      createdAt: z.string().optional(),
+      experimental_attachments: z.array(z.any()).optional(),
+      data: z.any().optional(),
+      annotations: z.any().optional(),
+      toolInvocations: z.array(z.any()).optional(),
+    })
+  ),
+  modelId: z.string(), // modelIdは例として追加
 });

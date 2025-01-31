@@ -19,7 +19,7 @@ export function Chat({
     setMessages,
     handleSubmit,
     input,
-    setInput,
+    handleInputChange,
     isLoading,
     stop,
     reload,
@@ -30,26 +30,24 @@ export function Chat({
     experimental_throttle: 500,
   });
   return (
-    <div className="flex flex-col min-w-0 h-dvh bg-background">
-      <Messages
+    <>
+      {/* <Messages
         chatId={id}
         isLoading={isLoading}
         messages={messages}
         setMessages={setMessages}
         reload={reload}
+      /> */}
+      <TextInput
+        chatId={id}
+        input={input}
+        handleInputChange={handleInputChange}
+        isLoading={isLoading}
+        stop={stop}
+        messages={messages}
+        setMessages={setMessages}
+        handleSubmit={handleSubmit}
       />
-      <form action="flex mx-auto px-4 w-full md:max-2-3xl bg-background pb-4 md:pb-6 gap-2">
-        <TextInput
-          chatId={id}
-          input={input}
-          setInput={setInput}
-          messages={messages}
-          setMessages={setMessages}
-          handleSubmit={handleSubmit}
-          isLoading={isLoading}
-          stop={stop}
-        />
-      </form>
-    </div>
+    </>
   );
 }
