@@ -1,4 +1,4 @@
-import { InferSelectModel, InferInsertModel } from "drizzle-orm";
+import { InferSelectModel } from "drizzle-orm";
 import { uuid } from "drizzle-orm/pg-core";
 import {
   pgTable,
@@ -92,3 +92,8 @@ export const message = pgTable("message", {
 });
 
 export type Message = InferSelectModel<typeof message>;
+export type User = InferSelectModel<typeof user>;
+export type Session = InferSelectModel<typeof session>;
+export type Account = InferSelectModel<typeof account>;
+export type Verification = InferSelectModel<typeof verification>;
+export type Chat = InferSelectModel<typeof chat>;

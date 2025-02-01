@@ -1,4 +1,4 @@
-import chatRoute from "./routes/chat/index";
+import chatRoute from "./routes/chat/route";
 import { Hono } from "hono";
 import { ContextVariables } from "./types";
 import { auth } from "@/lib/betterauth";

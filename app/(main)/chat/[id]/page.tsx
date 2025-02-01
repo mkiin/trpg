@@ -16,6 +16,7 @@ export default async function ChatPage(props: {
   }
 
   const messagesFromDb = await getMessagesByChatId({ id });
+  if (!messagesFromDb) notFound();
   const initialMessages = convertToUIMessages(messagesFromDb);
 
   const selectedModelId = DEFAULT_MODEL_NAME;
