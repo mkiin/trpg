@@ -3,7 +3,7 @@
 import { TextInput } from "./text-input";
 import { useChat } from "ai/react";
 import type { Message } from "ai";
-import { Messages } from "@/features/message/messages";
+import { Messages } from "@/features/message/components/messages";
 import { ChatProps } from "../types";
 
 export function Chat({ id, initialMessages, selectedModelId }: ChatProps) {

@@ -1,4 +1,4 @@
-import ChatPageHeader from "./chat-page-header";
+import ChatPageHeader from "@/features/chat/components/chat-header";
 
 export default function ChatLayout({
   children,

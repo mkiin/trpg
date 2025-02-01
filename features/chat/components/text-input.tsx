@@ -10,7 +10,6 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
-import { useForm } from "@conform-to/react";
 import { ArrowUpIcon, StopIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -52,12 +51,8 @@ function PureTextInput({
     handleSubmit();
   }, [chatId, handleSubmit]);
 
-  const [form, fields] = useForm({
-    onSubmit: submitForm,
-  });
-
   return (
-    <form id={form.id} className="relative flex  w-full md:max-w-3xl">
+    <form className="relative flex  w-full md:max-w-3xl">
       <Textarea
         ref={textareaRef}
         placeholder="Send a message..."

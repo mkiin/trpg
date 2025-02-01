@@ -26,11 +26,6 @@ import React from "react";
 
 const items = [
   {
-    title: "Session",
-    url: "/chat",
-    icon: HomeIcon,
-  },
-  {
     title: "CharacterSheet",
     url: "/character-sheet",
     icon: UserSettingsIcon,

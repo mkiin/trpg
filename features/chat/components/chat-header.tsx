@@ -1,10 +1,10 @@
 "use client";
 
-import { SidebarToggle } from "@/components/sidebar/sidebar-toggle";
+import { SidebarToggle } from "@/features/sidebar/sidebar-toggle";
 import { useSidebar } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 
-export default function ChatPageHeader() {
+export default function ChatHeader() {
   const { open } = useSidebar();
   return (
     <header className="flex sticky top-0 h-16 shrink-0 items-center gap-2 border-b px-4">

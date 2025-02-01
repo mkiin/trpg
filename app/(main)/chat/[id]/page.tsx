@@ -1,13 +1,23 @@
 import React from "react";
-import { cookies } from "next/headers";
 import { Chat } from "@/features/chat/components/chat";
 import { DEFAULT_MODEL_NAME, models } from "@/lib/ai/models";
+import { getChatById, getMessagesByChatId } from "@/lib/db/queries";
+import { notFound } from "next/navigation";
+import { convertToUIMessages } from "@/lib/utils";
 
 export default async function ChatPage(props: {
   params: Promise<{ id: string }>;
 }) {
-  const params = await props.params;
-  const { id } = params;
+  const id = (await props.params).id;
+  const chat = await getChatById({ id });
+
+  if (!chat) {
+    notFound();
+  }
+
+  const messagesFromDb = await getMessagesByChatId({ id });
+  const initialMessages = convertToUIMessages(messagesFromDb);
+
   const selectedModelId = DEFAULT_MODEL_NAME;
 
   return (
@@ -15,7 +25,7 @@ export default async function ChatPage(props: {
       <Chat
         key={id}
         id={id}
-        initialMessages={[]}
+        initialMessages={initialMessages}
         selectedModelId={selectedModelId}
       />
     </>

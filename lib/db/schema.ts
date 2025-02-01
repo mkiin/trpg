@@ -91,5 +91,4 @@ export const message = pgTable("message", {
     .$onUpdate(() => new Date()),
 });
 
-export type User1 = InferSelectModel<typeof user>;
-export type User2 = InferInsertModel<typeof user>;
+export type Message = InferSelectModel<typeof message>;
