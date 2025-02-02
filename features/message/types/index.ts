@@ -1,6 +1,11 @@
 import { ChatRequestOptions, Message } from "ai";
 import { Dispatch, SetStateAction } from "react";
 
+export interface MessProps {
+  chatId: string;
+  modelId: string;
+}
+
 export type MessagesProps = {
   message: Message;
   setMessages: (

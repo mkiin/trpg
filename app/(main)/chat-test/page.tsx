@@ -1,39 +1,17 @@
-"use client";
-import { Textarea } from "@/components/ui/textarea";
 import { generateId } from "ai";
-import { useChat } from "ai/react";
+import { TestMessages } from "./test-messages";
+import { TestInput } from "./test-input";
 
 export default function ChatTestPage() {
   const id = generateId();
-  const modelId = "gemini-2.0-flash-exp";
-  const { messages, input, error, handleInputChange, handleSubmit } = useChat({
-    body: { id, modelId },
-  });
   return (
-    <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
-      {messages.map((m) => (
-        <div key={m.id} className="whitespace-pre-wrap">
-          {m.role === "user" ? "User: " : "AI: "}
-          {m.content}
-        </div>
-      ))}
-      {error && (
-        <>
-          <div className="">{error.name}</div>
-          <div className="">{error.message}</div>
-        </>
-      )}
-
-      <form
-        onSubmit={handleSubmit}
-        className="fixed bottom-0 w-full max-w-md mb-8 border border-gray-300 rounded shadow-xl">
-        <Textarea
-          className="w-full p-2"
-          value={input}
-          placeholder="Say something..."
-          onChange={handleInputChange}
-        />
-      </form>
+    <div className="relative flex h-full min-w-0 flex-1 flex-col">
+      <div className="flex-1 overflow-hidden  @container/thread">
+        <TestMessages modelId="gemini-1.5-pro" id={id} />
+      </div>
+      <div className="flex flex-1 gap-4 text-base md:gap-5 mx-auto w-full lg:gap-6 md:max-3xl lg:max-w-[40rem] xl:max-w-[48rem]">
+        <TestInput modelId="gemini-1.5-pro" id={id} />
+      </div>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import chatRoute from "./routes/chat/route";
 import { Hono } from "hono";
 import { ContextVariables } from "./types";
 import { auth } from "@/lib/betterauth";
+import { chatTest } from "./routes/test/route";
 
 const app = new Hono<{
   Variables: ContextVariables;
@@ -21,7 +22,7 @@ app.use("*", async (c, next) => {
 app.on(["GET", "POST"], "/auth/*", (c) => auth.handler(c.req.raw));
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const routes = app.route("/chat", chatRoute);
+const routes = app.route("/chat", chatRoute).route("/chat-test", chatTest);
 
 export type AppType = typeof routes;
 export default app;

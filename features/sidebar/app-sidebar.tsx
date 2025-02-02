@@ -18,7 +18,6 @@ import Link from "next/link";
 import { SidebarToggle } from "./sidebar-toggle";
 import { cn } from "@/lib/utils";
 import React from "react";
-import { Button } from "@/components/ui/button";
 
 const items = [
   {

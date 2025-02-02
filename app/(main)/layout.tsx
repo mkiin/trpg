@@ -9,7 +9,7 @@ export default function MainLayout({
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>{children}</SidebarInset>
+      <SidebarInset className="overflow-auto">{children}</SidebarInset>
     </SidebarProvider>
   );
 }

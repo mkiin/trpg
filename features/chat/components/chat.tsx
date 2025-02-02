@@ -21,7 +21,7 @@ export function Chat({ id, initialMessages, selectedModelId }: ChatProps) {
     initialMessages,
     experimental_throttle: 500,
   });
-  console.log(messages);
+
   return (
     <>
       <Messages

@@ -1,43 +1,29 @@
 "use client";
 
-import type { Message, ChatRequestOptions } from "ai";
 import type React from "react";
-import {
-  memo,
-  useCallback,
-  useEffect,
-  useRef,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { memo, useCallback, useRef } from "react";
 import { ArrowUpIcon, StopIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { SendButtonProps, StopButtonProps, TextInputProps } from "../types";
-import { useWindowSize } from "usehooks-ts";
-import { ArrowRight, ArrowUp } from "lucide-react";
-function PureTextInput({
-  chatId,
-  input,
-  handleInputChange,
-  isLoading,
-  messages,
-  setMessages,
-  handleSubmit,
-  stop,
-  className,
-}: TextInputProps & { className?: string }) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+import { SendButtonProps, StopButtonProps } from "../types";
+import { MessProps } from "@/features/message/types";
+import { useChat } from "ai/react";
 
-  const adjustHeight = () => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${
-        textareaRef.current.scrollHeight + 2
-      }px`;
-    }
-  };
+function PureTextInput({ chatId, modelId }: MessProps) {
+  const {
+    input,
+    messages,
+    setMessages,
+    handleSubmit,
+    handleInputChange,
+    stop,
+    isLoading,
+  } = useChat({
+    id: chatId,
+    body: { id: chatId, modelId },
+  });
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const wrapHandleOnChange = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -52,12 +38,11 @@ function PureTextInput({
   }, [chatId, handleSubmit]);
 
   return (
-    <form className="relative flex  w-full md:max-w-3xl">
+    <form className="w-full fixed bottom-0 max-w-md mb-8 border border-gray-300 rounded shadow-xl">
       <Textarea
-        ref={textareaRef}
+        className="resize-none"
         placeholder="Send a message..."
         value={input}
-        className="min-h-[100px] pr-12 bg-muted resize-none"
         onChange={wrapHandleOnChange}
         onKeyDown={(event) => {
           if (event.key === "Enter" && !event.shiftKey) {
@@ -70,7 +55,7 @@ function PureTextInput({
           }
         }}
       />
-      <div className="absolute bottom-0 right-0 p-2 w-fit flex flex-row justify-end">
+      <div className="flex items-center justify-between sm:mt-5 mb-2 mt-1">
         {isLoading ? (
           <StopButton
             stop={stop}
@@ -85,9 +70,7 @@ function PureTextInput({
   );
 }
 
-export const TextInput = memo(PureTextInput, (prevProps, nextProps) => {
-  if (prevProps.input !== nextProps.input) return false;
-  if (prevProps.isLoading !== nextProps.isLoading) return false;
+export const TextInput = memo(PureTextInput, () => {
   return true;
 });
 
