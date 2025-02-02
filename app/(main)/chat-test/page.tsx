@@ -5,7 +5,7 @@ import { TestInput } from "./test-input";
 export default function ChatTestPage() {
   const id = generateId();
   return (
-    <div className="relative flex h-full min-w-0 flex-1 flex-col">
+    <div className="relative flex h-full -0 flex-1 flex-col">
       <div className="flex-1 overflow-hidden  @container/thread">
         <TestMessages modelId="gemini-1.5-pro" id={id} />
       </div>

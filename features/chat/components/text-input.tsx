@@ -38,7 +38,7 @@ function PureTextInput({ chatId, modelId }: MessProps) {
   }, [chatId, handleSubmit]);
 
   return (
-    <form className="w-full fixed bottom-0 max-w-md mb-8 border border-gray-300 rounded shadow-xl">
+    <form className="w-full bottom-0 max-w-md mb-8 border border-gray-300 rounded shadow-xl">
       <Textarea
         className="resize-none"
         placeholder="Send a message..."

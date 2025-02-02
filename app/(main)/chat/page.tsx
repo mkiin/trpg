@@ -10,10 +10,10 @@ export default async function ChatPage() {
 
   return (
     <>
-      <div className="flex-1 overflow-hidden  @container/thread">
+      <div className="@container/thread flex-1 overflow-hidden">
         <Messages chatId={id} modelId={selectedModelId} />
       </div>
-      <div className="flex flex-1 gap-4 text-base md:gap-5 mx-auto w-full lg:gap-6 md:max-3xl lg:max-w-[40rem] xl:max-w-[48rem]">
+      <div className="relative z-10 flex w-full flex-col bg-background mx-auto max-w-3xl px-2 sm:px-3 md:px-4 pb-0 sm:pb-0 md:pb-0">
         <TextInput chatId={id} modelId={selectedModelId} />
       </div>
     </>
