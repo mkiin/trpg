@@ -13,16 +13,12 @@ import {
   SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar";
-import {
-  AppIcon,
-  PlusIcon,
-  HomeIcon,
-  UserSettingsIcon,
-} from "@/components/icons";
+import { AppIcon, PlusIcon, UserSettingsIcon } from "@/components/icons";
 import Link from "next/link";
 import { SidebarToggle } from "./sidebar-toggle";
 import { cn } from "@/lib/utils";
 import React from "react";
+import { Button } from "@/components/ui/button";
 
 const items = [
   {
@@ -55,7 +51,7 @@ function PureAppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Link
                     href={"/chat"}
                     className={cn(
-                      "flex font-bold bg-primary text-secondary items-center group",
+                      "flex font-bold text-black items-center group",
                       state !== "collapsed" ? "justify-center" : ""
                     )}>
                     <PlusIcon

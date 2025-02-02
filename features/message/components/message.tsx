@@ -1,37 +1,26 @@
 "use client";
 
-import type { ChatRequestOptions, Message } from "ai";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { memo, useState } from "react";
+
 import { PencilEditIcon, SparklesIcon } from "@/components/icons";
-// import { MessageActions } from "./message-actions";
-import equal from "fast-deep-equal";
+import { Markdown } from "./markdown";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-// import { MessageEditor } from "./message-editor";
+import { MessageEditor } from "./message-editor";
+import { MessagesProps } from "../types/index";
+import equal from "fast-deep-equal";
 
 const PurePreviewMessage = ({
-  chatId,
   message,
-  isLoading,
   setMessages,
   reload,
-}: {
-  chatId: string;
-  message: Message;
-  isLoading: boolean;
-  setMessages: (
-    messages: Message[] | ((messages: Message[]) => Message[])
-  ) => void;
-  reload: (
-    chatRequestOptions?: ChatRequestOptions
-  ) => Promise<string | null | undefined>;
-}) => {
+}: MessagesProps) => {
   const [mode, setMode] = useState<"view" | "edit">("view");
 
   return (
@@ -60,7 +49,7 @@ const PurePreviewMessage = ({
           <div className="flex flex-col gap-2 w-full">
             {message.content && mode === "view" && (
               <div className="flex flex-row gap-2 items-start">
-                {/* {message.role === "user" && (
+                {message.role === "user" && (
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
@@ -74,19 +63,19 @@ const PurePreviewMessage = ({
                     </TooltipTrigger>
                     <TooltipContent>Edit message</TooltipContent>
                   </Tooltip>
-                )} */}
+                )}
 
-                {/* <div
+                <div
                   className={cn("flex flex-col gap-4", {
                     "bg-primary text-primary-foreground px-3 py-2 rounded-xl":
                       message.role === "user",
                   })}>
                   <Markdown>{message.content as string}</Markdown>
-                </div> */}
+                </div>
               </div>
             )}
 
-            {/* {message.content && mode === "edit" && (
+            {message.content && mode === "edit" && (
               <div className="flex flex-row gap-2 items-start">
                 <div className="size-8" />
 
@@ -98,16 +87,7 @@ const PurePreviewMessage = ({
                   reload={reload}
                 />
               </div>
-            )} */}
-
-            {/* {!isReadonly && (
-              <MessageActions
-                key={`action-${message.id}`}
-                chatId={chatId}
-                message={message}
-                isLoading={isLoading}
-              />
-            )} */}
+            )}
           </div>
         </div>
       </motion.div>
@@ -118,8 +98,14 @@ const PurePreviewMessage = ({
 export const PreviewMessage = memo(
   PurePreviewMessage,
   (prevProps, nextProps) => {
-    if (prevProps.isLoading !== nextProps.isLoading) return false;
     if (prevProps.message.content !== nextProps.message.content) return false;
+    if (
+      !equal(
+        prevProps.message.toolInvocations,
+        nextProps.message.toolInvocations
+      )
+    )
+      return false;
     return true;
   }
 );

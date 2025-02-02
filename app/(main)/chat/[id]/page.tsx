@@ -1,6 +1,6 @@
 import React from "react";
 import { Chat } from "@/features/chat/components/chat";
-import { DEFAULT_MODEL_NAME, models } from "@/lib/ai/models";
+import { DEFAULT_MODEL_NAME } from "@/lib/ai/models";
 import { getChatById, getMessagesByChatId } from "@/lib/db/queries";
 import { notFound } from "next/navigation";
 import { convertToUIMessages } from "@/lib/utils";

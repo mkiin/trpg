@@ -72,7 +72,7 @@ export function convertToUIMessages(
     } else if (Array.isArray(message.content)) {
       for (const content of message.content) {
         if (content.type === "text") {
-          textContent += content.type;
+          textContent += content.text;
         } else if (content.type === "tool-call") {
           toolInvocations.push({
             state: "call",

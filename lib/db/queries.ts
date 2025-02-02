@@ -56,3 +56,33 @@ export async function getMessagesByChatId({ id }: { id: string }) {
     return null;
   }
 }
+
+export async function getMessageById({ id }: { id: string }) {
+  try {
+    return await db.select().from(message).where(eq(message.id, id));
+  } catch (error) {
+    console.error("Failed to get message by id from database");
+    throw error;
+  }
+}
+
+export async function deleteMessagesByChatIdAfterTimestamp({
+  chatId,
+  timestamp,
+}: {
+  chatId: string;
+  timestamp: Date;
+}) {
+  try {
+    return await db
+      .delete(message)
+      .where(
+        and(eq(message.chatId, chatId), gte(message.createdAt, timestamp))
+      );
+  } catch (error) {
+    console.error(
+      "Failed to delete messages by id after timestamp from database"
+    );
+    throw error;
+  }
+}

@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 import { geistSans } from "@/styles/fonts";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "TRPG Tools",
@@ -27,6 +28,7 @@ export default function RootLayout({
           disableTransitionOnChange>
           {children}
         </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   );

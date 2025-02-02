@@ -70,7 +70,6 @@ chatRoute.post("/", zValidator("json", createChatSchema), async (c) => {
         messages: messages,
         system: systemPrompt,
         maxSteps: 5,
-        maxRetries: 2,
         onFinish: async ({ response }) => {
           try {
             const responseMessagesWithoutIncompleteToolCalls =
