@@ -1,42 +1,45 @@
 "use client";
 import { PreviewMessage, ThinkingMessage } from "./message";
-import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
-import { memo } from "react";
+import { memo, useEffect, useRef, useCallback } from "react";
 import { useChat } from "ai/react";
-import { MessProps } from "../types";
+import type { ChatProps } from "@/features/shared/shared-chat-types";
+import { motion } from "framer-motion";
 
-function PureMessages({ chatId, modelId }: MessProps) {
-  const [messagesContainerRef, messagesEndRef] =
-    useScrollToBottom<HTMLDivElement>();
+function PureMessages({ chatId, modelId, initialMessages }: ChatProps) {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const { messages, setMessages, reload, isLoading } = useChat({
     id: chatId,
     body: { id: chatId, modelId },
+    initialMessages,
   });
 
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, scrollToBottom]);
+
   return (
-    <div
-      ref={messagesContainerRef}
-      className="flex flex-col gap-6 flex-1 overflow-y-scroll pt-4">
+    <div>
       {messages.map((message) => (
-        <PreviewMessage
-          key={message.id}
-          message={message}
-          setMessages={setMessages}
-          reload={reload}
-        />
+        <PreviewMessage key={message.id} message={message} />
       ))}
       {isLoading &&
         messages.length > 0 &&
-        messages[messages.length - 1].role === "user" && <ThinkingMessage />}
-
-      <div
-        ref={messagesEndRef}
-        className="shrink-0 min-w-[24px] min-h-[24px]"
-      />
+        messages[messages.length - 1].role === "user" && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}>
+            <ThinkingMessage />
+          </motion.div>
+        )}
+      <div ref={messagesEndRef} />
     </div>
   );
 }
 
-export const Messages = memo(PureMessages, () => {
-  return true;
-});
+export const Messages = memo(PureMessages);

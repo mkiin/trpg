@@ -1,9 +1,10 @@
 import React from "react";
-import { Chat } from "@/features/chat/components/chat";
 import { DEFAULT_MODEL_NAME } from "@/lib/ai/models";
 import { getChatById, getMessagesByChatId } from "@/lib/db/queries";
 import { notFound } from "next/navigation";
 import { convertToUIMessages } from "@/lib/utils";
+import { Messages } from "@/features/message/components/messages";
+import { TextInput } from "@/features/chat/components/text-input";
 
 export default async function ChatPage(props: {
   params: Promise<{ id: string }>;
@@ -23,12 +24,12 @@ export default async function ChatPage(props: {
 
   return (
     <>
-      <Chat
-        key={id}
-        id={id}
-        initialMessages={initialMessages}
-        selectedModelId={selectedModelId}
-      />
+      <div className="@container/thread flex-1 overflow-hidden">
+        <Messages chatId={id} modelId={selectedModelId} />
+      </div>
+      <div className="relative z-20 flex w-full flex-col bg-background mx-auto max-w-3xl px-2 sm:px-3 md:px-4 pb-0 sm:pb-0 md:pb-0">
+        <TextInput chatId={id} modelId={selectedModelId} />
+      </div>
     </>
   );
 }
