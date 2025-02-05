@@ -2,7 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import { stream } from "hono/streaming";
 
 import { createChatSchema } from "./schema";
-import { createDataStream, streamText } from "ai";
+import { createDataStream, smoothStream, streamText } from "ai";
 
 import { vertex } from "@/lib/ai";
 import {
@@ -20,14 +20,10 @@ const chatRoute = new Hono<{
   Variables: ContextVariables;
 }>();
 
-chatRoute.get("/", async (c) => {
-  return c.json({ message: "hello" });
-});
-
 chatRoute.post("/", zValidator("json", createChatSchema), async (c) => {
   const receiveData = c.req.valid("json");
   const { id, messages, modelId } = receiveData;
-  console.log("receiveData", receiveData);
+  console.log(receiveData);
 
   const userMessages = getMostRecentUserMessage(messages);
 
@@ -69,36 +65,38 @@ chatRoute.post("/", zValidator("json", createChatSchema), async (c) => {
         model: vertex(modelId),
         messages: messages,
         system: systemPrompt,
+        maxTokens: 100,
         maxSteps: 5,
-        onFinish: async ({ response }) => {
-          try {
-            const responseMessagesWithoutIncompleteToolCalls =
-              sanitizeResponseMessages(response.messages);
-            await saveMessages({
-              messages: responseMessagesWithoutIncompleteToolCalls.map(
-                (message) => {
-                  const messageId = generateUUID();
-                  if (message.role === "assistant") {
-                    dataStreamWriter.writeMessageAnnotation({
-                      messageIdFromServer: messageId,
-                    });
-                  }
+        experimental_transform: smoothStream({ chunking: "word" }),
+        // onFinish: async ({ response }) => {
+        //   // try {
+        //   //   const responseMessagesWithoutIncompleteToolCalls =
+        //   //     sanitizeResponseMessages(response.messages);
+        //   //   await saveMessages({
+        //   //     messages: responseMessagesWithoutIncompleteToolCalls.map(
+        //   //       (message) => {
+        //   //         const messageId = generateUUID();
+        //   //         if (message.role === "assistant") {
+        //   //           dataStreamWriter.writeMessageAnnotation({
+        //   //             messageIdFromServer: messageId,
+        //   //           });
+        //   //         }
 
-                  return {
-                    id: messageId,
-                    chatId: id,
-                    role: message.role,
-                    content: message.content,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                  };
-                }
-              ),
-            });
-          } catch (error) {
-            console.error(error);
-          }
-        },
+        //   //         return {
+        //   //           id: messageId,
+        //   //           chatId: id,
+        //   //           role: message.role,
+        //   //           content: message.content,
+        //   //           createdAt: new Date(),
+        //   //           updatedAt: new Date(),
+        //   //         };
+        //   //       }
+        //   //     ),
+        //   //   });
+        //   // } catch (error) {
+        //   //   console.error(error);
+        //   // }
+        // },
       });
 
       result.mergeIntoDataStream(dataStreamWriter);

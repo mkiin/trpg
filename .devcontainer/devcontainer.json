@@ -8,7 +8,8 @@
   "forwardPorts": [
     8080,
     5432,
-    3000
+    3000,
+    4983
   ],
   "postStartCommand": "echo \"alias pn=pnpm\" >> /home/node/.bashrc",
   "customizations": {

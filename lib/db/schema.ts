@@ -8,6 +8,11 @@ import {
   varchar,
   json,
 } from "drizzle-orm/pg-core";
+import {
+  AssistantContent,
+  ToolContent,
+  UserContent,
+} from "ai";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -82,7 +87,9 @@ export const message = pgTable("message", {
     .notNull()
     .references(() => chat.id),
   role: varchar("role").notNull(),
-  content: json("content").notNull(),
+  content: json("content")
+    .$type<string | UserContent | AssistantContent | ToolContent>()
+    .notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

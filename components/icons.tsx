@@ -5,7 +5,6 @@ import {
   Sparkles,
   Home,
   UserRoundCog,
-  ArrowBigUp,
   PanelLeft,
   Plus,
 } from "lucide-react";
@@ -53,7 +52,7 @@ export const StopIcon = ({
   className,
 }: {
   size?: number;
-  className: string;
+  className?: string;
 }) => <CircleStop size={size} className={className} />;
 
 export const PencilEditIcon = ({ size = 16 }: { size?: number }) => (
@@ -64,10 +63,6 @@ export const SparklesIcon = ({ size = 16 }: { size?: number }) => (
   <Sparkles size={size} />
 );
 
-export const PlusIcon = ({
-  size = 16,
-  className,
-}: {
-  size?: number;
-  className?: string;
-}) => <Plus size={size} className={className} />;
+export const PlusIcon = ({ size = 16 }: { size?: number }) => (
+  <Plus size={size} />
+);
