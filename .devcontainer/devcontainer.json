@@ -19,7 +19,8 @@
         "streetsidesoftware.code-spell-checker",
         "bradlc.vscode-tailwindcss",
         "GitHub.copilot",
-        "RooVeterinaryInc.roo-cline"
+        "RooVeterinaryInc.roo-cline",
+        "naumovs.color-highlight"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash"
