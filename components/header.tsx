@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="flex h-14 shrink-0 items-center justify-between px-4 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+    <header className="flex h-14 shrink-0 items-center justify-between px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
       <Link href={"/"}>
         <AppIcon />
       </Link>

@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background ">
       <main className="flex-col container mx-auto px-4 py-16">
-        <h1 className="text-5xl text-balance bg-gradient-to-tr mb-5 from-black/70 via-black to-black/60 bg-clip-text text-center font-bold text-transparent dark:from-zinc-400/10 dark:via-white/90 dark:to-white/20 sm:text-5xl md:text-6xl lg:text-7xl">
+        <h1 className="text-5xl text-balance bg-linear-to-tr mb-5 from-black/70 via-black to-black/60 bg-clip-text text-center font-bold text-transparent dark:from-zinc-400/10 dark:via-white/90 dark:to-white/20 sm:text-5xl md:text-6xl lg:text-7xl">
           TRPGを試す場
         </h1>
         <div className="max-w-2xl mx-auto text-center mb-12">
