@@ -45,7 +45,16 @@
 | knowledge              | 知識          | education * 5   |
 | durability             | 耐久力        | (constitution + size) / 2 |
 | magic\_point            | マジックポイント | power * 1     |
-| vocational\_skill\_points | 職業技能ポイント | intelligence * 20 |
-| hobby skill points| 趣味技能ポイント| strength + size  |
+| vocational\_skill\_points | 職業技能ポイント | education * 20 |
+| hobby skill points| 趣味技能ポイント| intelligence * 10  |
+| damage bonus           | ダメージボーナス | strength + size |
 
 
+### 技能
+基本情報で選択した職業により、割り振れる技能というのが決定している。以下にすべての技能についてまとめる
+
+**戦闘技能**
+**探索技能**
+**行動技能**
+**交渉技能**
+**知識技能**
