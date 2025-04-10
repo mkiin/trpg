@@ -5,7 +5,7 @@ import { ArrowUpIcon, StopIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import type { SendButtonProps } from "../types";
-import type { ChatProps } from "@/features/shared/types";
+import type { ChatProps } from "@/features/shared/shared-chat-types";
 import { useChat } from "ai/react";
 
 function PureTextInput({ chatId, modelId }: ChatProps) {
@@ -16,41 +16,38 @@ function PureTextInput({ chatId, modelId }: ChatProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const submitForm = useCallback(() => {
-    window.history.replaceState({}, "", `/chat/${chatId}`);
     handleSubmit(undefined);
-  }, [chatId, handleSubmit]);
+  }, [handleSubmit]);
 
   return (
-    <div className="bg-background p-4 border-t border-border">
-      <form className="flex items-end space-x-2">
-        <div className="flex-grow relative">
-          <Textarea
-            ref={textareaRef}
-            className="resize-none overflow-hidden w-full bg-background p-3 text-sm outline-none border rounded-md focus:ring-2 focus:ring-primary"
-            placeholder="メッセージを入力..."
-            value={input}
-            onChange={handleInputChange}
-            onKeyDown={(event) => {
-              if (event.key === "Enter" && !event.shiftKey) {
-                event.preventDefault();
-                if (!isLoading) {
-                  submitForm();
-                }
+    <form className="flex mx-auto px-4 bg-background pb-4 md:pb-6 gap-2 w-full md:max-w-3xl">
+      <div className="relative w-full flex flex-col gap-4">
+        <Textarea
+          ref={textareaRef}
+          className="resize-none overflow-hidden w-full bg-background p-3 text-sm outline-none border rounded-md focus:ring-2 focus:ring-primary"
+          placeholder="メッセージを入力..."
+          value={input}
+          onChange={handleInputChange}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" && !event.shiftKey) {
+              event.preventDefault();
+              if (!isLoading) {
+                submitForm();
               }
-            }}
-            rows={1}
-          />
-        </div>
-        <div className="flex space-x-2">
-          <SendButton
-            input={input}
-            submitForm={submitForm}
-            isLoading={isLoading}
-          />
-          {isLoading && <StopButton stop={stop} />}
-        </div>
-      </form>
-    </div>
+            }
+          }}
+          rows={1}
+        />
+      </div>
+      <div className="flex space-x-2">
+        <SendButton
+          input={input}
+          submitForm={submitForm}
+          isLoading={isLoading}
+        />
+        {isLoading && <StopButton stop={stop} />}
+      </div>
+    </form>
   );
 }
 

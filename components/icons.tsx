@@ -21,9 +21,13 @@ export const HomeIcon = ({ size = 16 }: { size?: number }) => (
   <Home size={size} />
 );
 
-export const UserSettingsIcon = ({ size = 16 }: { size?: number }) => (
-  <UserRoundCog size={size} />
-);
+export const UserSettingsIcon = ({
+  size = 16,
+  className,
+}: {
+  size?: number;
+  className?: string;
+}) => <UserRoundCog size={size} className={className} />;
 
 export const SidebarLeftIcon = ({ size = 16 }: { size?: number }) => (
   <PanelLeft size={size} />

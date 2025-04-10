@@ -1,7 +1,6 @@
 "use client";
 
 import { SidebarToggle } from "@/features/sidebar/sidebar-toggle";
-import { useSidebar } from "@/components/ui/sidebar";
 
 export default function ChatHeader() {
   return (

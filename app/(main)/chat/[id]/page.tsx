@@ -23,13 +23,10 @@ export default async function ChatPage(props: {
   const selectedModelId = DEFAULT_MODEL_NAME;
 
   return (
-    <>
-      <div className="@container/thread flex-1 overflow-hidden">
-        <Messages chatId={id} modelId={selectedModelId} />
-      </div>
-      <div className="relative z-20 flex w-full flex-col bg-background mx-auto max-w-3xl px-2 sm:px-3 md:px-4 pb-0 sm:pb-0 md:pb-0">
-        <TextInput chatId={id} modelId={selectedModelId} />
-      </div>
-    </>
+    <div className="flex flex-col min-w-0 h-dvh bg-background">
+      <Messages chatId={id} modelId={selectedModelId} />
+
+      <TextInput chatId={id} modelId={selectedModelId} />
+    </div>
   );
 }

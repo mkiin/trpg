@@ -3,6 +3,7 @@ import { DEFAULT_MODEL_NAME } from "@/lib/ai/models";
 import { generateUUID } from "@/lib/utils";
 import { Messages } from "@/features/message/components/messages";
 import { TextInput } from "@/features/chat/components/text-input";
+import ChatPageHeader from "@/features/chat/components/chat-header";
 
 export default async function ChatPage() {
   const id = generateUUID();
@@ -11,10 +12,9 @@ export default async function ChatPage() {
 
   return (
     <>
-      <div className="@container/thread flex-1 overflow-hidden">
+      <div className="flex flex-col min-w-0 h-svh bg-background">
+        <ChatPageHeader />
         <Messages chatId={id} modelId={selectedModelId} />
-      </div>
-      <div className="relative z-20 flex w-full flex-col bg-background mx-auto max-w-3xl px-2 sm:px-3 md:px-4 pb-0 sm:pb-0 md:pb-0">
         <TextInput chatId={id} modelId={selectedModelId} />
       </div>
     </>

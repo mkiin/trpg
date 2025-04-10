@@ -5,10 +5,5 @@ export default function ChatLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div role="presentation" className="flex flex-1 h-full flex-col">
-      <ChatPageHeader />
-      {children}
-    </div>
-  );
+  return <>{children}</>;
 }

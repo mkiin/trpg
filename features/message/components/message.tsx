@@ -13,8 +13,15 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { MessageEditor } from "./message-editor";
-import { MessagesProps } from "../types/index";
+// import { ChatProps } from "../../shared/shared-chat-types";
 import equal from "fast-deep-equal";
+import { Message } from "ai";
+
+type MessagesProps = {
+  message: Message;
+  setMessages: (messages: Message[]) => void;
+  reload: () => void;
+};
 
 const PurePreviewMessage = ({
   message,
@@ -24,7 +31,9 @@ const PurePreviewMessage = ({
   const [mode, setMode] = useState<"view" | "edit">("view");
 
   return (
-    <div data-role={message.role}>
+    <div
+      data-role={message.role}
+      className="w-full mx-auto max-w-3xl px-4 group/message">
       <div
         className={cn(
           "flex gap-4 w-full group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl",
@@ -65,7 +74,7 @@ const PurePreviewMessage = ({
                   "bg-primary text-primary-foreground px-3 py-2 rounded-xl":
                     message.role === "user",
                 })}>
-                <Markdown>{message.content as string}</Markdown>
+                <Markdown>{message.content}</Markdown>
               </div>
             </div>
           )}

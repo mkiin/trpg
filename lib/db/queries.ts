@@ -1,6 +1,6 @@
 import "server-only";
 import { db } from "./index";
-import { and, asc, desc, eq, gt, gte } from "drizzle-orm";
+import { } from "drizzle-orm";
 import { chat, Message, message } from "./schema";
 
 export async function saveChat({

@@ -23,7 +23,6 @@ const chatRoute = new Hono<{
 chatRoute.post("/", zValidator("json", createChatSchema), async (c) => {
   const receiveData = c.req.valid("json");
   const { id, messages, modelId } = receiveData;
-  console.log(receiveData);
 
   const userMessages = getMostRecentUserMessage(messages);
 
@@ -54,65 +53,18 @@ chatRoute.post("/", zValidator("json", createChatSchema), async (c) => {
     ],
   });
 
-  const dataStream = createDataStream({
-    execute: async (dataStreamWriter) => {
-      dataStreamWriter.writeData({
-        type: "user-message-id",
-        content: userMessageId,
-      });
-
-      const result = streamText({
-        model: vertex(modelId),
-        messages: messages,
-        system: systemPrompt,
-        maxTokens: 100,
-        maxSteps: 5,
-        experimental_transform: smoothStream({ chunking: "word" }),
-        // onFinish: async ({ response }) => {
-        //   // try {
-        //   //   const responseMessagesWithoutIncompleteToolCalls =
-        //   //     sanitizeResponseMessages(response.messages);
-        //   //   await saveMessages({
-        //   //     messages: responseMessagesWithoutIncompleteToolCalls.map(
-        //   //       (message) => {
-        //   //         const messageId = generateUUID();
-        //   //         if (message.role === "assistant") {
-        //   //           dataStreamWriter.writeMessageAnnotation({
-        //   //             messageIdFromServer: messageId,
-        //   //           });
-        //   //         }
-
-        //   //         return {
-        //   //           id: messageId,
-        //   //           chatId: id,
-        //   //           role: message.role,
-        //   //           content: message.content,
-        //   //           createdAt: new Date(),
-        //   //           updatedAt: new Date(),
-        //   //         };
-        //   //       }
-        //   //     ),
-        //   //   });
-        //   // } catch (error) {
-        //   //   console.error(error);
-        //   // }
-        // },
-      });
-
-      result.mergeIntoDataStream(dataStreamWriter);
-    },
-    onError: (error) => {
-      return error instanceof Error ? error.message : String(error);
-    },
+  const result = streamText({
+    model: vertex(modelId),
+    messages: messages,
+    system: systemPrompt,
+    experimental_transform: smoothStream({ chunking: "word" }),
   });
 
   // Mark the response as a v1 data stream:
   c.header("X-Vercel-AI-Data-Stream", "v1");
   c.header("Content-Type", "text/plain; charset=utf-8");
 
-  return stream(c, (stream) =>
-    stream.pipe(dataStream.pipeThrough(new TextEncoderStream()))
-  );
+  return stream(c, (stream) => stream.pipe(result.toDataStream()));
 });
 
 export default chatRoute;
