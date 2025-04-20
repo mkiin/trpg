@@ -4,7 +4,7 @@ import { stream } from "hono/streaming";
 import { createChatSchema } from "./schema";
 import { createDataStream, smoothStream, streamText } from "ai";
 
-import { vertex } from "@/lib/ai";
+import { google, vertex } from "@/lib/ai";
 import {
   generateUUID,
   getMostRecentUserMessage,
@@ -54,7 +54,7 @@ chatRoute.post("/", zValidator("json", createChatSchema), async (c) => {
   });
 
   const result = streamText({
-    model: vertex(modelId),
+    model: google(modelId),
     messages: messages,
     system: systemPrompt,
     experimental_transform: smoothStream({ chunking: "word" }),

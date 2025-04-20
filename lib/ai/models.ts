@@ -6,14 +6,14 @@ export interface Model {
 
 export const models: Array<Model> = [
   {
-    id: "gemini-1.5-flash",
-    label: "Gemini 2.0 Flash Experimental",
-    description: "Gemini 2.0 Flash Experimental model",
+    id: "gemini-2.0-flash-001",
+    label: "Gemini 2.0 Flash",
+    description: "Gemini 2.0 Flash",
   },
   {
-    id: "gemini-1.5-pro",
-    label: "Gemini 1.5 Pro",
-    description: "Gemini 1.5 Pro model",
+    id: "gemini-2.5-pro-exp-03-25",
+    label: "Gemini 2.5 pro Experimental",
+    description: "Gemini 2.5 pro Experimental model",
   },
 ] as const;
 
