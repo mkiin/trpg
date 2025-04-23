@@ -20,8 +20,7 @@
 - フロントエンドはNext.jsの機能を用いて作成する。
 - バックエンドの処理をHonoを用いて作成する。
 - vercel AI SDKを用いてAIとの連携機能を作成する。
-
-
+- パッケージマネージャーは*pnpm*を使用する。
 ### 最適化とベストプラクティス
 - `'use client'`、`useEffect`、`setState`の使用を最小限に抑え、React Server Components（RSC）とNext.jsのSSR機能を優先する。
 - コード分割と最適化のために動的インポートを実装する。
