@@ -1,7 +1,15 @@
-export default function Page() {
+import { CharacterSheetProvider } from "./components/character-sheet-context";
+import { CharacterSheetForm } from "./components/character-sheet-form";
+
+export const metadata = {
+  title: "キャラクターシート作成 | TRPG",
+  description: "TRPGのキャラクターシートをAIを用いて自動生成します。",
+};
+
+export default function CharacterSheetPage() {
   return (
-    <div className="container mx-auto py-10">
-      <div className="flex items-center justify-between mb-4">hello</div>
-    </div>
+    <CharacterSheetProvider>
+      <CharacterSheetForm />
+    </CharacterSheetProvider>
   );
 }

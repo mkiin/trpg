@@ -8,6 +8,39 @@
 - TRPGのシナリオを試遊できるAIアプリケーションを作成する。
 - 上記のアプリケーションを作成するために最新の技術スタックを使用して作成する。
 
+## ディレクトリ構成
+ディレクトリ内の構成
+
+## /features
+ある特定の機能、ドメインでしか使わないapiへのアクセサや定数、型、hooks、コンポーネントなど全てを詰め込む。
+例
+/features/authtypes
+/features/authapi
+/features/authactions
+/features/authhooks
+/features/auth/constants
+
+## components
+アプリケーション全体で使用されるコンポーネントを格納
+thema providers
+context
+
+
+
+## /libs
+ライブラリ関連の設定ファイルを格納する。
+
+例：dbコード関連
+/libs/db/db.ts
+/libs/db/schema.ts
+
+
+## utils
+アプリケーション全体で使用されるユーティリティ関数を格納
+
+## hooks
+アプリケーション全体で使用されるフックを格納
+
 ### コードスタイルと構造
 - 簡潔で技術的なTypeScriptコードを、正確な例とともに記述する。
 - 関数型および宣言型のプログラミングパターンを使用し、クラスの使用は避ける。
@@ -16,12 +49,13 @@
 - エクスポートされたコンポーネント、サブコンポーネント、ヘルパー、静的コンテンツ、型を含むファイル構造にする。
 - ディレクトリ名には小文字とダッシュを使用する（例: `components/auth-wizard`）。
 
+
+
 ### 技術スタックの使い分け
 - フロントエンドはNext.jsの機能を用いて作成する。
 - バックエンドの処理をHonoを用いて作成する。
 - vercel AI SDKを用いてAIとの連携機能を作成する。
-
-
+- パッケージマネージャーは*pnpm*を使用する。
 ### 最適化とベストプラクティス
 - `'use client'`、`useEffect`、`setState`の使用を最小限に抑え、React Server Components（RSC）とNext.jsのSSR機能を優先する。
 - コード分割と最適化のために動的インポートを実装する。
