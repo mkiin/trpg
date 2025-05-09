@@ -44,33 +44,33 @@ export function ResultView() {
         <div className="space-y-6">
           {/* タブナビゲーション */}
           <div className="flex border-b">
-            <button
+            <Button
               className={`px-4 py-2 font-medium ${activeTab === 'profile'
-                  ? 'text-blue-600 border-b-2 border-blue-600'
-                  : 'text-gray-500'
+                ? 'text-blue-600 border-b-2 border-blue-600'
+                : 'text-gray-500'
                 }`}
               onClick={() => setActiveTab('profile')}
             >
               プロフィール
-            </button>
-            <button
+            </Button>
+            <Button
               className={`px-4 py-2 font-medium ${activeTab === 'abilities'
-                  ? 'text-blue-600 border-b-2 border-blue-600'
-                  : 'text-gray-500'
+                ? 'text-blue-600 border-b-2 border-blue-600'
+                : 'text-gray-500'
                 }`}
               onClick={() => setActiveTab('abilities')}
             >
               能力値
-            </button>
-            <button
+            </Button>
+            <Button
               className={`px-4 py-2 font-medium ${activeTab === 'skills'
-                  ? 'text-blue-600 border-b-2 border-blue-600'
-                  : 'text-gray-500'
+                ? 'text-blue-600 border-b-2 border-blue-600'
+                : 'text-gray-500'
                 }`}
               onClick={() => setActiveTab('skills')}
             >
               技能
-            </button>
+            </Button>
           </div>
 
           {/* プロフィールタブ */}

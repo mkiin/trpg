@@ -43,6 +43,7 @@ export function SkillsForm() {
         try {
           await generateCharacterSheetAction();
         } catch (err) {
+          console.error(err);
           setError("キャラクターシートの生成に失敗しました。もう一度お試しください。");
         }
       }
@@ -57,6 +58,7 @@ export function SkillsForm() {
       await generateCharacterSheetAction();
       setError(null);
     } catch (err) {
+      console.error(err);
       setError("キャラクターシートの生成に失敗しました。もう一度お試しください。");
     }
   };
@@ -84,7 +86,7 @@ export function SkillsForm() {
         </CardHeader>
         <CardContent>
           <div className="flex flex-col justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4" />
             <p className="text-gray-500">AIがキャラクターの技能を生成しています...</p>
           </div>
           {error && (
@@ -107,7 +109,7 @@ export function SkillsForm() {
         <div className="space-y-6">
           {/* 戦闘技能 */}
           <div className="border rounded-md overflow-hidden">
-            <button
+            <Button
               className="w-full flex items-center justify-between p-3 bg-secondary/50 hover:bg-secondary/70 transition-colors"
               onClick={() => toggleCategory('combat')}
             >
@@ -116,7 +118,7 @@ export function SkillsForm() {
                 戦闘技能
               </h3>
               <span className="text-sm text-muted-foreground">{Object.keys(skills.combat).length}項目</span>
-            </button>
+            </Button>
             {expandedCategories.combat && (
               <div className="p-3">
                 <div className="grid grid-cols-3 gap-3">
@@ -139,7 +141,7 @@ export function SkillsForm() {
 
           {/* 探索技能 */}
           <div className="border rounded-md overflow-hidden">
-            <button
+            <Button
               className="w-full flex items-center justify-between p-3 bg-secondary/50 hover:bg-secondary/70 transition-colors"
               onClick={() => toggleCategory('investigation')}
             >
@@ -148,7 +150,7 @@ export function SkillsForm() {
                 探索技能
               </h3>
               <span className="text-sm text-muted-foreground">{Object.keys(skills.investigation).length}項目</span>
-            </button>
+            </Button>
             {expandedCategories.investigation && (
               <div className="p-3">
                 <div className="grid grid-cols-3 gap-3">
@@ -171,7 +173,7 @@ export function SkillsForm() {
 
           {/* 行動技能 */}
           <div className="border rounded-md overflow-hidden">
-            <button
+            <Button
               className="w-full flex items-center justify-between p-3 bg-secondary/50 hover:bg-secondary/70 transition-colors"
               onClick={() => toggleCategory('action')}
             >
@@ -180,7 +182,7 @@ export function SkillsForm() {
                 行動技能
               </h3>
               <span className="text-sm text-muted-foreground">{Object.keys(skills.action).length}項目</span>
-            </button>
+            </Button>
             {expandedCategories.action && (
               <div className="p-3">
                 <div className="grid grid-cols-3 gap-3">
@@ -202,7 +204,7 @@ export function SkillsForm() {
 
           {/* 交渉技能 */}
           <div className="border rounded-md overflow-hidden">
-            <button
+            <Button
               className="w-full flex items-center justify-between p-3 bg-secondary/50 hover:bg-secondary/70 transition-colors"
               onClick={() => toggleCategory('negotiation')}
             >
@@ -211,7 +213,7 @@ export function SkillsForm() {
                 交渉技能
               </h3>
               <span className="text-sm text-muted-foreground">{Object.keys(skills.negotiation).length}項目</span>
-            </button>
+            </Button>
             {expandedCategories.negotiation && (
               <div className="p-3">
                 <div className="grid grid-cols-3 gap-3">
@@ -228,7 +230,7 @@ export function SkillsForm() {
 
           {/* 知識技能 */}
           <div className="border rounded-md overflow-hidden">
-            <button
+            <Button
               className="w-full flex items-center justify-between p-3 bg-secondary/50 hover:bg-secondary/70 transition-colors"
               onClick={() => toggleCategory('knowledge')}
             >
@@ -237,7 +239,7 @@ export function SkillsForm() {
                 知識技能
               </h3>
               <span className="text-sm text-muted-foreground">{Object.keys(skills.knowledge).length}項目</span>
-            </button>
+            </Button>
             {expandedCategories.knowledge && (
               <div className="p-3">
                 <div className="grid grid-cols-3 gap-3">

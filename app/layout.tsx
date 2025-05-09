@@ -3,7 +3,7 @@ import "@/styles/globals.css";
 import { geistSans } from "@/styles/fonts";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner"
 
 export const metadata: Metadata = {
   title: "TRPG Tools",

@@ -2,9 +2,9 @@
 
 import { useCharacterSheet } from "./character-sheet-context";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectGroup, SelectLabel, SelectSeparator, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectGroup, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ALL_OCCUPATIONS, Occupation, OCCUPATION_GROUPS } from "../types";
+import { Occupation, OCCUPATION_GROUPS } from "../types/character-sheet-types";
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -97,7 +97,7 @@ export function BasicInfoForm() {
 
           {/* 性別選択 */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium">性別</label>
+            <Label className="block text-sm font-medium">性別</Label>
             <div className="flex space-x-4">
               <label className="flex items-center">
                 <input

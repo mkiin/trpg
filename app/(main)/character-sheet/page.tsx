@@ -1,5 +1,5 @@
-import { CharacterSheetProvider } from "./components/character-sheet-context";
-import { CharacterSheetForm } from "./components/character-sheet-form";
+import { CharacterSheetProvider } from "@/features/character-sheets/components/character-sheet-context";
+import { CharacterSheetForm } from "@/features/character-sheets/components/character-sheet-form";
 
 export const metadata = {
   title: "キャラクターシート作成 | TRPG",

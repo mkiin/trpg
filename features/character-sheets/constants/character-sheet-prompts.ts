@@ -14,7 +14,7 @@ export const characterBasicInfoPrompt = `
   "name": "キャラクターの名前（日本人名）",
   "occupation": "職業",
   "age": 年齢（数値）,
-  "gender": "性別",
+  "gender": "性別 (man or woman)",
   "height": 身長（cm、数値）,
   "weight": 体重（kg、数値）,
   "birthplace": "出身地",
@@ -41,7 +41,6 @@ export const characterSkillsPrompt = `
 技能の初期値に加算する形で値を設定してください。
 
 以下の形式でJSON形式で回答してください。回答は必ずJSON形式のみにしてください。
-各技能の値は0-99の整数で指定してください。
 
 {
   "combat": {

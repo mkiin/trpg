@@ -5,7 +5,7 @@ import { BasicInfoForm } from "./basic-info-form";
 import { AbilitiesForm } from "./abilities-form";
 import { SkillsForm } from "./skills-form";
 import { ResultView } from "./result-view";
-import { CharacterSheetStep } from "../types";
+import { CharacterSheetStep } from "../types/character-sheet-types";
 
 export function CharacterSheetForm() {
   const { currentStep } = useCharacterSheet();
@@ -106,7 +106,7 @@ function StepDivider({ active }: { active: boolean }) {
     <div className="flex-1 mx-2">
       <div
         className={`h-1 ${active ? 'bg-blue-600' : 'bg-gray-300'}`}
-      ></div>
+      />
     </div>
   );
 }

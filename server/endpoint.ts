@@ -1,7 +1,7 @@
 import chatRoute from "./routes/chat/route";
 import { Hono } from "hono";
 import { ContextVariables } from "./types";
-import { auth } from "@/lib/betterauth";
+import { auth } from "@/lib/auth";
 import { chatTest } from "./routes/test/route";
 
 const app = new Hono<{

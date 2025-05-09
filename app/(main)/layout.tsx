@@ -1,5 +1,4 @@
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/features/sidebar/app-sidebar";
+import { SidebarProvider } from "@/components/sidebar-provider"
 
 export default function MainLayout({
   children,
@@ -8,8 +7,7 @@ export default function MainLayout({
 }) {
   return (
     <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>{children}</SidebarInset>
+      {children}
     </SidebarProvider>
   );
 }

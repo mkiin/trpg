@@ -10,12 +10,10 @@ import {
 import {
   CharacterSheet,
   CharacterSheetStep,
-  CharacterBasicInfo,
   CharacterAbilities,
-  CharacterSkills,
   Occupation
-} from "../types";
-import { generateAbilities, generateCharacterSheet } from "../actions";
+} from "../types/character-sheet-types";
+import { generateAbilities, generateCharacterSheet } from "../actions/generate-character-actions";
 
 interface CharacterSheetContextType {
   // 現在のステップ
