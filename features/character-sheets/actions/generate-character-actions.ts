@@ -11,6 +11,7 @@ import {
 	CharacterSheet,
 	CharacterSkills,
 	Occupation,
+	OCCUPATION_SKILLS_MAP,
 } from "../types/character-sheet-types";
 import {
 	characterBasicInfoPrompt,
@@ -98,7 +99,7 @@ export async function generateSkills(
 	try {
 		// 職業に基づいて職業技能のリストを取得
 		const occupation = basicInfo.occupation;
-		const vocationalSkills = occupationSkillsMap[occupation] || [];
+		const vocationalSkills = OCCUPATION_SKILLS_MAP[occupation] || [];
 
 		// 職業技能と趣味技能の情報をプロンプトに追加
 		const vocationalSkillsText =
@@ -106,7 +107,7 @@ export async function generateSkills(
 				? `職業技能: ${vocationalSkills.join(", ")}`
 				: "職業技能: 特定の職業技能はありません";
 
-		const prompt = `${characterSkillsPrompt
+		const prompt = characterSkillsPrompt
 			.replace("{basicInfo}", JSON.stringify(basicInfo, null, 2))
 			.replace("{abilities}", JSON.stringify(abilities, null, 2))
 			.replace("{occupation}", basicInfo.occupation)
@@ -114,12 +115,8 @@ export async function generateSkills(
 				"{vocationalSkillPoints}",
 				abilities.vocational_skill_points.toString(),
 			)
-			.replace("{hobbySkillPoints}", abilities.hobby_skill_points.toString())}
-			
-${vocationalSkillsText}
-
-職業「${basicInfo.occupation}」に関連する技能に適切なポイントを割り振ってください。
-職業技能ポイント（${abilities.vocational_skill_points}）と趣味技能ポイント（${abilities.hobby_skill_points}）の合計が上限を超えないようにしてください。`;
+			.replace("{hobbySkillPoints}", abilities.hobby_skill_points.toString())
+			.replace("{vocationalSkillsText}", vocationalSkillsText);
 
 		// generateObjectを使用してJSONを取得
 		const { object } = await generateObject({

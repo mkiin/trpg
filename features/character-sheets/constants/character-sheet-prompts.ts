@@ -36,6 +36,8 @@ export const characterSkillsPrompt = `
 職業技能ポイント: {vocationalSkillPoints}
 趣味技能ポイント: {hobbySkillPoints}
 
+{vocationalSkillsText}
+
 職業「{occupation}」に適した技能にポイントを割り振ってください。
 キャラクターの背景や性格に合った技能にもポイントを割り振ってください。
 技能の初期値に加算する形で値を設定してください。
@@ -43,6 +45,8 @@ export const characterSkillsPrompt = `
 職業技能ポイント（{vocationalSkillPoints}）と趣味技能ポイント（{hobbySkillPoints}）の合計が上限を超えないようにしてください。
 
 以下の形式でJSON形式で回答してください。回答は必ずJSON形式のみにしてください。
+
+職業 「{basicInfo.occupation}」に関連する技能に適切なポイントを割りふってください.
 
 {
   "combat": {
@@ -116,7 +120,4 @@ export const characterSkillsPrompt = `
     "history": 値
   }
 }
-
-また、職業「{occupation}」に関連する主要な技能を5つ選び、それぞれに多くのポイントを割り振ってください。
-趣味技能は、キャラクターの背景や性格に合ったものを3つ選んでください。
 `;
