@@ -1,22 +1,27 @@
+type GoogleGenerativeAIModelId =
+	| "gemini-2.0-flash-lite-preview-02-05"
+	| "gemini-2.0-flash-thinking-exp-01-21"
+	| "gemini-2.0-flash-exp"
+	| (string & {});
+
 export interface Model {
-  id: string;
-  label: string;
-  description: string;
+	id: GoogleGenerativeAIModelId;
+	label: string;
 }
 
 export const models: Array<Model> = [
-  {
-    id: "gemini-2.0-flash-001",
-    label: "Gemini 2.0 Flash",
-    description: "Gemini 2.0 Flash",
-  },
-  {
-    id: "gemini-2.5-pro-exp-03-25",
-    label: "Gemini 2.5 pro Experimental",
-    description: "Gemini 2.5 pro Experimental model",
-  },
+	{
+		id: "gemini-2.0-flash-lite-preview-02-05",
+		label: "Gemini 2.0 Flash Lite Preview 2 05",
+	},
+	{
+		id: "gemini-2.0-flash-thinking-exp-01-21",
+		label: "Gemini 2.0 Flash Thinking Exp 01 21",
+	},
+	{
+		id: "gemini-2.0-flash-exp",
+		label: "Gemini 2.0 Flash Exp",
+	},
 ] as const;
 
-export type ModelId = (typeof models)[number]["id"];
-
-export const DEFAULT_MODEL_NAME = "gemini-1.5-flash";
+export const DEFAULT_MODE = models[0];

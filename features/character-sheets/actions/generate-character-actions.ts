@@ -1,7 +1,7 @@
 "use server";
 
-import { google } from "@/lib/ai";
-import { generateObject, generateText } from "ai";
+import { google } from "@/lib/ai/google-ai";
+import { generateObject } from "ai";
 import { generateUUID } from "@/lib/utils";
 import { rollDice } from "../utils/dice";
 
@@ -16,8 +16,8 @@ import {
 	characterBasicInfoPrompt,
 	characterSkillsPrompt,
 } from "../constants/character-sheet-prompts";
-import { extractJsonFromMarkdown } from "../utils/helpers";
 import { basicInfoSchema } from "../types/schemas/basic-info-schema";
+import { skillSchema } from "../types/schemas/skill-schema";
 
 // 能力値を生成する関数
 export async function generateAbilities(): Promise<CharacterAbilities> {
@@ -96,7 +96,17 @@ export async function generateSkills(
 	abilities: CharacterAbilities,
 ): Promise<CharacterSkills> {
 	try {
-		const prompt = characterSkillsPrompt
+		// 職業に基づいて職業技能のリストを取得
+		const occupation = basicInfo.occupation;
+		const vocationalSkills = occupationSkillsMap[occupation] || [];
+
+		// 職業技能と趣味技能の情報をプロンプトに追加
+		const vocationalSkillsText =
+			vocationalSkills.length > 0
+				? `職業技能: ${vocationalSkills.join(", ")}`
+				: "職業技能: 特定の職業技能はありません";
+
+		const prompt = `${characterSkillsPrompt
 			.replace("{basicInfo}", JSON.stringify(basicInfo, null, 2))
 			.replace("{abilities}", JSON.stringify(abilities, null, 2))
 			.replace("{occupation}", basicInfo.occupation)
@@ -104,19 +114,37 @@ export async function generateSkills(
 				"{vocationalSkillPoints}",
 				abilities.vocational_skill_points.toString(),
 			)
-			.replace("{hobbySkillPoints}", abilities.hobby_skill_points.toString());
+			.replace("{hobbySkillPoints}", abilities.hobby_skill_points.toString())}
+			
+${vocationalSkillsText}
 
-		// generateTextを使用してテキストを取得し、JSONを抽出
-		const response = await generateText({
-			model: google("gemini-2.0-flash-001"),
+職業「${basicInfo.occupation}」に関連する技能に適切なポイントを割り振ってください。
+職業技能ポイント（${abilities.vocational_skill_points}）と趣味技能ポイント（${abilities.hobby_skill_points}）の合計が上限を超えないようにしてください。`;
+
+		// generateObjectを使用してJSONを取得
+		const { object } = await generateObject({
+			model: google("gemini-2.0-flash-lite-preview-02-05"),
+			schema: skillSchema,
 			prompt,
-			temperature: 0.7,
-			maxTokens: 2048,
+			mode: "json",
 		});
 
-		// マークダウンからJSONを抽出
-		const jsonText = extractJsonFromMarkdown(response.text);
-		const skills = JSON.parse(jsonText) as CharacterSkills;
+		// 職業技能ポイントと趣味技能ポイントの制限を確認
+		const skills = object;
+
+		// 技能ポイントの合計使用量を確認
+		const totalAvailablePoints =
+			abilities.vocational_skill_points + abilities.hobby_skill_points;
+
+		if (
+			skills.totalPointsUsed &&
+			skills.totalPointsUsed > totalAvailablePoints
+		) {
+			console.warn(
+				`技能ポイントが超過しています: ${skills.totalPointsUsed} > ${totalAvailablePoints}`,
+			);
+			// ここで調整ロジックを追加することも可能
+		}
 
 		return skills;
 	} catch (error) {

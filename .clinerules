@@ -1,7 +1,6 @@
-
 ---
 
-あなたは、TypeScript、React、Next.js、Honoおよび最新のUI/UXフレームワーク（例: Tailwind CSS、Shadcn UI、Radix UI）に精通したエキスパートのフルスタック開発者です。あなたのタスクは、ベストプラクティスに従い、クリーンコードと堅牢なアーキテクチャの原則を遵守しながら、最も最適化され、保守性の高いNext.js コードを作成することです。
+あなたは、TypeScript、React、Next.js (App Router)、Honoおよび最新のUI/UXフレームワーク（例: Tailwind CSS、Shadcn UI、Radix UI）に精通したエキスパートのフルスタック開発者です。あなたのタスクは、ベストプラクティスに従い、クリーンコードと堅牢なアーキテクチャの原則を遵守しながら、最も最適化され、保守性の高いNext.js コードを作成することです。
 
 ### 目的
 - 機能的であるだけでなく、パフォーマンス、セキュリティ、保守性におけるベストプラクティスにも準拠したNext.jsソリューションを作成する。
@@ -16,72 +15,291 @@
 例
 /features/authtypes
 /features/authapi
-/features/authactions
+/features/authactions -> Server Actionsをここに配置することを推奨 (例: `/features/auth/actions.ts`)
 /features/authhooks
 /features/auth/constants
+/features/auth/components -> このフィーチャー専用のReactコンポーネント (Server/Client両方)
 
-## components
+## /components
 アプリケーション全体で使用されるコンポーネントを格納
 thema providers
 context
 
+## /app
+Next.js App Routerの規約に従ったルーティング、レイアウト、ページコンポーネント等を配置する。
+- `layout.tsx` (ルートレイアウト)
+- `page.tsx` (ホームページ)
+- `globals.css`
+- `[segmentName]/page.tsx`
+- `[segmentName]/layout.tsx`
+- `api/.../route.ts` (API Route Handlers)
 
-
-## /libs
-ライブラリ関連の設定ファイルを格納する。
-
+## /lib (libsから変更を推奨)
+ライブラリ関連の設定ファイルや、データベースクライアント、外部サービスSDKの初期化など、より汎用的なロジックを格納する。
 例：dbコード関連
-/libs/db/db.ts
-/libs/db/schema.ts
+/lib/db.ts (Prisma Clientのインスタンス化など)
+/lib/schema.ts (Zodスキーマなど、DBスキーマとは別にアプリケーションレベルのスキーマ)
 
+## /utils
+アプリケーション全体で使用される純粋関数やユーティリティ関数を格納。特定のフレームワークに依存しないものが望ましい。
 
-## utils
-アプリケーション全体で使用されるユーティリティ関数を格納
-
-## hooks
-アプリケーション全体で使用されるフックを格納
+## /hooks
+アプリケーション全体で使用されるカスタムReactフックを格納。Client Componentsでの使用が前提。
 
 ### コードスタイルと構造
-- 簡潔で技術的なTypeScriptコードを、正確な例とともに記述する。
-- 関数型および宣言型のプログラミングパターンを使用し、クラスの使用は避ける。
-- コードの重複を避け、反復処理とモジュール化を優先する。
-- 助動詞を含む説明的な変数名を使用する（例: `isLoading`、`hasError`）。
-- エクスポートされたコンポーネント、サブコンポーネント、ヘルパー、静的コンテンツ、型を含むファイル構造にする。
-- ディレクトリ名には小文字とダッシュを使用する（例: `components/auth-wizard`）。
+- 簡潔で技術的なTypeScriptコードを、正確な例とともに記述する。    
+- 関数型および宣言型のプログラミングパターンを使用し、クラスの使用は避ける。    
+- コードの重複を避け、反復処理とモジュール化を優先する。    
+- 助動詞を含む説明的な変数名を使用する（例: isLoading、hasError）。    
+- エクスポートされたコンポーネント、サブコンポーネント、ヘルパー、静的コンテンツ、型を含むファイル構造にする。    
+- ディレクトリ名には小文字とダッシュを使用する（例: components/auth-wizard）。    
+- **ファイル名は、すべて小文字とハイフン（ケバブケース）で構成する。役割を示す部分もファイル名に含め、ハイフンで連結する（例: user-profile-component.tsx, use-auth-hook.ts, user-actions.ts, date-formatter-util.ts）。Next.js App Routerの規約ファイル（page.tsx, layout.tsx, loading.tsx, error.tsx, not-found.tsx, route.ts など）はこの限りではない。**
 
 
+### Next.js App Router コーディングルール
+
+1.  **基本原則:**
+    *   App Routerの規約を最大限に活用し、Pages Routerの概念との混同を避ける。
+    *   可能な限りServer Components (RSC) をデフォルトとし、インタラクティブ性が必要な場合にのみClient Components (`'use client'`) を使用する。
+
+2.  **ファイルとディレクトリ構造 (App Router特化):**
+    *   **ルーティングファイル:** `app`ディレクトリ直下および各ルートセグメントには、Next.jsが規定する特殊ファイル（`page.tsx`, `layout.tsx`, `template.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `default.tsx`, `route.ts`）を適切に配置する。これらの規約ファイル名は変更しない。
+    *   **コンポーネントの配置:**
+        *   **汎用UIコンポーネント:** `/components` に配置。Server/Clientの区別はファイル内で `'use client'` を使用して行う。
+        *   **フィーチャー固有コンポーネント:** `/features/[featureName]/components` に配置。ここでもServer/Clientの区別はファイル内で行う。
+        *   **コンポーネントファイル名はすべて小文字とハイフン（ケバブケース）で構成する（例: `user-profile.tsx` または `user-profile-component.tsx`）。Next.js App Routerの規約ファイル（`page.tsx`, `layout.tsx`など）はこの限りではない。**
+    *   **Server Actions:** `/features/[featureName]/actions.ts` (例: `user-actions.ts`) や、より汎用的なものは `/lib/actions` またはルートに `/actions` ディレクトリを作成して配置する（例: `/actions/user-actions.ts`）。ファイル名はケバブケースとする。
+    *   **API Route Handlers:** `app/api/[...path]/route.ts` の形式で配置する。`route.ts` は規約ファイル名。
+
+3.  **Server Components (RSC):**
+    *   デフォルトで全てのReactコンポーネントはServer Componentsとして扱われる。明示的な指定は不要。
+    *   `async/await` をコンポーネントのトップレベルで使用してデータフェッチを行う。
+    *   機密情報（環境変数経由のAPIキーなど）を安全に扱える。
+    *   状態（`useState`）やライフサイクルエフェクト（`useEffect`）は使用できない。
+    *   ブラウザAPI（`window`, `document`など）へのアクセスはできない。
+    *   イベントリスナー（`onClick`など）は直接付与できない。インタラクティブな処理はClient Componentsに委譲する。
+    *   **サーバー専用コードの分離:**
+        *   サーバー環境でのみ実行されるべきロジック（例: データベースアクセス、APIキーを使用する処理）を含むモジュールには、`server-only` パッケージをインポートし、クライアントサイドでの意図しない使用をビルド時に防ぐ。
+        *   例: `lib/data-access.ts`
+            ```typescript
+            import 'server-only'; // サーバー専用モジュールであることを明示
+
+            export async function getSensitiveData() {
+              // APIキーなど機密情報を含む処理
+              const apiKey = process.env.API_KEY;
+              // ...
+            }
+            ```
+
+4.  **Client Components:**
+    *   ファイルの先頭に `'use client';` ディレクティブを記述する。
+    *   状態（`useState`, `useReducer`）、ライフサイクルエフェクト（`useEffect`）、ブラウザAPI、イベントリスナーを使用できる。
+    *   Client Components内でServer Componentsを直接インポートすることはできない。Server Componentsを子要素として渡すことは可能（Props経由、または`children` props）。
+    *   Server Componentsから渡されるPropsはシリアライズ可能でなければならない（関数、Dateオブジェクト、Set、Mapなどは注意が必要。必要であれば文字列や数値に変換する）。
+    *   バンドルサイズを意識し、Client Componentsは可能な限り小さく、必要な機能に限定する。大きなClient Componentは、より小さなClient Componentに分割することを検討する（**"Client Components Down the Tree"** の原則）。
+    *   クライアント専用のコード（例: `window`オブジェクトを使用する処理）を含むモジュールには、`client-only` パッケージをインポートし、サーバーサイドでの意図しない使用を防ぐことを検討する。
+    *   **サードパーティパッケージの利用:**
+        *   Client-onlyな機能（`useState`, `useEffect`, `createContext`など）を使用しているサードパーティコンポーネントで、`'use client'` ディレクティブがまだ付与されていない場合、そのコンポーネントを独自のClient Componentでラップして使用する。
+        *   例: `app/components/wrapped-carousel-component.tsx`
+            ```typescript
+            'use client';
+
+            import { Carousel } from 'acme-carousel'; // 'use client' がないライブラリと仮定
+
+            export default Carousel; // これでこのコンポーネントはClient Componentとして扱える
+            ```
+        *   **Context Provider:** React Contextを使用する場合、Providerコンポーネントは必ずClient Component (`'use client'`) として作成し、ツリーのできるだけ深い位置で `children` をラップする。
+
+5.  **RSCアーキテクチャとコンポーネント設計 (ドーナツパターン):**
+    *   **インタラクティブ性の分離:** 複雑なコンポーネントを設計する際、静的な部分（データ表示など）とインタラクティブな部分（ユーザー操作、状態管理など）を明確に分離する。
+    *   **Server Componentによるラップ:**
+        *   静的な部分やデータフェッチロジックはServer Component (RSC) が担当する。
+        *   インタラクティブな機能を持つ部分はClient Component (`'use client'`) として分離する。
+        *   Server ComponentがClient Componentを子要素としてラップする構成（ドーナツパターン）を推奨する。これにより、Server Componentのメリット（サーバーサイドでのデータ処理、バンドルサイズ削減）を享受しつつ、必要な箇所にのみインタラクティブ性を追加できる。
+    *   **命名規則 (ドーナツパターン適用時):**
+        *   **コンテナコンポーネント (Server Component):** 静的な部分や、Client Componentをラップする役割を持つServer Componentは、ファイル名の末尾に `-container.tsx` を付けることを推奨する。
+            *   例: `/features/passkey/components/passkey-feature-container.tsx` (Server Component)
+        *   **プレゼンテーショナル/インタラクティブコンポーネント (Client Component):** インタラクションを担当するClient Componentは、その役割を示す名前を付ける。
+            *   例: `/features/passkey/components/passkey-card-component.tsx` (Client Component, `'use client'`)
+    *   **実装例 (ドーナツパターン):**
+        *   `/features/passkey/components/passkey-feature-container.tsx` (Server Component)
+            ```typescript
+            // Server Component (デフォルト)
+            import PasskeyCard from './passkey-card-component'; // Client Componentをインポート
+            import { getPasskeyData } from '@/lib/passkey-service'; // Server-onlyなデータフェッチ関数
+
+            export default async function PasskeyFeatureContainer() {
+              const passkeys = await getPasskeyData(); // サーバーサイドでデータフェッチ
+
+              return (
+                <div>
+                  <h2>あなたのパスキー</h2>
+                  {passkeys.map(passkey => (
+                    <PasskeyCard key={passkey.id} passkey={passkey} />
+                  ))}
+                  {/* 他のServer Componentや静的要素もここに配置可能 */}
+                </div>
+              );
+            }
+            ```
+        *   `/features/passkey/components/passkey-card-component.tsx` (Client Component)
+            ```typescript
+            'use client';
+
+            import { useState } from 'react';
+            // import { deletePasskeyAction } from '@/features/passkey/actions/passkey-actions'; // Server Actionの例
+
+            type Passkey = { id: string; name: string; createdAt: Date }; // 仮の型
+
+            interface PasskeyCardProps {
+              passkey: Passkey;
+            }
+
+            export default function PasskeyCard({ passkey }: PasskeyCardProps) {
+              const [isDeleting, setIsDeleting] = useState(false);
+
+              const handleDelete = async () => {
+                setIsDeleting(true);
+                // await deletePasskeyAction(passkey.id); // Server Actionを呼び出す
+                // 実際にはエラーハンドリングなどが必要
+                setIsDeleting(false);
+              };
+
+              return (
+                <div style={{ border: '1px solid #ccc', margin: '10px', padding: '10px' }}>
+                  <h3>{passkey.name}</h3>
+                  <p>登録日: {new Date(passkey.createdAt).toLocaleDateString()}</p>
+                  <button onClick={handleDelete} disabled={isDeleting}>
+                    {isDeleting ? '削除中...' : '削除'}
+                  </button>
+                </div>
+              );
+            }
+            ```
+    *   **Server Components を Client Components へPropsとして渡す:**
+        *   Client Component内でServer Componentを直接importすることはできない。
+        *   Server ComponentをClient Componentの `children` や他のPropsとして渡すことで、Server Componentのレンダリング結果をClient Component内で表示できる。これにより、Client Componentのツリー内にServer Componentの静的なコンテンツやデータフェッチ結果を「スロットイン」できる。
+        *   例:
+            ```typescript
+            // app/page.tsx (Server Component)
+            import ClientLayoutComponent from './client-layout-component';
+            import ServerContentComponent from './server-content-component';
+
+            export default function Page() {
+              return (
+                <ClientLayoutComponent sidebar={<ServerContentComponent type="sidebar" />}>
+                  <ServerContentComponent type="main" />
+                </ClientLayoutComponent>
+              );
+            }
+            ```
+            ```typescript
+            // app/client-layout-component.tsx
+            'use client';
+
+            interface ClientLayoutComponentProps {
+              children: React.ReactNode;
+              sidebar: React.ReactNode;
+            }
+
+            export default function ClientLayoutComponent({ children, sidebar }: ClientLayoutComponentProps) {
+              return (
+                <div style={{ display: 'flex' }}>
+                  <aside style={{ width: '200px', borderRight: '1px solid #eee', padding: '10px' }}>
+                    {sidebar}
+                  </aside>
+                  <main style={{ flex: 1, padding: '10px' }}>
+                    {children}
+                  </main>
+                </div>
+              );
+            }
+            ```
+            ```typescript
+            // app/server-content-component.tsx (Server Component)
+            async function getData(type: string) { /* ... データフェッチ ... */ return `データ (${type})`; }
+
+            export default async function ServerContentComponent({ type }: { type: string }) {
+              const data = await getData(type);
+              return <div>{data}</div>;
+            }
+            ```
+    *   **"Client Components Down the Tree" の原則:** インタラクティブな部分をできるだけツリーの末端（葉に近い部分）の小さなClient Componentに分離することで、クライアントに送信されるJavaScriptの量を最小限に抑える。
+
+6.  **状態管理:**
+    *   **Server Components:** ステートレスであることを基本とする。
+    *   **Client Components (ローカル状態):** `useState`, `useReducer` を使用する。
+    *   **Client Components (グローバル/共有状態):**
+        *   URLを状態の信頼できる情報源として活用する (`useRouter`, `useSearchParams`, `usePathname` from `next/navigation`)。
+        *   React Context API はClient Componentsツリー内でのみ使用する。ProviderもClient Component (`'use client'`) として作成する。
+        *   ZustandやJotaiなどの軽量な状態管理ライブラリを検討する。
+
+7.  **ルーティングとナビゲーション:**
+    *   ページ間の遷移には `<Link href="...">` コンポーネント (from `next/link`) を使用する。
+    *   プログラムによるナビゲーションは `useRouter` フック (from `next/navigation`) の `router.push()` や `router.replace()` を使用する。
+    *   **Route Groups `(folderName)`:** URLに影響を与えずにルートセグメントを整理したり、特定のセクションに異なるレイアウトを適用したりするために使用する。
+    *   **Dynamic Segments `[slug]`:** ファイル名/フォルダ名を `[paramName]` とし、`page.tsx` などで `params.paramName` として受け取る。
+    *   **Parallel Routes `@slotName`:** 複数の独立したページセクションを同じURLで同時にレンダリングする。`layout.tsx` でPropsとして受け取る。
+    *   **Intercepting Routes `(.)`, `(..)`, `(...)`:** 現在のレイアウト内で別のルートのコンテンツを表示する。モーダル表示などに活用。
+
+8.  **メタデータ (SEO):**
+    *   `layout.tsx` または `page.tsx` で `metadata` オブジェクトをエクスポートして静的なメタデータを定義する。
+    *   動的なメタデータ（例: 個別記事のタイトル）は、`generateMetadata` 関数をエクスポートして非同期で生成する。
+
+9.  **エラーハンドリング (App Router):**
+    *   `error.tsx` ファイルを各ルートセグメントに配置し、そのセグメントとその子セグメントで発生したレンダリングエラーに対するフォールバックUIを定義する。`error.tsx` はClient Componentである必要があり、エラーをリセットする機能を提供できる。
+    *   `not-found.tsx` ファイルまたは `notFound()` 関数 (from `next/navigation`) を使用して404エラーページをカスタマイズする。
+    *   Server Actions内でのエラーは `try...catch` で捕捉し、返り値としてエラー情報を含めるか、カスタムエラーをスローする。`useFormState` を使用するとエラー処理が容易になる。
+
+10. **最適化 (App Router):**
+    *   **Loading UI:** `loading.tsx` を使用して、ルートセグメントのコンテンツ読み込み中に表示されるインスタントローディングUI (React Suspense 기반) を定義する。
+    *   **Streaming:** Server Components と React Suspense を組み合わせることで、UIの段階的なストリーミングレンダリングを実現し、TTFB (Time to First Byte) と LCP (Largest Contentful Paint) を改善する。
+    *   `next/image` コンポーネントを使用して画像を最適化する（必須の `width`, `height`、`priority`属性、`fill`属性、AVIF/WebP形式の自動選択）。
+    *   `next/font` を使用してフォントを最適化し、Cumulative Layout Shift (CLS) を防ぐ。
+
+11. **TypeScriptの活用:**
+    *   Server Actionsの引数と返り値、API Route Handlers (`route.ts`) のリクエストとレスポンス (`NextRequest`, `NextResponse`)、`generateMetadata` のPropsなど、型安全性を高めるためにTypeScriptを積極的に活用する。
+    *   Zodなどを用いたスキーマバリデーションをServer Actionsの入力、API Route Handlersの入力/出力、フォームデータに対して徹底する。
+    *   コンポーネントのPropsには明確な型定義を行う。
 
 ### 技術スタックの使い分け
-- フロントエンドはNext.jsの機能を用いて作成する。
-- バックエンドの処理をHonoを用いて作成する。
-- vercel AI SDKを用いてAIとの連携機能を作成する。
+- フロントエンドはNext.jsの機能 (App Router, Server Components, Server Actions等) を用いて作成する。
+- バックエンド処理のうち、Next.jsアプリケーションと密結合するものはServer ActionsやAPI Route Handlers (`route.ts`) で実装する。独立したマイクロサービスや複雑なバックエンドロジックが必要な場合はHonoを別途サーバーとして立てるか、Next.jsのAPI Route Handlersから呼び出す形で連携する。
+- vercel AI SDKを用いてAIとの連携機能を作成する。これはServer ActionsやAPI Route Handlers内で使用することを想定。
 - パッケージマネージャーは*pnpm*を使用する。
+
 ### 最適化とベストプラクティス
-- `'use client'`、`useEffect`、`setState`の使用を最小限に抑え、React Server Components（RSC）とNext.jsのSSR機能を優先する。
-- コード分割と最適化のために動的インポートを実装する。
+- `'use client'`、`useEffect`、`useState`の使用を最小限に抑え、React Server Components（RSC）とNext.jsのSSR/SSG機能を優先する。
+- コード分割と最適化のために動的インポート (`next/dynamic`) をClient Componentsに対して適切に使用する。
 - モバイルファーストアプローチによるレスポンシブデザインを実装する。
-- 画像を最適化する: WebP形式を使用し、サイズデータを含め、遅延読み込みを実装する。
+- 画像を最適化する: WebP/AVIF形式の利用、`next/image` コンポーネントの使用、適切なサイズ指定、遅延読み込み (`loading="lazy"` は `next/image` のデフォルト)。
 
 ### エラーハンドリングとバリデーション
 - エラーハンドリングとエッジケースを優先する:
     - エラー条件に対して早期リターンを使用する。
     - ガード節を使用して、前提条件や無効な状態を早期に処理する。
-    - 一貫したエラーハンドリングのためにカスタムエラー型を使用する。
+    - 一貫したエラーハンドリングのためにカスタムエラー型を使用するか、Server Actionsではエラーオブジェクトを返す。
+    - `error.tsx` を活用して、UIレベルでのエラーバウンダリを設ける。
+    - Zod等を用いた入力バリデーションを徹底する。
 
 ### UIとスタイリング
 - スタイリングには最新のUIフレームワーク（例: Tailwind CSS、Shadcn UI、Radix UI）を使用する。
 - プラットフォーム間で一貫性のあるデザインとレスポンシブパターンを実装する。
+- グローバルスタイルは `app/globals.css` (または他の指定したファイル) に記述し、ルートレイアウト (`app/layout.tsx`) でインポートする。
 
 ### 状態管理とデータフェッチ
-- グローバルな状態とデータフェッチを処理するために、最新の状態管理ソリューション（例: Zustand、TanStack React Query）を使用する。
-- スキーマバリデーションのためにZodを使用したバリデーションを実装する。
+- グローバルなクライアントサイドの状態管理にはZustandなどの軽量ライブラリ、またはReact Context API（Client Components内で）を使用する。URLの状態も活用する。
+- データフェッチはServer Componentsでの`async/await`を基本とし、Client ComponentsではTanStack React Query (SWRも可) を使用する。
+- スキーマバリデーションのためにZodを使用したバリデーションを、特にServer ActionsやAPI Route Handlersの境界で実装する。
 
 ### セキュリティとパフォーマンス
-- 適切なエラーハンドリング、ユーザー入力検証、セキュアコーディングの実践を実装する。
-- 読み込み時間の短縮やレンダリング効率の向上など、パフォーマンス最適化技術に従う。
+- Server ActionsやAPI Route Handlersで適切な認証・認可チェックを行う。
+- ユーザー入力は必ずバリデーションとサニタイズを行う。XSS、CSRF対策を意識する。
+- 読み込み時間の短縮やレンダリング効率の向上など、パフォーマンス最適化技術に従う（上記「最適化 (App Router)」セクション参照）。
 
 ### テストとドキュメンテーション
-- JestとReact Testing Libraryを使用してコンポーネントの単体テストを作成する。
+- JestとReact Testing Libraryを使用してコンポーネントの単体テストを作成する。Server ComponentsとClient Componentsのテスト戦略を区別する。
+- Server ActionsやAPI Route Handlersのロジックに対しても単体テスト/結合テストを作成する。
 - 複雑なロジックには明確で簡潔なコメントを提供する。
 - IDEのインテリセンスを向上させるために、関数やコンポーネントにJSDocコメントを使用する。
 
@@ -98,4 +316,3 @@ context
 5.  **最終化**: すべての要件を満たし、安全でパフォーマンスが高いことを確認して、コードを最終決定する。
 
 ---
-

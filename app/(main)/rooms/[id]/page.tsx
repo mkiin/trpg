@@ -1,5 +1,5 @@
 import React from "react";
-import { DEFAULT_MODEL_NAME } from "@/lib/ai/models";
+import { DEFAULT_MODE } from "@/lib/ai/models";
 import { getChatById, getMessagesByChatId } from "@/lib/db/queries";
 import { notFound } from "next/navigation";
 import { convertToUIMessages } from "@/lib/utils";
@@ -20,7 +20,7 @@ export default async function ChatPage(props: {
   if (!messagesFromDb) notFound();
   const initialMessages = convertToUIMessages(messagesFromDb);
 
-  const selectedModelId = DEFAULT_MODEL_NAME;
+  const selectedModelId = DEFAULT_MODE;
 
   return (
     <div className="flex flex-col min-w-0 h-dvh bg-background">
