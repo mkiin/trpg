@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import React, { useEffect } from "react";
 import { ABILITIES_INFO, AbilityDisplayItemProps } from "../constants/abilities";
+import { NavigationButton } from "./navigation-button";
 
 export function AbilitiesForm() {
   const {
@@ -28,16 +29,6 @@ export function AbilitiesForm() {
   // 能力値を再生成
   const handleRegenerate = async () => {
     await generateAbilitiesAction();
-  };
-
-  // 次のステップへ
-  const handleNext = () => {
-    nextStep();
-  };
-
-  // 前のステップへ
-  const handlePrev = () => {
-    prevStep();
   };
 
   if (!abilities) {
@@ -116,17 +107,14 @@ export function AbilitiesForm() {
             </div>
           </div>
 
-          <div className="flex justify-between pt-4">
-            <Button variant="outline" onClick={handlePrev}>
-              戻る
-            </Button>
+          <NavigationButton
+            nextStep={nextStep}
+            prevStep={prevStep}
+          >
             <Button variant="outline" onClick={handleRegenerate}>
               能力値を再生成
             </Button>
-            <Button onClick={handleNext}>
-              次へ
-            </Button>
-          </div>
+          </NavigationButton>
         </div>
       </CardContent>
       <CardFooter className="text-sm text-gray-500">

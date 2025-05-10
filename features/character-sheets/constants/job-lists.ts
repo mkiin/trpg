@@ -33,7 +33,7 @@ export const OCCUPATION_GROUPS = [
 		label: "芸術家",
 		options: [
 			{ label: "芸術家", value: "artist" },
-			{ label: "芸術家（基本）", value: "artist_basic" }, // または general_artist など
+			{ label: "芸術家（基本）", value: "artist_basic" },
 			{ label: "ダンサー", value: "dancer" },
 			{ label: "デザイナー", value: "designer" },
 			{ label: "ファッション系芸術家", value: "fashion_artist" },
@@ -62,23 +62,18 @@ export const OCCUPATION_GROUPS = [
 		options: [{ label: "ジャーナリスト", value: "journalist" }],
 	},
 	{
-		// labelなし (単独項目)
 		options: [{ label: "宗教家", value: "religious_figure" }],
 	},
 	{
-		// labelなし (単独項目)
 		options: [{ label: "商店主／店員", value: "shopkeeper_clerk" }],
 	},
 	{
-		// labelなし (単独項目)
 		options: [{ label: "私立探偵", value: "private_detective" }],
 	},
 	{
-		// labelなし (単独項目)
 		options: [{ label: "水産業従事者", value: "fishery_worker" }],
 	},
 	{
-		// labelなし (単独項目)
 		options: [{ label: "スポーツ選手", value: "athlete" }],
 	},
 	{
@@ -114,19 +109,15 @@ export const OCCUPATION_GROUPS = [
 		],
 	},
 	{
-		// labelなし (単独項目)
 		options: [{ label: "ディレッタント", value: "dilettante" }],
 	},
 	{
-		// labelなし (単独項目)
 		options: [{ label: "ドライバー", value: "driver" }],
 	},
 	{
-		// labelなし (単独項目)
 		options: [{ label: "農林業従事者", value: "agriculture_forestry_worker" }],
 	},
 	{
-		// labelなし (単独項目)
 		options: [{ label: "パイロット", value: "pilot" }],
 	},
 	{
@@ -160,6 +151,13 @@ export const OCCUPATION_GROUPS = [
 ];
 
 // 職業ごとの職業技能マッピング
+/**
+ * 語学
+ * 運転
+ * 製作
+ * 操縦
+ * 芸術
+ */
 export const occupationSkillsMap: Record<string, string[]> = {
 	医師: [
 		"medicine",
