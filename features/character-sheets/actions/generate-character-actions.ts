@@ -11,14 +11,14 @@ import {
 	CharacterSheet,
 	CharacterSkills,
 	Occupation,
-	OCCUPATION_SKILLS_MAP,
+	// OCCUPATION_SKILLS_MAP,
 } from "../types/character-sheet-types";
 import {
 	characterBasicInfoPrompt,
 	characterSkillsPrompt,
 } from "../constants/character-sheet-prompts";
 import { basicInfoSchema } from "../types/schemas/basic-info-schema";
-import { skillSchema } from "../types/schemas/skill-schema";
+// import { skillSchema } from "../types/schemas/skill-schema";
 
 // 能力値を生成する関数
 export async function generateAbilities(): Promise<CharacterAbilities> {

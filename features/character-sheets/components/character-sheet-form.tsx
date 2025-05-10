@@ -1,14 +1,16 @@
 "use client";
 
-import { useCharacterSheet } from "./character-sheet-context";
+// /
+import { useCharacterSheet as Test } from "../hooks/use-character-sheet";
 import { BasicInfoForm } from "./basic-info-form";
 import { AbilitiesForm } from "./abilities-form";
 import { SkillsForm } from "./skills-form";
 import { ResultView } from "./result-view";
 import { CharacterSheetStep } from "../types/character-sheet-types";
 
+
 export function CharacterSheetForm() {
-  const { currentStep } = useCharacterSheet();
+  const { currentStep } = Test();
 
   // 現在のステップに応じたコンポーネントを表示
   const renderStep = () => {

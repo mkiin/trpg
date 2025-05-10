@@ -3,7 +3,8 @@
 import { useCharacterSheet } from "./character-sheet-context";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+import { ABILITIES_INFO, AbilityDisplayItemProps } from "../constants/abilities";
 
 export function AbilitiesForm() {
   const {
@@ -47,7 +48,7 @@ export function AbilitiesForm() {
         </CardHeader>
         <CardContent>
           <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500" />
           </div>
         </CardContent>
       </Card>
@@ -61,93 +62,42 @@ export function AbilitiesForm() {
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
-          <div className="grid grid-cols-2 gap-4">
+          {/* 基本能力値と派生能力値を左右に並べるgrid */}
+          <div className="grid grid-cols-2 gap-2">
+            {/* 左カラム */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">基本能力値</h3>
-
               <div className="grid grid-cols-2 gap-2">
-                <div className="bg-gray-100 p-3 rounded-md">
-                  <div className="text-sm text-gray-600">筋力 (STR)</div>
-                  <div className="text-xl font-bold text-primary-foreground">{abilities.strength}</div>
-                </div>
-
-                <div className="bg-gray-100 p-3 rounded-md">
-                  <div className="text-sm text-gray-600">体力 (CON)</div>
-                  <div className="text-xl font-bold text-primary-foreground">{abilities.constitution}</div>
-                </div>
-
-                <div className="bg-gray-100 p-3 rounded-md">
-                  <div className="text-sm text-gray-600">精神力 (POW)</div>
-                  <div className="text-xl font-bold text-primary-foreground">{abilities.power}</div>
-                </div>
-
-                <div className="bg-gray-100 p-3 rounded-md">
-                  <div className="text-sm text-gray-600">機敏 (DEX)</div>
-                  <div className="text-xl font-bold text-primary-foreground">{abilities.dexterity}</div>
-                </div>
-
-                <div className="bg-gray-100 p-3 rounded-md">
-                  <div className="text-sm text-gray-600">外見 (APP)</div>
-                  <div className="text-xl font-bold text-primary-foreground">{abilities.appearance}</div>
-                </div>
-
-                <div className="bg-gray-100 p-3 rounded-md">
-                  <div className="text-sm text-gray-600">体格 (SIZ)</div>
-                  <div className="text-xl font-bold text-primary-foreground">{abilities.size}</div>
-                </div>
-
-                <div className="bg-gray-100 p-3 rounded-md">
-                  <div className="text-sm text-gray-600">知性 (INT)</div>
-                  <div className="text-xl font-bold text-primary-foreground">{abilities.intelligence}</div>
-                </div>
-
-                <div className="bg-gray-100 p-3 rounded-md">
-                  <div className="text-sm text-gray-600">教養 (EDU)</div>
-                  <div className="text-xl font-bold text-primary-foreground">{abilities.education}</div>
-                </div>
+                {ABILITIES_INFO.basic.map((abilitiesInfo) => {
+                  const abilityValue = abilities[abilitiesInfo.id];
+                  return (
+                    <AbilityDisplayItem
+                      key={abilitiesInfo.id}
+                      label={abilitiesInfo.label}
+                      shortLabel={abilitiesInfo.shortLabel}
+                      value={abilityValue}
+                    />
+                  )
+                })}
               </div>
             </div>
-
+            {/* {右カラム} */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">派生能力値</h3>
-
               <div className="grid grid-cols-2 gap-2">
-                <div className="bg-gray-100 p-3 rounded-md">
-                  <div className="text-sm text-gray-600">正気度 (SAN)</div>
-                  <div className="text-xl font-bold text-primary-foreground">{abilities.san}</div>
-                </div>
-
-                <div className="bg-gray-100 p-3 rounded-md">
-                  <div className="text-sm text-gray-600">幸運 (LUCK)</div>
-                  <div className="text-xl font-bold text-primary-foreground">{abilities.fortune}</div>
-                </div>
-
-                <div className="bg-gray-100 p-3 rounded-md">
-                  <div className="text-sm text-gray-600">アイデア (IDEA)</div>
-                  <div className="text-xl font-bold text-primary-foreground">{abilities.idea}</div>
-                </div>
-
-                <div className="bg-gray-100 p-3 rounded-md">
-                  <div className="text-sm text-gray-600">知識 (KNOW)</div>
-                  <div className="text-xl font-bold text-primary-foreground">{abilities.knowledge}</div>
-                </div>
-
-                <div className="bg-gray-100 p-3 rounded-md">
-                  <div className="text-sm text-gray-600">耐久力 (HP)</div>
-                  <div className="text-xl font-bold text-primary-foreground">{abilities.durability}</div>
-                </div>
-
-                <div className="bg-gray-100 p-3 rounded-md">
-                  <div className="text-sm text-gray-600">MP</div>
-                  <div className="text-xl font-bold text-primary-foreground">{abilities.magic_point}</div>
-                </div>
-
-                <div className="bg-gray-100 p-3 rounded-md col-span-2">
-                  <div className="text-sm text-gray-600">ダメージボーナス (DB)</div>
-                  <div className="text-xl font-bold text-primary-foreground">
-                    {abilities.damage_bonus <= 0 ? "なし" : `+${abilities.damage_bonus}D4`}
-                  </div>
-                </div>
+                {ABILITIES_INFO.derived.map((abilitiesInfo) => {
+                  const rawValue = abilities[abilitiesInfo.id];
+                  const displayValue = abilitiesInfo.displayFormatter ? abilitiesInfo.displayFormatter(rawValue) : rawValue;
+                  return (
+                    <AbilityDisplayItem
+                      key={abilitiesInfo.id}
+                      label={abilitiesInfo.label}
+                      shortLabel={abilitiesInfo.shortLabel}
+                      value={displayValue}
+                      colSpan={abilitiesInfo.colSpan}
+                    />
+                  )
+                })}
               </div>
             </div>
           </div>
@@ -184,6 +134,24 @@ export function AbilitiesForm() {
           能力値はランダムに生成されます。気に入らない場合は再生成ボタンを押してください。
         </p>
       </CardFooter>
-    </Card>
+    </Card >
   );
+}
+
+const AbilityDisplayItem: React.FC<AbilityDisplayItemProps> = ({
+  label,
+  shortLabel,
+  value,
+  colSpan = 1
+}) => {
+  return (
+    <div className={`bg-gray-100 p-3 rounded-md ${colSpan === 2 ? 'col-span-2' : ''}`}>
+      <div className="text-gray-600">
+        {label} {shortLabel}
+      </div>
+      <div className="text-xl font-bold text-primary-foreground">
+        {value}
+      </div>
+    </div>
+  )
 }

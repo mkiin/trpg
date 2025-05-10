@@ -4,6 +4,7 @@ import { geistSans } from "@/styles/fonts";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner"
+import { NuqsAdapter as NuqsNextAppRouterAdapter } from 'nuqs/adapters/next'
 
 export const metadata: Metadata = {
   title: "TRPG Tools",
@@ -21,14 +22,16 @@ export default function RootLayout({
         <script src="https://unpkg.com/react-scan/dist/auto.global.js" async />
       </head>
       <body className={cn("bg-background font-sans antialiased", geistSans)}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange>
-          {children}
-        </ThemeProvider>
-        <Toaster />
+        <NuqsNextAppRouterAdapter>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange>
+            {children}
+          </ThemeProvider>
+          <Toaster />
+        </NuqsNextAppRouterAdapter>
       </body>
     </html>
   );

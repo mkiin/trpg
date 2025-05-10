@@ -1,10 +1,12 @@
 "use client";
 
 import { useCharacterSheet } from "./character-sheet-context";
+import { useCharacterSheet as Test } from "../hooks/use-character-sheet";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectGroup, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Occupation, OCCUPATION_GROUPS } from "../types/character-sheet-types";
+
+import { OCCUPATION_GROUPS } from "../constants/job-lists"
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -17,8 +19,10 @@ export function BasicInfoForm() {
     setAge,
     gender,
     setGender,
-    nextStep
+    // nextStep
   } = useCharacterSheet();
+
+  const { nextStep } = Test();
 
   const [error, setError] = useState<string | null>(null);
 
@@ -48,6 +52,8 @@ export function BasicInfoForm() {
     nextStep();
   };
 
+  console.log("職業", occupation);
+
   return (
     <Card className="w-full max-w-3xl mx-auto">
       <CardHeader>
@@ -58,7 +64,7 @@ export function BasicInfoForm() {
           {/* 職業選択 */}
           <Select
             value={occupation}
-            onValueChange={(value) => setOccupation(value as Occupation)}
+            onValueChange={(value) => setOccupation(value)}
           >
             <Label htmlFor="occupation" className="block text-sm font-medium">職業選択</Label>
             <SelectTrigger className="">
@@ -66,14 +72,23 @@ export function BasicInfoForm() {
             </SelectTrigger>
             <SelectContent>
               {OCCUPATION_GROUPS.map((group, groupIndex) => (
-                <SelectGroup key={group.label ?? `group-${groupIndex}`}>
-                  {group.label && <SelectLabel>{group.label}</SelectLabel>}
-                  {group.options.map((occupation) => (
-                    <SelectItem key={occupation} value={occupation}>
-                      {occupation}
+                group.label ? (
+                  <SelectGroup key={`${group.label}-${groupIndex}`}>
+                    <SelectLabel>{group.label}</SelectLabel>
+                    {group.options.map(option => (
+                      <SelectItem value={option.value} key={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+
+                  </SelectGroup>
+                ) : (
+                  group.options.map(option => (
+                    <SelectItem value={option.value} key={option.value}>
+                      {option.label}
                     </SelectItem>
-                  ))}
-                </SelectGroup>
+                  ))
+                )
               ))}
             </SelectContent>
           </Select>
@@ -103,8 +118,8 @@ export function BasicInfoForm() {
                 <input
                   type="radio"
                   name="gender"
-                  value="男性"
-                  checked={gender === "男性"}
+                  value="man"
+                  checked={gender === "man"}
                   onChange={(e) => setGender(e.target.value)}
                   className="mr-2"
                 />
@@ -114,8 +129,8 @@ export function BasicInfoForm() {
                 <input
                   type="radio"
                   name="gender"
-                  value="女性"
-                  checked={gender === "女性"}
+                  value="woman"
+                  checked={gender === "woman"}
                   onChange={(e) => setGender(e.target.value)}
                   className="mr-2"
                 />

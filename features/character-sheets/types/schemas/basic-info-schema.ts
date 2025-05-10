@@ -5,7 +5,7 @@ export const basicInfoSchema = z
 		name: z.string(),
 		occupation: z.string(),
 		age: z.number(),
-		gender: z.enum(["man", "woman"]),
+		gender: z.enum(["man", "woman", "else"]),
 		height: z.number(),
 		weight: z.number(),
 		birthplace: z.string(),
