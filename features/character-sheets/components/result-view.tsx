@@ -1,6 +1,6 @@
 "use client";
 
-import { useCharacterSheet } from "./character-sheet-context";
+import { useCharacterSheet } from "../hooks/use-character-sheet";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";

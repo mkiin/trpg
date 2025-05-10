@@ -1,7 +1,6 @@
 "use client";
 
-import { useCharacterSheet } from "./character-sheet-context";
-import { useCharacterSheet as Test } from "../hooks/use-character-sheet";
+import { useCharacterSheet } from "../hooks/use-character-sheet";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectGroup, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,10 +18,8 @@ export function BasicInfoForm() {
     setAge,
     gender,
     setGender,
-    // nextStep
+    nextStep
   } = useCharacterSheet();
-
-  const { nextStep } = Test();
 
   const [error, setError] = useState<string | null>(null);
 
@@ -73,7 +70,7 @@ export function BasicInfoForm() {
             <SelectContent>
               {OCCUPATION_GROUPS.map((group, groupIndex) => (
                 group.label ? (
-                  <SelectGroup key={`${group.label}-${groupIndex}`}>
+                  <SelectGroup key={`${group.options}-${groupIndex}`}>
                     <SelectLabel>{group.label}</SelectLabel>
                     {group.options.map(option => (
                       <SelectItem value={option.value} key={option.value}>

@@ -150,7 +150,7 @@ export const OCCUPATION_GROUPS = [
 		// labelなし (単独項目)
 		options: [{ label: "メンタルセラピスト", value: "mental_therapist" }],
 	},
-] as const;
+];
 
 // 職業ごとの職業技能マッピング
 /**

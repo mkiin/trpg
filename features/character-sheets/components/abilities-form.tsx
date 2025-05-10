@@ -1,6 +1,6 @@
 "use client";
 
-import { useCharacterSheet } from "./character-sheet-context";
+import { useCharacterSheetContext } from "./character-sheet-context";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import React, { useEffect } from "react";
@@ -13,7 +13,7 @@ export function AbilitiesForm() {
     generateAbilitiesAction,
     nextStep,
     prevStep
-  } = useCharacterSheet();
+  } = useCharacterSheetContext();
 
   // コンポーネントがマウントされたときに能力値を生成
   useEffect(() => {
