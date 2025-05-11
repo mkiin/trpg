@@ -152,15 +152,7 @@ export const OCCUPATION_GROUPS = [
 	},
 ];
 
-// 職業ごとの職業技能マッピング
-/**
- * 語学
- * 運転
- * 製作
- * 操縦
- * 芸術
- */
-
+/* 職業ごとの職業技能マッピング */
 export type OccupationValue =
 	(typeof OCCUPATION_GROUPS)[number]["options"][number]["value"];
 

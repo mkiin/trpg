@@ -97,52 +97,6 @@ export async function generateSkills(
 	abilities: CharacterAbilities,
 ): Promise<CharacterSkills> {
 	try {
-		// 職業に基づいて職業技能のリストを取得
-		const occupation = basicInfo.occupation;
-		const vocationalSkills = OCCUPATION_SKILLS_MAP[occupation] || [];
-
-		// 職業技能と趣味技能の情報をプロンプトに追加
-		const vocationalSkillsText =
-			vocationalSkills.length > 0
-				? `職業技能: ${vocationalSkills.join(", ")}`
-				: "職業技能: 特定の職業技能はありません";
-
-		const prompt = characterSkillsPrompt
-			.replace("{basicInfo}", JSON.stringify(basicInfo, null, 2))
-			.replace("{abilities}", JSON.stringify(abilities, null, 2))
-			.replace("{occupation}", basicInfo.occupation)
-			.replace(
-				"{vocationalSkillPoints}",
-				abilities.vocational_skill_points.toString(),
-			)
-			.replace("{hobbySkillPoints}", abilities.hobby_skill_points.toString())
-			.replace("{vocationalSkillsText}", vocationalSkillsText);
-
-		// generateObjectを使用してJSONを取得
-		const { object } = await generateObject({
-			model: google("gemini-2.0-flash-lite-preview-02-05"),
-			schema: skillSchema,
-			prompt,
-			mode: "json",
-		});
-
-		// 職業技能ポイントと趣味技能ポイントの制限を確認
-		const skills = object;
-
-		// 技能ポイントの合計使用量を確認
-		const totalAvailablePoints =
-			abilities.vocational_skill_points + abilities.hobby_skill_points;
-
-		if (
-			skills.totalPointsUsed &&
-			skills.totalPointsUsed > totalAvailablePoints
-		) {
-			console.warn(
-				`技能ポイントが超過しています: ${skills.totalPointsUsed} > ${totalAvailablePoints}`,
-			);
-			// ここで調整ロジックを追加することも可能
-		}
-
 		return skills;
 	} catch (error) {
 		console.error("Error generating skills:", error);
