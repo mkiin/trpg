@@ -7,7 +7,7 @@ import {
   CharacterSheet
 } from "../types/character-sheet-types";
 import { OccupationValue } from "../constants/job-lists";
-import { useCharacterSheet as useCharacterSheetHook } from "../hooks/use-character-sheet";
+import { useCharacterSheet } from "../hooks/use-character-sheet";
 
 // コンテキストの型定義
 interface CharacterSheetContextType {
@@ -47,7 +47,7 @@ const CharacterSheetContext = createContext<CharacterSheetContextType | undefine
 
 export function CharacterSheetProvider({ children }: { children: ReactNode }) {
   // カスタムフックを使用して状態とアクションを取得
-  const characterSheetState = useCharacterSheetHook();
+  const characterSheetState = useCharacterSheet();
 
   return (
     <CharacterSheetContext.Provider value={characterSheetState}>

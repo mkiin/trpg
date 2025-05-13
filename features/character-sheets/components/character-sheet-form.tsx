@@ -1,16 +1,15 @@
 "use client";
 
-// /
-import { useCharacterSheet as Test } from "../hooks/use-character-sheet";
 import { BasicInfoForm } from "./basic-info-form";
 import { AbilitiesForm } from "./abilities-form";
 import { SkillsForm } from "./skills-form";
 import { ResultView } from "./result-view";
 import { CharacterSheetStep } from "../types/character-sheet-types";
+import { CharacterSheetProvider, useCharacterSheetContext } from "./character-sheet-context";
 
-
-export function CharacterSheetForm() {
-  const { currentStep } = Test();
+// CharacterSheetFormの内部コンポーネント
+function CharacterSheetFormContent() {
+  const { currentStep } = useCharacterSheetContext();
 
   // 現在のステップに応じたコンポーネントを表示
   const renderStep = () => {
@@ -67,6 +66,15 @@ export function CharacterSheetForm() {
   );
 }
 
+// メインのエクスポートコンポーネント
+export function CharacterSheetForm() {
+  return (
+    <CharacterSheetProvider>
+      <CharacterSheetFormContent />
+    </CharacterSheetProvider>
+  );
+}
+
 // ステップインジケーターコンポーネント
 function StepIndicator({
   step,
@@ -88,7 +96,7 @@ function StepIndicator({
           ${isCurrent ? 'bg-blue-600 ring-4 ring-blue-100' : isActive ? 'bg-blue-600' : 'bg-gray-300'}
         `}
       >
-        {step + 1}
+        {step}
       </div>
       <div
         className={`

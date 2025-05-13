@@ -1,6 +1,6 @@
 "use client";
 
-import { useCharacterSheet } from "../hooks/use-character-sheet";
+import { useCharacterSheetContext } from "./character-sheet-context";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectGroup, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,7 +19,7 @@ export function BasicInfoForm() {
     gender,
     setGender,
     nextStep
-  } = useCharacterSheet();
+  } = useCharacterSheetContext();
 
   const [error, setError] = useState<string | null>(null);
 
@@ -48,8 +48,6 @@ export function BasicInfoForm() {
     // 次のステップへ
     nextStep();
   };
-
-  console.log("職業", occupation);
 
   return (
     <Card className="w-full max-w-3xl mx-auto">

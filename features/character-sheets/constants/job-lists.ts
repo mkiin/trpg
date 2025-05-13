@@ -1521,3 +1521,49 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		},
 	],
 };
+
+export const MOCK_OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
+	doctor: [
+		{ type: "fixed", skill: "medicine", label: "医学" },
+		{ type: "fixed", skill: "firstAid", label: "応急手当" }, // 元のマークダウンでは occult になっていましたが、firstAid が適切と思われます
+		{ type: "fixed", skill: "accounting", label: "経理" },
+		{ type: "fixed", skill: "credit", label: "信用" },
+		{ type: "fixed", skill: "biology", label: "生物学" },
+		{ type: "fixed", skill: "persuade", label: "説得" },
+		{ type: "fixed", skill: "pharmacy", label: "薬学" },
+		{
+			type: "customizable",
+			skill: "otherLanguage",
+			label: "ほかの言語（英語、ラテン語、ドイツ語）",
+			examples: ["英語", "ラテン語", "ドイツ語"],
+		},
+	],
+	nurse: [
+		{ type: "fixed", skill: "chemistry", label: "化学" },
+		{ type: "fixed", skill: "biology", label: "生物学" },
+		{ type: "fixed", skill: "firstAid", label: "応急手当" },
+		{
+			type: "choice",
+			label: "言いくるめ or 説得",
+			options: [
+				{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
+				{ type: "fixed", skill: "persuade", label: "説得" },
+			],
+			count: 1,
+		},
+		{ type: "fixed", skill: "pharmacy", label: "薬学" },
+		{ type: "fixed", skill: "psychology", label: "心理学" },
+		{ type: "fixed", skill: "listen", label: "聞き耳" },
+		{ type: "fixed", skill: "spot", label: "目星" },
+	],
+	underground_doctor: [
+		{ type: "fixed", skill: "medicine", label: "医学" },
+		{ type: "fixed", skill: "firstAid", label: "応急手当" },
+		{ type: "fixed", skill: "accounting", label: "経理" },
+		{ type: "fixed", skill: "persuade", label: "説得" },
+		{ type: "fixed", skill: "law", label: "法律" },
+		{ type: "fixed", skill: "pharmacy", label: "薬学" },
+		{ type: "customizable", skill: "otherLanguage", label: "ほかの言語" },
+		{ type: "free_choice", label: "＋個人的な関心のある技能１つ", count: 1 },
+	],
+};
