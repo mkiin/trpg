@@ -42,9 +42,9 @@ export const ABILITIES_INFO: AbilitiesInfo = {
 		{ id: "idea", label: "アイデア", shortLabel: "IDEA" },
 		{ id: "knowledge", label: "知識", shortLabel: "KNOW" },
 		{ id: "durability", label: "耐久力", shortLabel: "HP" },
-		{ id: "magic_point", label: "マジックポイント", shortLabel: "MP" }, // shortLabelなし
+		{ id: "magicPoint", label: "マジックポイント", shortLabel: "MP" }, // shortLabelなし
 		{
-			id: "damage_bonus",
+			id: "damageBonus",
 			label: "ダメージボーナス",
 			shortLabel: "DB",
 			colSpan: 2,

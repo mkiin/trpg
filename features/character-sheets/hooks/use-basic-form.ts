@@ -22,11 +22,12 @@ export function useBasicForm() {
 		onValidate({ formData }) {
 			return parseWithZod(formData, { schema: basicInfoFormSchema });
 		},
-		shouldValidate: "onSubmit",
+		shouldValidate: "onBlur",
+		shouldRevalidate: "onInput",
 		defaultValue: {
 			occupation: "",
 			age: 0,
-			gender: "",
+			gender: "man",
 		},
 		onSubmit(event) {
 			event.preventDefault();

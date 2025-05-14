@@ -38,10 +38,10 @@ export async function generateAbilities(): Promise<CharacterAbilities> {
 	const idea = intelligence * 5;
 	const knowledge = education * 5;
 	const durability = Math.floor((constitution + size) / 2);
-	const magic_point = power;
-	const vocational_skill_points = education * 20;
-	const hobby_skill_points = intelligence * 10;
-	const damage_bonus = strength + size;
+	const magicPoint = power;
+	const vocationalSkillPoints = education * 20;
+	const hobbySkillPoints = intelligence * 10;
+	const damageBonus = strength + size;
 
 	return {
 		strength,
@@ -57,10 +57,10 @@ export async function generateAbilities(): Promise<CharacterAbilities> {
 		idea,
 		knowledge,
 		durability,
-		magic_point,
-		vocational_skill_points,
-		hobby_skill_points,
-		damage_bonus,
+		magicPoint,
+		vocationalSkillPoints,
+		hobbySkillPoints,
+		damageBonus,
 	};
 }
 

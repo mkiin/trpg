@@ -1,34 +1,33 @@
 "use client";
 
-import { useCharacterSheetContext } from "./character-sheet-context";
+import { useCharacterSheet } from "../hooks/use-character-sheet";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import React, { useEffect } from "react";
 import { ABILITIES_INFO, AbilityDisplayItemProps } from "../constants/abilities";
 import { NavigationButton } from "./navigation-button";
+import { useAbilityForm } from "../hooks/use-ability-form";
 
 export function AbilitiesForm() {
   const {
     abilities,
-    generateAbilitiesAction,
-    nextStep,
-    prevStep
-  } = useCharacterSheetContext();
+    handleGenerateAbility
+  } = useAbilityForm();
+
+  const { nextStep, prevStep } = useCharacterSheet();
+
 
   // コンポーネントがマウントされたときに能力値を生成
   useEffect(() => {
     if (!abilities) {
       // 非同期関数を呼び出す
-      const generateAbilities = async () => {
-        await generateAbilitiesAction();
-      };
-      generateAbilities();
+      handleGenerateAbility();
     }
-  }, [abilities, generateAbilitiesAction]);
+  }, [abilities, handleGenerateAbility]);
 
   // 能力値を再生成
   const handleRegenerate = async () => {
-    await generateAbilitiesAction();
+    await handleGenerateAbility();
   };
 
   if (!abilities) {
@@ -98,11 +97,11 @@ export function AbilitiesForm() {
             <div className="grid grid-cols-2 gap-4 mt-2">
               <div>
                 <div className="text-sm text-blue-600">職業技能ポイント</div>
-                <div className="text-xl font-bold text-primary-foreground">{abilities.vocational_skill_points}</div>
+                <div className="text-xl font-bold text-primary">{abilities.vocationalSkillPoints}</div>
               </div>
               <div>
                 <div className="text-sm text-blue-600">趣味技能ポイント</div>
-                <div className="text-xl font-bold text-primary-foreground" >{abilities.hobby_skill_points}</div>
+                <div className="text-xl font-bold text-primary" >{abilities.hobbySkillPoints}</div>
               </div>
             </div>
           </div>
@@ -133,11 +132,11 @@ const AbilityDisplayItem: React.FC<AbilityDisplayItemProps> = ({
   colSpan = 1
 }) => {
   return (
-    <div className={`bg-gray-100 p-3 rounded-md ${colSpan === 2 ? 'col-span-2' : ''}`}>
+    <div className={` p-3 rounded-md ${colSpan === 2 ? 'col-span-2' : ''}`}>
       <div className="text-gray-600">
         {label} {shortLabel}
       </div>
-      <div className="text-xl font-bold text-primary-foreground">
+      <div className="text-xl font-bold text-primary">
         {value}
       </div>
     </div>

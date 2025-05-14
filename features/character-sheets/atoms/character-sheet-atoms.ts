@@ -5,19 +5,17 @@ import {
 	CharacterBasicInfoForm,
 } from "../types/character-sheet-types";
 
-// 基本情報を入力atom
+// ﾂ甘ｮﾂ本ﾂ湘ｮﾂ頁�ﾂて堕禿ｼﾂ療溝tom
 export const basicInfoAtom = atomWithStorage<CharacterBasicInfoForm>(
 	"character-basic-info",
 	{} as CharacterBasicInfoForm,
 );
 
-// 能力値のatom
 export const abilitiesAtom = atomWithStorage<CharacterAbilities>(
 	"character-ability",
 	{} as CharacterAbilities,
 );
 
-// 技能値のatom
 export const skillsAtom = atomWithStorage<CharacterSkills>("character-skill", {
 	combat: {
 		dodge: 0,

@@ -28,12 +28,21 @@ export function BasicInfoForm() {
           <div>
             <Label htmlFor={fields.occupation.id} className="block text-sm font-medium">職業選択</Label>
             <Select
+              key={fields.occupation.key}
+              name={fields.occupation.name}
               defaultValue={fields.occupation.initialValue}
               onValueChange={(value) => {
-                form.update({ name: fields.occupation.name, value });
+                form.update({
+                  name: fields.occupation.name,
+                  value
+                })
               }}
             >
-              <SelectTrigger className="">
+              <SelectTrigger
+                id={fields.occupation.id}
+                aria-invalid={!fields.occupation.valid || undefined}
+                aria-describedby={!fields.occupation.value ? fields.occupation.errorId : undefined}
+              >
                 <SelectValue placeholder="職業を選択してください。" />
               </SelectTrigger>
               <SelectContent>
@@ -110,8 +119,8 @@ export function BasicInfoForm() {
                 <input
                   type="radio"
                   name={fields.gender.name}
-                  value="その他"
-                  defaultChecked={fields.gender.initialValue === "その他"}
+                  value="else"
+                  defaultChecked={fields.gender.initialValue === "else"}
                   className="mr-2"
                 />
                 その他
