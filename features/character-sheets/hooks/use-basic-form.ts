@@ -45,6 +45,7 @@ export function useBasicForm() {
 		},
 	});
 	return {
+		basicInfo,
 		form,
 		fields,
 	};
