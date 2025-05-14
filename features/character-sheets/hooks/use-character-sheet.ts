@@ -10,7 +10,6 @@ import {
 	generateAbilities,
 	generateCharacterSheet,
 } from "../actions/generate-character-actions";
-import { useSafeForm } from "@/hooks/use-safe-form";
 
 export function useCharacterSheet() {
 	// URLパラメータからステップを取得し、整数として解析
@@ -41,9 +40,6 @@ export function useCharacterSheet() {
 		},
 		[setCurrentStep],
 	);
-
-	// マルチステップフォーム
-	const [ form, fields ] = useSafeForm<>
 
 	// 入力値
 	const [occupation, setOccupation] = useState<OccupationValue | "">("");

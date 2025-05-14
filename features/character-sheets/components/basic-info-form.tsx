@@ -1,53 +1,16 @@
 "use client";
 
-import { useCharacterSheetContext } from "./character-sheet-context";
+import { useBasicForm } from "../hooks/use-basic-form";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectGroup, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-
-import { OCCUPATION_GROUPS } from "../constants/job-lists"
-import { useState } from "react";
+import { OCCUPATION_GROUPS } from "../constants/job-lists";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { getInputProps, getFormProps } from "@conform-to/react";
 
 export function BasicInfoForm() {
-  const {
-    occupation,
-    setOccupation,
-    age,
-    setAge,
-    gender,
-    setGender,
-    nextStep
-  } = useCharacterSheetContext();
-
-  const [error, setError] = useState<string | null>(null);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // バリデーション
-    if (!occupation) {
-      setError("職業を選択してください");
-      return;
-    }
-
-    if (!age || age < 15 || age > 90) {
-      setError("年齢は15〜90の間で入力してください");
-      return;
-    }
-
-    if (!gender) {
-      setError("性別を選択してください");
-      return;
-    }
-
-    // エラーをクリア
-    setError(null);
-
-    // 次のステップへ
-    nextStep();
-  };
+  const { form, fields } = useBasicForm();
 
   return (
     <Card className="w-full max-w-3xl mx-auto">
@@ -55,54 +18,68 @@ export function BasicInfoForm() {
         <CardTitle className="text-2xl font-bold">基本情報</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form {...getFormProps(form)} className="space-y-6">
+          {/* フォームエラー表示 */}
+          {form.errors && (
+            <div className="text-red-500 text-sm" id={form.errorId}>{form.errors}</div>
+          )}
+
           {/* 職業選択 */}
-          <Select
-            value={occupation}
-            onValueChange={(value) => setOccupation(value)}
-          >
-            <Label htmlFor="occupation" className="block text-sm font-medium">職業選択</Label>
-            <SelectTrigger className="">
-              <SelectValue placeholder="職業を選択してください。" />
-            </SelectTrigger>
-            <SelectContent>
-              {OCCUPATION_GROUPS.map((group, groupIndex) => (
-                group.label ? (
-                  <SelectGroup key={`${group.options}-${groupIndex}`}>
-                    <SelectLabel>{group.label}</SelectLabel>
-                    {group.options.map(option => (
+          <div>
+            <Label htmlFor={fields.occupation.id} className="block text-sm font-medium">職業選択</Label>
+            <Select
+              defaultValue={fields.occupation.initialValue}
+              onValueChange={(value) => {
+                form.update({ name: fields.occupation.name, value });
+              }}
+            >
+              <SelectTrigger className="">
+                <SelectValue placeholder="職業を選択してください。" />
+              </SelectTrigger>
+              <SelectContent>
+                {OCCUPATION_GROUPS.map((group, groupIndex) => (
+                  group.label ? (
+                    <SelectGroup key={`${group.options}-${groupIndex}`}>
+                      <SelectLabel>{group.label}</SelectLabel>
+                      {group.options.map(option => (
+                        <SelectItem value={option.value} key={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  ) : (
+                    group.options.map(option => (
                       <SelectItem value={option.value} key={option.value}>
                         {option.label}
                       </SelectItem>
-                    ))}
-
-                  </SelectGroup>
-                ) : (
-                  group.options.map(option => (
-                    <SelectItem value={option.value} key={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))
-                )
-              ))}
-            </SelectContent>
-          </Select>
-
+                    ))
+                  )
+                ))}
+              </SelectContent>
+            </Select>
+            {fields.occupation.errors && (
+              <div className="text-red-500 text-sm" id={fields.occupation.errorId}>
+                {fields.occupation.errors}
+              </div>
+            )}
+          </div>
 
           {/* 年齢入力 */}
           <div className="space-y-2">
-            <Label htmlFor="age" className="block text-sm font-medium">
+            <Label htmlFor={fields.age.id} className="block text-sm font-medium">
               年齢
             </Label>
             <Input
-              id="age"
-              type="number"
+              {...getInputProps(fields.age, { type: "number" })}
               min={15}
               max={90}
-              value={age}
-              onChange={(e) => setAge(Number(e.target.value))}
               className="w-full p-2 border border-gray-300 rounded-md text-primary"
             />
+            {fields.age.errors && (
+              <div className="text-red-500 text-sm" id={fields.age.errorId}>
+                {fields.age.errors}
+              </div>
+            )}
           </div>
 
           {/* 性別選択 */}
@@ -112,10 +89,9 @@ export function BasicInfoForm() {
               <label className="flex items-center">
                 <input
                   type="radio"
-                  name="gender"
+                  name={fields.gender.name}
                   value="man"
-                  checked={gender === "man"}
-                  onChange={(e) => setGender(e.target.value)}
+                  defaultChecked={fields.gender.initialValue === "man"}
                   className="mr-2"
                 />
                 男性
@@ -123,10 +99,9 @@ export function BasicInfoForm() {
               <label className="flex items-center">
                 <input
                   type="radio"
-                  name="gender"
+                  name={fields.gender.name}
                   value="woman"
-                  checked={gender === "woman"}
-                  onChange={(e) => setGender(e.target.value)}
+                  defaultChecked={fields.gender.initialValue === "woman"}
                   className="mr-2"
                 />
                 女性
@@ -134,21 +109,20 @@ export function BasicInfoForm() {
               <label className="flex items-center">
                 <input
                   type="radio"
-                  name="gender"
+                  name={fields.gender.name}
                   value="その他"
-                  checked={gender === "その他"}
-                  onChange={(e) => setGender(e.target.value)}
+                  defaultChecked={fields.gender.initialValue === "その他"}
                   className="mr-2"
                 />
                 その他
               </label>
             </div>
+            {fields.gender.errors && (
+              <div className="text-red-500 text-sm" id={fields.gender.errorId}>
+                {fields.gender.errors}
+              </div>
+            )}
           </div>
-
-          {/* エラーメッセージ */}
-          {error && (
-            <div className="text-red-500 text-sm">{error}</div>
-          )}
 
           <div className="pt-4">
             <Button type="submit" className="w-full">
