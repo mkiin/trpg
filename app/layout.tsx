@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
-import { geistSans } from "@/styles/fonts";
+import { GeistSans } from "geist/font/sans";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner"
@@ -17,11 +17,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" className="dark" style={{ colorScheme: "dark" }}>
+    <html lang="ja" suppressHydrationWarning>
       <head>
         <script src="https://unpkg.com/react-scan/dist/auto.global.js" async />
       </head>
-      <body className={cn("bg-background font-sans antialiased", geistSans)}>
+      <body className={cn("bg-background font-sans antialiased", GeistSans)}>
         <NuqsNextAppRouterAdapter>
           <ThemeProvider
             attribute="class"

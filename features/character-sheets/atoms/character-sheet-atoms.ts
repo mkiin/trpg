@@ -1,4 +1,3 @@
-import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import {
 	CharacterAbilities,
@@ -6,13 +5,20 @@ import {
 	CharacterBasicInfoForm,
 } from "../types/character-sheet-types";
 
+// 基本情報を入力atom
 export const basicInfoAtom = atomWithStorage<CharacterBasicInfoForm>(
 	"character-basic-info",
 	{} as CharacterBasicInfoForm,
 );
 
-export const abilitiesAtom = atom<CharacterAbilities>({} as CharacterAbilities);
-export const skillsAtom = atom<CharacterSkills>({
+// 能力値のatom
+export const abilitiesAtom = atomWithStorage<CharacterAbilities>(
+	"character-ability",
+	{} as CharacterAbilities,
+);
+
+// 技能値のatom
+export const skillsAtom = atomWithStorage<CharacterSkills>("character-skill", {
 	combat: {
 		dodge: 0,
 		kick: 25,
