@@ -1,6 +1,6 @@
 // キャラクターシートの型定義
 
-import { OccupationValue } from "../constants/job-lists";
+import { OccupationValue } from "../constants/occupation-lists";
 
 // 基本情報
 export type CharacterBasicInfo = {
@@ -79,13 +79,22 @@ export interface CharacterSkills {
 
 	// 行動技能
 	action: {
-		drive: number; // 運転 (20)
+		drive: {
+			label: string;
+			value: number;
+		}; // 運転 (20)
 		mechanicalRepair: number; // 機械修理 (20)
 		operateHeavyMachinery: number; // 重機械操作 (1)
 		ride: number; // 乗馬 (5)
 		swim: number; // 水泳 (25)
-		craft: number; // 製作 (5)
-		pilot: number; // 操縦 (1)
+		craft: {
+			label: string;
+			value: number;
+		}; // 製作 (5)
+		pilot: {
+			label: string;
+			value: number;
+		}; // 操縦 (1)
 		jump: number; // 跳躍 (25)
 		electricalRepair: number; // 電気修理 (10)
 		navigate: number; // ナビゲート (10)
@@ -99,7 +108,10 @@ export interface CharacterSkills {
 		persuade: number; // 説得 (15)
 		bargain: number; // 値切り (5)
 		nativeLanguage: number; // 母国語 (EDU×5%)
-		otherLanguage: number; // 他の言語 (1%)
+		otherLanguage: {
+			label: string;
+			value: number;
+		}; // 他の言語 (1%)
 	};
 
 	// 知識技能
@@ -108,7 +120,10 @@ export interface CharacterSkills {
 		occult: number; // オカルト (5)
 		chemistry: number; // 化学 (1)
 		cthulhuMythos: number; // クトゥルフ神話 (0)
-		art: number; // 芸術 (5)
+		art: {
+			label: string;
+			value: number;
+		}; // 芸術 (5)
 		accounting: number; // 経理 (10)
 		archaeology: number; // 考古学 (1)
 		computer: number; // コンピュータ (1)

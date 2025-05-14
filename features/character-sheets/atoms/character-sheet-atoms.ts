@@ -1,8 +1,8 @@
 import { atomWithStorage } from "jotai/utils";
 import {
 	CharacterAbilities,
-	CharacterSkills,
 	CharacterBasicInfoForm,
+	CharacterSkills,
 } from "../types/character-sheet-types";
 
 // î{îńđüÍatom
@@ -46,13 +46,22 @@ export const skillsAtom = atomWithStorage<CharacterSkills>("character-skill", {
 		spot: 25,
 	},
 	action: {
-		drive: 20,
+		drive: {
+			label: "",
+			value: 20,
+		},
 		mechanicalRepair: 20,
 		operateHeavyMachinery: 1,
 		ride: 5,
 		swim: 25,
-		craft: 5,
-		pilot: 1,
+		craft: {
+			label: "",
+			value: 5,
+		},
+		pilot: {
+			label: "",
+			value: 1,
+		},
 		jump: 25,
 		electricalRepair: 10,
 		navigate: 10,
@@ -64,14 +73,20 @@ export const skillsAtom = atomWithStorage<CharacterSkills>("character-skill", {
 		persuade: 15,
 		bargain: 5,
 		nativeLanguage: 0,
-		otherLanguage: 1,
+		otherLanguage: {
+			label: "",
+			value: 1,
+		},
 	},
 	knowledge: {
 		medicine: 5,
 		occult: 5,
 		chemistry: 1,
 		cthulhuMythos: 0,
-		art: 5,
+		art: {
+			label: "",
+			value: 5,
+		},
 		accounting: 10,
 		archaeology: 1,
 		computer: 1,

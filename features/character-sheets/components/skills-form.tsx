@@ -1,5 +1,5 @@
 import { useSafeForm } from "@/hooks/use-safe-form";
-import { OCCUPATION_SKILL_MAP } from "../constants/job-lists";
+import { OCCUPATION_SKILL_MAP } from "../constants/occupation-lists";
 import { useCharacterSheet } from "../hooks/use-character-sheet"
 import { NavigationButton } from "./navigation-button";
 import { useBasicForm } from "../hooks/use-basic-form";
@@ -10,21 +10,15 @@ export function SkillsForm() {
 
   const { nextStep, prevStep } = useCharacterSheet();
   const { basicInfo } = useBasicForm(); // 選択した職業を取得目的
-  const { skills } = useSkillForm(); // 
-  // const [form, fields] = useSafeForm();
+  const { skills, setSkills, form, fields } = useSkillForm(); // 
+
   // 選択した職業の割り振り可能スキル
   const availableSkills = OCCUPATION_SKILL_MAP[basicInfo.occupation];
 
   return (
 
     <div>
-      {availableSkills.map((skill) => (
-        skill.type === "fixed" && skill.type === "fixed" && (
-          <div>
-            {skill.label}
-          </div>
-        )
-      ))}
+
       <NavigationButton
         nextStep={nextStep}
         prevStep={prevStep}

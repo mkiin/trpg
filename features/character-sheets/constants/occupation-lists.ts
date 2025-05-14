@@ -177,9 +177,7 @@ export type SkillKey =
  */
 export interface FixedSkill {
 	type: "fixed";
-	/** 技能の英語キー */
 	skill: Exclude<SkillKey, CustomizableSkillKey>;
-	/** 技能の日本語名 (UI表示用) */
 	label: string;
 }
 
@@ -191,7 +189,6 @@ export interface FixedSpecificSkill {
 	type: "fixed_specific";
 	skill: CustomizableSkillKey;
 	label: string;
-	/** 固定された詳細 (例: "自動車", "ダンス") */
 	specification: string;
 }
 
@@ -201,11 +198,8 @@ export interface FixedSpecificSkill {
  */
 export interface CustomizableSkill {
 	type: "customizable";
-	/** 技能の英語キー */
 	skill: CustomizableSkillKey;
-	/** UI表示用の説明 (例: "芸術（任意）", "ほかの言語（英語、ラテン語など）") */
 	label: string;
-	/** 任意指定の場合の入力例 (UIでサジェストなどに使用) */
 	examples?: string[];
 }
 
@@ -215,13 +209,10 @@ export interface CustomizableSkill {
  */
 export interface ChoiceSkill {
 	type: "choice";
-	/** UI表示用の説明 (例: "言いくるめ or 説得", "＋次の技能から２つ選択") */
 	label: string;
-	/** 選択肢の配列 */
 	options: Array<
 		FixedSkill | FixedSpecificSkill | CustomizableSkill | OtherSkill
 	>;
-	/** 選択する数 */
 	count: number;
 }
 
@@ -230,9 +221,7 @@ export interface ChoiceSkill {
  */
 export interface FreeChoiceSkill {
 	type: "free_choice";
-	/** UI表示用の説明 (例: "＋個人的な関心のある技能１つ") */
 	label: string;
-	/** 選択する数 */
 	count: number;
 }
 
@@ -242,7 +231,6 @@ export interface FreeChoiceSkill {
  */
 export interface OtherSkill {
 	type: "other";
-	/** 技能の日本語名 (UI表示用) */
 	label: string;
 }
 

@@ -4,7 +4,7 @@ import {
 	CharacterAbilities,
 	CharacterSheet,
 } from "../types/character-sheet-types";
-import { OccupationValue } from "../constants/job-lists";
+import { OccupationValue } from "../constants/occupation-lists";
 import { useCallback, useState } from "react";
 import {
 	generateAbilities,

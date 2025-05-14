@@ -1,8 +1,4 @@
-export type SKILL_POINT_ALLOCATION_CATEGORY =
-	| "high"
-	| "medium"
-	| "low"
-	| "none";
+export type SKILL_POINT_ALLOCATION_CATEGORY = "high" | "medium" | "low";
 
 // ユーザーが設定する、各カテゴリに対応する具体的なポイント数
 export type SkillPointAllocationValues = {

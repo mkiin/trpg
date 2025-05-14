@@ -4,7 +4,7 @@ import { useBasicForm } from "../hooks/use-basic-form";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectGroup, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { OCCUPATION_GROUPS } from "../constants/job-lists";
+import { OCCUPATION_GROUPS } from "../constants/occupation-lists";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { getInputProps, getFormProps } from "@conform-to/react";

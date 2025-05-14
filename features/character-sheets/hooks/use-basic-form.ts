@@ -29,16 +29,13 @@ export function useBasicForm() {
 			age: 0,
 			gender: "man",
 		},
-		onSubmit(event) {
+		onSubmit(event, context) {
 			event.preventDefault();
-			const formData = new FormData(event.currentTarget);
-			const submission = parseWithZod(formData, {
-				schema: basicInfoFormSchema,
-			});
-			if (submission.status === "success") {
+
+			if (context.submission && context.submission.status === "success") {
 				setBasicInfo({
 					...basicInfo,
-					...submission.value,
+					...context.submission.value,
 				});
 				nextStep();
 			}

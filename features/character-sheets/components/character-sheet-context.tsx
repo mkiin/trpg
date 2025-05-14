@@ -6,7 +6,7 @@ import {
   CharacterAbilities,
   CharacterSheet
 } from "../types/character-sheet-types";
-import { OccupationValue } from "../constants/job-lists";
+import { OccupationValue } from "../constants/occupation-lists";
 import { useCharacterSheet } from "../hooks/use-character-sheet";
 
 // コンテキストの型定義
