@@ -274,7 +274,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "jump", label: "跳躍" },
 		{ type: "fixed", skill: "track", label: "追跡" },
 		{ type: "fixed", skill: "naturalHistory", label: "博物学" },
-		{ type: "free_choice", label: "＋個人的な関心のある技能１つ", count: 1 },
+		{ type: "free_choice", label: "個人的な関心のある技能１つ", count: 1 },
 	],
 	nurse: [
 		{ type: "fixed", skill: "chemistry", label: "化学" },
@@ -336,7 +336,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "law", label: "法律" },
 		{ type: "fixed", skill: "pharmacy", label: "薬学" },
 		{ type: "customizable", skill: "otherLanguage", label: "ほかの言語" },
-		{ type: "free_choice", label: "＋個人的な関心のある技能１つ", count: 1 },
+		{ type: "free_choice", label: "個人的な関心のある技能１つ", count: 1 },
 	],
 
 	// エンジニア
@@ -870,7 +870,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "astronomy", label: "天文学" },
 		{ type: "fixed", skill: "navigate", label: "ナビゲート" },
 		{ type: "other", label: "パラシュート" },
-		{ type: "free_choice", label: "＋個人的な関心のある技能１つ", count: 1 },
+		{ type: "free_choice", label: "個人的な関心のある技能１つ", count: 1 },
 	],
 	pmc_member: [
 		{ type: "fixed", skill: "dodge", label: "回避" },
@@ -1079,7 +1079,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		},
 		{ type: "fixed", skill: "library", label: "図書館" },
 		{ type: "fixed", skill: "nativeLanguage", label: "母国語" },
-		{ type: "free_choice", label: "＋個人的な関心のある技能１つ", count: 1 },
+		{ type: "free_choice", label: "個人的な関心のある技能１つ", count: 1 },
 	],
 	comedian: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
@@ -1164,7 +1164,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "sneak", label: "忍び歩き" },
 		{ type: "fixed", skill: "bargain", label: "値切り" },
 		{ type: "fixed", skill: "law", label: "法律" },
-		{ type: "free_choice", label: "＋個人的な関心のある技能１つ", count: 1 },
+		{ type: "free_choice", label: "個人的な関心のある技能１つ", count: 1 },
 	],
 	parapsychologist: [
 		{ type: "fixed", skill: "occult", label: "オカルト" },
@@ -1204,7 +1204,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "psychology", label: "心理学" },
 		{ type: "fixed", skill: "persuade", label: "説得" },
 		{ type: "fixed", skill: "bargain", label: "値切り" },
-		{ type: "free_choice", label: "＋個人的な関心のある技能１つ", count: 1 },
+		{ type: "free_choice", label: "個人的な関心のある技能１つ", count: 1 },
 	],
 	dilettante: [
 		{
@@ -1387,7 +1387,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "psychology", label: "心理学" },
 		{ type: "fixed", skill: "persuade", label: "説得" },
 		{ type: "fixed", skill: "bargain", label: "値切り" },
-		{ type: "free_choice", label: "＋個人的な関心のある技能１つ", count: 1 },
+		{ type: "free_choice", label: "個人的な関心のある技能１つ", count: 1 },
 	],
 	legal_professional: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
@@ -1552,6 +1552,6 @@ export const MOCK_OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "law", label: "法律" },
 		{ type: "fixed", skill: "pharmacy", label: "薬学" },
 		{ type: "customizable", skill: "otherLanguage", label: "ほかの言語" },
-		{ type: "free_choice", label: "＋個人的な関心のある技能１つ", count: 1 },
+		{ type: "free_choice", label: "個人的な関心のある技能１つ", count: 1 },
 	],
 };
