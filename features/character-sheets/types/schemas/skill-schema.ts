@@ -64,6 +64,7 @@ const choiceSkillSchema = z
 		(data) => data.selectedSkills.length === data.count,
 		(data) => ({
 			message: `選択されたスキルの数が${data.count}と一致しません。`,
+			path: ["selectedSkills"],
 		}),
 	);
 
