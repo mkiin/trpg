@@ -355,7 +355,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		},
 		{
 			type: "choice",
-			label: "＋次の技能から１つ選択：化学、地質学、電子工学",
+			label: "次の技能から１つ選択",
 			options: [
 				{ type: "fixed", skill: "chemistry", label: "化学" },
 				{ type: "fixed", skill: "geology", label: "地質学" },
@@ -380,8 +380,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		},
 		{
 			type: "choice",
-			label:
-				"＋次の技能から２つ選択：化学、電気修理、法律、薬学、ライフル、ショットガン、スタンガン",
+			label: "次の技能から２つ選択",
 			options: [
 				{ type: "fixed", skill: "chemistry", label: "化学" },
 				{ type: "fixed", skill: "electricalRepair", label: "電気修理" },
@@ -406,8 +405,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "spot", label: "目星" },
 		{
 			type: "choice",
-			label:
-				"＋次の技能から１つ選択：運転（自動車、二輪車）、信用、組みつき、武道（柔道）、日本刀、拳銃、杖",
+			label: "次の技能から１つ選択",
 			options: [
 				{
 					type: "fixed_specific",
@@ -481,7 +479,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "spot", label: "目星" },
 		{
 			type: "choice",
-			label: "＋次の技能から１つ選択：聞き耳、写真術、値切り、スタンガン",
+			label: "次の技能から１つ選択",
 			options: [
 				{ type: "fixed", skill: "listen", label: "聞き耳" },
 				{ type: "fixed", skill: "photography", label: "写真術" },
@@ -550,8 +548,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		},
 		{
 			type: "choice",
-			label:
-				"＋次の技能から３つ選択：コンピューター、写真術、生物学、天文学、芸術（任意） or 製作（任意）",
+			label: "次の技能から３つ選択",
 			options: [
 				{ type: "fixed", skill: "computer", label: "コンピューター" },
 				{ type: "fixed", skill: "photography", label: "写真術" },
@@ -657,8 +654,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "navigate", label: "ナビゲート" },
 		{
 			type: "choice",
-			label:
-				"＋次の技能から２つ選択：回避、隠れる、聞き耳、経理、忍び歩き、信用、説得、値切り、法律、ほかの言語（英語など）、こぶし/パンチ、キック、組みつき、武道（任意）、サブマシンガン、ライフル、グレネード・ランチャー、砲、拳銃",
+			label: "次の技能から２つ選択",
 			options: [
 				{ type: "fixed", skill: "dodge", label: "回避" },
 				{ type: "fixed", skill: "conceal", label: "隠れる" },
@@ -698,8 +694,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "climb", label: "登攀" },
 		{
 			type: "choice",
-			label:
-				"＋次の技能から３つ選択：応急手当、乗馬、水泳、こぶし/パンチ、キック、組みつき、武道（任意）、日本刀、薙刀、杖、弓、競技用アーチェリー、拳銃、ライフル、ショットガン",
+			label: "次の技能から３つ選択",
 			options: [
 				{ type: "fixed", skill: "firstAid", label: "応急手当" },
 				{ type: "fixed", skill: "ride", label: "乗馬" },
@@ -731,7 +726,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "bargain", label: "値切り" },
 		{
 			type: "choice",
-			label: "＋次の技能から１つ選択：運転（自動車、二輪車）、コンピューター",
+			label: "次の技能から１つ選択",
 			options: [
 				{
 					type: "fixed_specific",
@@ -816,8 +811,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "other", label: "任意の火器技能" }, // 同上
 		{
 			type: "choice",
-			label:
-				"＋次の技能から２つ選択：機械修理、忍び歩き、水泳、登攀、ほかの言語、パラシュート、重機械操作、砲",
+			label: "次の技能から２つ選択",
 			options: [
 				{ type: "fixed", skill: "mechanicalRepair", label: "機械修理" },
 				{ type: "fixed", skill: "sneak", label: "忍び歩き" },
@@ -845,8 +839,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "other", label: "サバイバル（海）" },
 		{
 			type: "choice",
-			label:
-				"＋次の技能から２つ選択：機械修理、電気修理、任意の近接戦技能、任意の火器技能、砲",
+			label: "次の技能から２つ選択",
 			options: [
 				{ type: "fixed", skill: "mechanicalRepair", label: "機械修理" },
 				{ type: "fixed", skill: "electricalRepair", label: "電気修理" },
@@ -889,8 +882,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "other", label: "任意の火器技能" },
 		{
 			type: "choice",
-			label:
-				"＋次の技能から２つ選択：応急手当、機械修理、サバイバル（山、砂漠）、ほかの言語",
+			label: "次の技能から２つ選択",
 			options: [
 				{ type: "fixed", skill: "firstAid", label: "応急手当" },
 				{ type: "fixed", skill: "mechanicalRepair", label: "機械修理" },
@@ -925,8 +917,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "history", label: "歴史" },
 		{
 			type: "choice",
-			label:
-				"＋次の技能から１つ選択：言いくるめ、信用、ほかの言語（漢文、ラテン語など）",
+			label: "次の技能から１つ選択",
 			options: [
 				{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
 				{ type: "fixed", skill: "credit", label: "信用" },
@@ -969,8 +960,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		},
 		{
 			type: "choice",
-			label:
-				"＋次の技能から専門的研究分野として２つ選択：医学、化学、考古学、人類学、生物学、地質学、電子工学、天文学、博物学、物理学、法律、歴史",
+			label: "次の技能から専門的研究分野として２つ選択",
 			options: [
 				{ type: "fixed", skill: "medicine", label: "医学" },
 				{ type: "fixed", skill: "chemistry", label: "化学" },
@@ -997,8 +987,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "customizable", skill: "otherLanguage", label: "ほかの言語" },
 		{
 			type: "choice",
-			label:
-				"＋次の技能から専門的研究分野として２つ選択：考古学、地質学、歴史など",
+			label: "次の技能から専門的研究分野として２つ選択",
 			options: [
 				{ type: "fixed", skill: "archaeology", label: "考古学" },
 				{ type: "fixed", skill: "geology", label: "地質学" },
@@ -1017,8 +1006,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "nativeLanguage", label: "母国語" },
 		{
 			type: "choice",
-			label:
-				"＋次の技能から専門的研究分野として２つ選択：オカルト、博物学、歴史など",
+			label: "次の技能から専門的研究分野として２つ選択",
 			options: [
 				{ type: "fixed", skill: "occult", label: "オカルト" },
 				{ type: "fixed", skill: "naturalHistory", label: "博物学" },
@@ -1230,8 +1218,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		},
 		{
 			type: "choice",
-			label:
-				"＋次の技能から２つ選択：乗馬、写真術、操縦（航空機、船舶）、拳銃、ライフル、ショットガン、武道（任意）",
+			label: "次の技能から２つ選択",
 			options: [
 				{ type: "fixed", skill: "ride", label: "乗馬" },
 				{ type: "fixed", skill: "photography", label: "写真術" },
@@ -1279,7 +1266,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "naturalHistory", label: "博物学" },
 		{
 			type: "choice",
-			label: "＋次の技能から１つ選択：杖、ライフル、ショットガン、チェーンソー",
+			label: "次の技能から１つ選択",
 			options: [
 				{ type: "other", label: "杖" },
 				{ type: "fixed", skill: "rifle", label: "ライフル" },
@@ -1409,8 +1396,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "spot", label: "目星" },
 		{
 			type: "choice",
-			label:
-				"＋次の技能から１つ選択：運転（自動車、二輪車）、芸術（ギャンブル）、ほかの言語（英語など）",
+			label: "次の技能から１つ選択",
 			options: [
 				{
 					type: "customizable",
@@ -1448,8 +1434,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "spot", label: "目星" },
 		{
 			type: "choice",
-			label:
-				"＋次の技能から２つ選択：隠れる、こぶし/パンチ、キック、組みつき、武道（任意）、日本刀、ナイフ、拳銃",
+			label: "次の技能から２つ選択",
 			options: [
 				{ type: "fixed", skill: "conceal", label: "隠れる" },
 				{ type: "fixed", skill: "punch", label: "こぶし/パンチ" },
