@@ -8,7 +8,10 @@ import {
 	SkillsFormSchema,
 } from "../types/schemas/skill-schema";
 import { useBasicForm } from "./use-basic-form";
-import { OCCUPATION_SKILL_MAP } from "../constants/occupation-lists";
+import {
+	CategorizedOccupationSkills,
+	OCCUPATION_SKILL_MAP,
+} from "../constants/occupation-lists";
 
 export function useSkillForm() {
 	const { basicInfo } = useBasicForm();
@@ -64,8 +67,6 @@ export function useSkillForm() {
 					categorized.otherSkills.push(skill);
 					break;
 				default:
-					// 未知の型の場合、何らかの警告を出すか、エラー処理を行うと良いでしょう
-					// console.warn("Unknown skill type:", (skill as any).type);
 					break;
 			}
 		}

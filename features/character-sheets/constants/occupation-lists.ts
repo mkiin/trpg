@@ -249,8 +249,13 @@ export type OccupationSkillsMapType = Record<
 	SkillDefinition[]
 >;
 
-export type CategorizedOccupationSkills = 
-	
+export interface CategorizedOccupationSkills {
+	fixedSkills: Array<FixedSkill | FixedSpecificSkill>;
+	customizableSkills: CustomizableSkill[];
+	choiceSkills: ChoiceSkill[];
+	freeChoiceSkills: FreeChoiceSkill[];
+	otherSkills: OtherSkill[];
+}
 
 export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 	// 医師グループ
