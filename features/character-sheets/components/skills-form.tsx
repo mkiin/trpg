@@ -5,19 +5,11 @@ import { useBasicForm } from "../hooks/use-basic-form";
 import { useSkillForm } from "../hooks/use-skill-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getFormProps } from "@conform-to/react";
-import { useMemo } from "react";
 
 export function SkillsForm() {
   const { nextStep, prevStep } = useCharacterSheet();
-  const { basicInfo } = useBasicForm(); // 選択した職業を取得目的
   const { skills, setSkills, form, fields } = useSkillForm();
 
-  // 選択した職業の割り振り可能スキルをメモ化
-  const availableSkills = useMemo(() => {
-    // 職業が選択されていない場合は空配列を返す
-    if (!basicInfo?.occupation) return [];
-    return OCCUPATION_SKILL_MAP[basicInfo.occupation];
-  }, [basicInfo?.occupation]);
 
   return (
     <Card className="max-w-4xl mx-auto">

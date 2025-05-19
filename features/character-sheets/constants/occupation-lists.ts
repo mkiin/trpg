@@ -249,6 +249,9 @@ export type OccupationSkillsMapType = Record<
 	SkillDefinition[]
 >;
 
+export type CategorizedOccupationSkills = 
+	
+
 export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 	// 医師グループ
 	doctor: [

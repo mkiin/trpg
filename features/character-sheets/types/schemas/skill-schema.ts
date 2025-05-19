@@ -63,7 +63,7 @@ const choiceSkillSchema = z
 	.refine(
 		(data) => data.selectedSkills.length === data.count,
 		(data) => ({
-			message: `選択されたスキルの数が${data.count}と一致しません。`,
+			message: `選択するスキルは${data.count}個にしてください。`,
 			path: ["selectedSkills"],
 		}),
 	);
@@ -72,24 +72,28 @@ const choiceSkillSchema = z
 // 「free choice」はcount値の個数分、全スキルから選択する
 // 選択したスキルは補正値を必ず選択する
 // 示されたスキル一覧に「customizable」がある場合はlabel値を入力する
-const freeChoiceSkillSchema = z.object({
-	type: z.literal("free_choice"),
-	label: z.string(),
-	count: z.number().int().positive(),
-	// 選択されたスキルの配列
-	selectedSkills: z
-		.array(
+const freeChoiceSkillSchema = z
+	.object({
+		type: z.literal("free_choice"),
+		label: z.string(),
+		count: z.number().int().positive(),
+		// 選択されたスキルの配列
+		selectedSkills: z.array(
 			z.union([
 				fixedSkillSchema,
 				fixedSpecificSkillSchema,
 				customizableSkillSchema,
 				otherSkillSchema,
 			]),
-		)
-		.refine((skills) => skills.length > 0, {
-			message: "少なくとも1つのスキルを選択してください",
+		),
+	})
+	.refine(
+		(data) => data.selectedSkills.length === data.count,
+		(data) => ({
+			message: `選択するスキルは${data.count}個にしてください。`,
+			path: ["selectedSkills"],
 		}),
-});
+	);
 
 // スキル定義のユニオン型
 export const skillDefinitionSchema = z.union([

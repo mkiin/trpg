@@ -5,7 +5,6 @@ import {
 	CharacterSkills,
 } from "../types/character-sheet-types";
 
-// î{îńđüÍatom
 export const basicInfoAtom = atomWithStorage<CharacterBasicInfoForm>(
 	"character-basic-info",
 	{} as CharacterBasicInfoForm,
