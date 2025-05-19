@@ -28,6 +28,7 @@ export function useSkillForm() {
 		defaultValue: {},
 	});
 
+	// 生スキルオブジェクト
 	const rawOccupationSkills = useMemo(() => {
 		if (!basicInfo?.occupation) return [];
 		// OccupationValue 型にキャストして安全性を高める
@@ -35,6 +36,7 @@ export function useSkillForm() {
 		return OCCUPATION_SKILL_MAP[occupationKey] || [];
 	}, [basicInfo?.occupation]);
 
+	// スキルタイプ別にカテゴライズされたスキルオブジェクト
 	const categorizedOccupationSkills = useMemo(() => {
 		const categorized: CategorizedOccupationSkills = {
 			fixedSkills: [],
@@ -43,10 +45,6 @@ export function useSkillForm() {
 			freeChoiceSkills: [],
 			otherSkills: [],
 		};
-
-		if (!rawOccupationSkills || rawOccupationSkills.length === 0) {
-			return categorized;
-		}
 
 		for (const skill of rawOccupationSkills) {
 			switch (skill.type) {

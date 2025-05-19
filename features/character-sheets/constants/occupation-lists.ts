@@ -580,7 +580,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "jump", label: "跳躍" },
 		{ type: "fixed", skill: "climb", label: "登攀" },
 		{ type: "fixed", skill: "spot", label: "目星" },
-		{ type: "free_choice", label: "＋個人的な関心のある技能２つ", count: 2 },
+		{ type: "free_choice", label: "個人的な関心のある技能２つ", count: 2 },
 	],
 	designer: [
 		{
@@ -605,7 +605,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "psychology", label: "心理学" },
 		{ type: "fixed", skill: "library", label: "図書館" },
 		{ type: "fixed", skill: "spot", label: "目星" },
-		{ type: "free_choice", label: "＋個人的な関心のある技能２つ", count: 2 },
+		{ type: "free_choice", label: "個人的な関心のある技能２つ", count: 2 },
 	],
 	fashion_artist: [
 		{
@@ -630,7 +630,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "bargain", label: "値切り" },
 		{ type: "fixed", skill: "disguise", label: "変装" },
 		{ type: "fixed", skill: "spot", label: "目星" },
-		{ type: "free_choice", label: "＋個人的な関心のある技能２つ", count: 2 },
+		{ type: "free_choice", label: "個人的な関心のある技能２つ", count: 2 },
 	],
 	// 自衛官
 	self_defense_official: [
@@ -1060,7 +1060,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "psychology", label: "心理学" },
 		{ type: "fixed", skill: "persuade", label: "説得" },
 		{ type: "fixed", skill: "disguise", label: "変装" },
-		{ type: "free_choice", label: "＋個人的な関心のある技能２つ", count: 2 },
+		{ type: "free_choice", label: "個人的な関心のある技能２つ", count: 2 },
 	],
 	announcer: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
@@ -1094,7 +1094,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 			specification: "演劇",
 		},
 		{ type: "fixed", skill: "disguise", label: "変装" },
-		{ type: "free_choice", label: "＋個人的な関心のある技能２つ", count: 2 },
+		{ type: "free_choice", label: "個人的な関心のある技能２つ", count: 2 },
 	],
 	sports_talent: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
@@ -1116,7 +1116,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		},
 		{ type: "fixed", skill: "disguise", label: "変装" },
 		{ type: "other", label: "任意の素手の近接戦技能" }, // punch, kick, grapple などから選択 or その他
-		{ type: "free_choice", label: "＋個人的な関心のある技能２つ", count: 2 },
+		{ type: "free_choice", label: "個人的な関心のある技能２つ", count: 2 },
 	],
 	tv_commentator: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
@@ -1145,7 +1145,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "psychology", label: "心理学" },
 		{ type: "fixed", skill: "persuade", label: "説得" },
 		{ type: "fixed", skill: "disguise", label: "変装" },
-		{ type: "free_choice", label: "＋個人的な関心のある技能２つ", count: 2 },
+		{ type: "free_choice", label: "個人的な関心のある技能２つ", count: 2 },
 	],
 	producer_manager: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
