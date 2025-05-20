@@ -1,4 +1,4 @@
-import { CategorizedOccupationSkills, OCCUPATION_SKILL_MAP, SkillDefinition } from "../constants/occupation-lists";
+import { CustomizableSkill, FixedSkill, FixedSpecificSkill, SkillDefinition } from "../constants/occupation-lists";
 import { useCharacterSheet } from "../hooks/use-character-sheet";
 import { NavigationButton } from "./navigation-button";
 import { useSkillForm } from "../hooks/use-skill-form";
@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 
 import { getFormProps } from "@conform-to/react";
 import { SKILL_POINT_ALLOCATION_VALUES } from "../constants/skill-correction-value";
+import { Input } from "@/components/ui/input";
 
 export function SkillsForm() {
   const { nextStep, prevStep } = useCharacterSheet();
@@ -37,9 +38,9 @@ export function SkillsForm() {
                 switch (skillDefinition.type) {
                   case "fixed":
                   case "fixed_specific":
-                    return <FixedSkillItem key={key} skillDefinition={skillDefinition} />
+                    return <FixedSkillItem key={key} fixedSkill={skillDefinition} />
                   case "customizable":
-                    return <CustomizableSkillItem key={key} />
+                    return <CustomizableSkillItem key={key} customizableSkill={skillDefinition} />
                   case "other":
                     return <OtherSKillItem key={key} />
                   case "choice":
@@ -67,26 +68,42 @@ export function SkillsForm() {
   スキル名を表示するラベル
   補正値を選択するラジオボタン
  */
-function FixedSkillItem({ skillDefinition }: { skillDefinition: SkillDefinition }) {
+function FixedSkillItem({ fixedSkill }: { fixedSkill: FixedSkill | FixedSpecificSkill }) {
   /** skill id にはskill nameを指定
    *  1つの職業でskill nameは重複しないため
    */
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{skillDefinition.label}</CardTitle>
+        <CardTitle>{fixedSkill.label}</CardTitle>
       </CardHeader>
-      <CardContent><SkillPointAllocationSelector skillId={skillDefinition.label} /></CardContent>
-
+      <CardContent><SkillPointAllocationSelector skillId={fixedSkill.label} /></CardContent>
     </Card>
   )
 }
 
 
 // カスタムスキルを表示するコンポーネント
-function CustomizableSkillItem() {
+/**
+ * スキル名を表示するラベル
+ * 
+ */
+function CustomizableSkillItem({ customizableSkill }: { customizableSkill: CustomizableSkill }) {
+  let exampleText = "";
+  for (const example of customizableSkill.examples ?? "") {
+    exampleText += example;
+    exampleText += " "
+  }
   return (
-    <div>カスタムスキル</div>
+    <Card>
+      <CardHeader><CardTitle>{customizableSkill.label}</CardTitle></CardHeader>
+      <CardContent>
+        <div className="grid w-full max-w-sm items-center gap-1">
+          <Label htmlFor={customizableSkill.skill}>カスタム値を入力</Label>
+          <Input id={customizableSkill.skill} placeholder={exampleText} />
+        </div>
+      </CardContent>
+    </Card>
   )
 }
 
