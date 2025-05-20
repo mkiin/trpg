@@ -1,4 +1,4 @@
-import { CustomizableSkill, FixedSkill, FixedSpecificSkill, SkillDefinition } from "../constants/occupation-lists";
+import { CustomizableSkill, FixedSkill, FixedSpecificSkill, OtherSkill, SkillDefinition } from "../constants/occupation-lists";
 import { useCharacterSheet } from "../hooks/use-character-sheet";
 import { NavigationButton } from "./navigation-button";
 import { useSkillForm } from "../hooks/use-skill-form";
@@ -42,7 +42,7 @@ export function SkillsForm() {
                   case "customizable":
                     return <CustomizableSkillItem key={key} customizableSkill={skillDefinition} />
                   case "other":
-                    return <OtherSKillItem key={key} />
+                    return <OtherSKillItem key={key} otherSkill={skillDefinition} />
                   case "choice":
                     return <ChoiceSkillModal key={key} />
                   case "free_choice":
@@ -108,9 +108,12 @@ function CustomizableSkillItem({ customizableSkill }: { customizableSkill: Custo
 }
 
 // その他スキルを表示するコンポーネント
-function OtherSKillItem() {
+function OtherSKillItem({ otherSkill }: { otherSkill: OtherSkill }) {
   return (
-    <div>その他スキル</div>
+    <Card>
+      <CardHeader><CardTitle>{otherSkill.label}</CardTitle></CardHeader>
+      <SkillPointAllocationSelector skillId={otherSkill.label} />
+    </Card>
   )
 }
 
