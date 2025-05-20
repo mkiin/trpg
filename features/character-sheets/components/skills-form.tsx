@@ -1,4 +1,4 @@
-import { CustomizableSkill, FixedSkill, FixedSpecificSkill, OtherSkill, SkillDefinition } from "../constants/occupation-lists";
+import { CustomizableSkill, FixedSkill, FixedSpecificSkill, OtherSkill } from "../constants/occupation-lists";
 import { useCharacterSheet } from "../hooks/use-character-sheet";
 import { NavigationButton } from "./navigation-button";
 import { useSkillForm } from "../hooks/use-skill-form";
@@ -6,6 +6,14 @@ import { useSkillForm } from "../hooks/use-skill-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 import { getFormProps } from "@conform-to/react";
 import { SKILL_POINT_ALLOCATION_VALUES } from "../constants/skill-correction-value";
