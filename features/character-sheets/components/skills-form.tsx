@@ -1,4 +1,4 @@
-import { CustomizableSkill, FixedSkill, FixedSpecificSkill, OtherSkill } from "../constants/occupation-lists";
+import { ChoiceSkill, CustomizableSkill, FixedSkill, FixedSpecificSkill, OtherSkill } from "../constants/occupation-lists";
 import { useCharacterSheet } from "../hooks/use-character-sheet";
 import { NavigationButton } from "./navigation-button";
 import { useSkillForm } from "../hooks/use-skill-form";
@@ -10,6 +10,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -18,6 +19,9 @@ import {
 import { getFormProps } from "@conform-to/react";
 import { SKILL_POINT_ALLOCATION_VALUES } from "../constants/skill-correction-value";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export function SkillsForm() {
   const { nextStep, prevStep } = useCharacterSheet();
@@ -52,7 +56,7 @@ export function SkillsForm() {
                   case "other":
                     return <OtherSKillItem key={key} otherSkill={skillDefinition} />
                   case "choice":
-                    return <ChoiceSkillModal key={key} />
+                    return <ChoiceSkillItem key={key} choiceSkill={skillDefinition} />
                   case "free_choice":
                     return <FreeChoiceSkillModal key={key} />
                   default:
@@ -97,6 +101,8 @@ function FixedSkillItem({ fixedSkill }: { fixedSkill: FixedSkill | FixedSpecific
  * 
  */
 function CustomizableSkillItem({ customizableSkill }: { customizableSkill: CustomizableSkill }) {
+
+  // placeholderに表示する文字
   let exampleText = "";
   for (const example of customizableSkill.examples ?? "") {
     exampleText += example;
@@ -126,15 +132,61 @@ function OtherSKillItem({ otherSkill }: { otherSkill: OtherSkill }) {
 }
 
 // 選択スキルを表示するコンポーネント(モーダル)
-/*
- * 
+/* 
+   - label 
+ * - optionプロパティ内のスキルごとの表示
+   - count分、optionプロパティ内のスキルを選択
+   - 選択したスキルのみ、補正値、カスタムスキルの内容を保持するようにしたい。
+
  * 
  */
-function ChoiceSkillModal() {
+function ChoiceSkillItem({ choiceSkill }: { choiceSkill: ChoiceSkill }) {
   return (
-    <Dialog>
+    <Card>
+      <CardHeader>
+        <CardTitle>{choiceSkill.label}</CardTitle>
+      </CardHeader>
+      <CardContent>
 
-    </Dialog>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline" className="w-full justify-start">
+              <span className="truncate">スキルを選択してください</span>
+              <span className="ml-auto text-xs text-muted-foreground">0/{choiceSkill.count}</span>
+            </Button>
+          </DialogTrigger>
+          {/* ダイアログのコンテンツ */}
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>スキル選択</DialogTitle>
+              <DialogDescription>{choiceSkill.label}から{choiceSkill.count}つ選択してください</DialogDescription>
+            </DialogHeader>
+            {/* スキルを選択するスクロールエリア */}
+            <ScrollArea className="h-[300px]">
+              <div className="space-y-2 ">
+                {choiceSkill.options.map((optionSkill, index) => {
+                  return (
+                    <div className="flex items-center space-x-2 rounded-md border p-3" key={`${optionSkill.label}-${index}`} >
+                      <Checkbox />
+                      <div className="flex-1">
+                        <Label htmlFor={`skill-option-${index}`} className="text-sm font-medium cursor-pointer" >
+                          {optionSkill.label}
+                        </Label>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </ScrollArea>
+            {/* ダイアログのフッター */}
+            <DialogFooter className="flex items-center justify-between">
+              <div className="text-sm text-muted-foreground">選択済み 0 / ...</div>
+              <Button type="button">選択を確定</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </CardContent>
+    </Card>
   )
 }
 
