@@ -2,12 +2,17 @@ import { CategorizedOccupationSkills, OCCUPATION_SKILL_MAP, SkillDefinition } fr
 import { useCharacterSheet } from "../hooks/use-character-sheet";
 import { NavigationButton } from "./navigation-button";
 import { useSkillForm } from "../hooks/use-skill-form";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label";
+
 import { getFormProps } from "@conform-to/react";
+import { SKILL_POINT_ALLOCATION_VALUES } from "../constants/skill-correction-value";
 
 export function SkillsForm() {
   const { nextStep, prevStep } = useCharacterSheet();
-  const { skills, setSkills, rawOccupationSkills, categorizedOccupationSkills, form, fields } = useSkillForm();
+  const { definedOccupationSkills, form, fields } = useSkillForm();
 
 
   return (
@@ -18,7 +23,7 @@ export function SkillsForm() {
       </CardHeader>
       <CardContent>
         <form {...getFormProps(form)} className="space-y-6">
-          {rawOccupationSkills.length === 0 ? (
+          {definedOccupationSkills.length === 0 ? (
             <div className="text-center py-4 text-muted-foreground">
               職業が選択されていないです。基本情報フォームで職業を選択してください
             </div>
@@ -26,57 +31,25 @@ export function SkillsForm() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* 職業スキルを grid 形式で表示する */}
               {/* 固定スキル */}
-              {categorizedOccupationSkills.fixedSkills.length > 0 && (
+              {definedOccupationSkills.map((skillDefinition, index) => {
+                const key = `${skillDefinition.type}-${skillDefinition.label}-${index}`;
 
-                <section className="space-y-4 p-4 border rounded-lg shadow-md md:col-span-1">
-                  {categorizedOccupationSkills.fixedSkills.map((skill) => {
-                    return (
-
-                      <FixedSkillItem />
-                    )
-                  })}
-                </section>
-              )}
-              {/* カスタマイズ可能スキル */}
-              {categorizedOccupationSkills.customizableSkills.length > 0 && (
-                <section className="space-y-4 p-4 border rounded-lg shadow-md md:col-span-1">
-                  {categorizedOccupationSkills.customizableSkills.map((skill) => {
-                    return (
-                      <CustomizableSkillItem />
-                    )
-                  })}
-                </section>
-              )}
-              {/* その他スキル */}
-              {categorizedOccupationSkills.otherSkills.length > 0 && (
-                <section className="space-y-4 p-4 border rounded-lg shadow-md md:col-span-1">
-                  {categorizedOccupationSkills.otherSkills.map((skill) => {
-                    return (
-                      <OtherSKillItem />
-                    )
-                  })}
-                </section>
-              )}
-              {/* 選択スキル */}
-              {categorizedOccupationSkills.choiceSkills.length > 0 && (
-                <section className="space-y-4 p-4 border rounded-lg shadow-md md:col-span-1">
-                  {categorizedOccupationSkills.choiceSkills.map((skill) => {
-                    return (
-                      <ChoiceSkillModal />
-                    )
-                  })}
-                </section>
-              )}
-              {/* 自由選択スキル */}
-              {categorizedOccupationSkills.freeChoiceSkills.length > 0 && (
-                <section className="space-y-4 p-4 border rounded-lg shadow-md md:col-span-1">
-                  {categorizedOccupationSkills.freeChoiceSkills.map((skill) => {
-                    return (
-                      <FreeChoiceSkillModa />
-                    )
-                  })}
-                </section>
-              )}
+                switch (skillDefinition.type) {
+                  case "fixed":
+                  case "fixed_specific":
+                    return <FixedSkillItem key={key} skillDefinition={skillDefinition} />
+                  case "customizable":
+                    return <CustomizableSkillItem key={key} />
+                  case "other":
+                    return <OtherSKillItem key={key} />
+                  case "choice":
+                    return <ChoiceSkillModal key={key} />
+                  case "free_choice":
+                    return <FreeChoiceSkillModal key={key} />
+                  default:
+                    return null;
+                }
+              })}
 
             </div>
           )}
@@ -94,30 +67,67 @@ export function SkillsForm() {
   スキル名を表示するラベル
   補正値を選択するラジオボタン
  */
-function FixedSkillItem() {
+function FixedSkillItem({ skillDefinition }: { skillDefinition: SkillDefinition }) {
+  /** skill id にはskill nameを指定
+   *  1つの職業でskill nameは重複しないため
+   */
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{skillDefinition.label}</CardTitle>
+      </CardHeader>
+      <CardContent><SkillPointAllocationSelector skillId={skillDefinition.label} /></CardContent>
 
+    </Card>
+  )
 }
 
 
-// カスタマイズ可能なスキルを表示するコンポーネント
+// カスタムスキルを表示するコンポーネント
 function CustomizableSkillItem() {
-
+  return (
+    <div>カスタムスキル</div>
+  )
 }
 
 // その他スキルを表示するコンポーネント
 function OtherSKillItem() {
-
+  return (
+    <div>その他スキル</div>
+  )
 }
 
 // 選択スキルを表示するコンポーネント(モーダル)
 function ChoiceSkillModal() {
-
+  return (
+    <div>選択スキル</div>
+  )
 }
 
 
 // 全スキルを選択するコンポーネント(モーダル)
-function FreeChoiceSkillModa() {
-
+function FreeChoiceSkillModal() {
+  return (
+    <div>自由選択スキル</div>
+  )
 }
 
-// 
+// 全スキルで使用する補正値選択のラジオボタン
+function SkillPointAllocationSelector({ skillId }: { skillId: string }) {
+  return (
+    // 画面がmdより大きい場合は3列で, それ以外は1列で表示
+    <RadioGroup name={`skill-${skillId}`} defaultChecked defaultValue="medium">
+      <div className="grid grid-cols-1 md:grid-cols-3">
+        {SKILL_POINT_ALLOCATION_VALUES.map((skillPoint) => {
+          const id = `${skillId}-${skillPoint.category}`;
+          return (
+            <div className="flex items-center space-x-2" key={skillPoint.category}>
+              <RadioGroupItem value={skillPoint.category} id={id} />
+              <Label htmlFor={id}>{skillPoint.label}</Label>
+            </div>
+          )
+        })}
+      </div>
+    </RadioGroup>
+  )
+}

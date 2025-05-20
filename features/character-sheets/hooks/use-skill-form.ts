@@ -8,10 +8,7 @@ import {
 	SkillsFormSchema,
 } from "../types/schemas/skill-schema";
 import { useBasicForm } from "./use-basic-form";
-import {
-	CategorizedOccupationSkills,
-	OCCUPATION_SKILL_MAP,
-} from "../constants/occupation-lists";
+import { OCCUPATION_SKILL_MAP } from "../constants/occupation-lists";
 
 export function useSkillForm() {
 	const { basicInfo } = useBasicForm();
@@ -28,55 +25,19 @@ export function useSkillForm() {
 		defaultValue: {},
 	});
 
-	// 生スキルオブジェクト
-	const rawOccupationSkills = useMemo(() => {
+	// 職業に応じた選択可能なスキルリスト
+	const definedOccupationSkills = useMemo(() => {
 		if (!basicInfo?.occupation) return [];
 		// OccupationValue 型にキャストして安全性を高める
 		const occupationKey = basicInfo.occupation;
 		return OCCUPATION_SKILL_MAP[occupationKey] || [];
 	}, [basicInfo?.occupation]);
 
-	// スキルタイプ別にカテゴライズされたスキルオブジェクト
-	const categorizedOccupationSkills = useMemo(() => {
-		const categorized: CategorizedOccupationSkills = {
-			fixedSkills: [],
-			customizableSkills: [],
-			choiceSkills: [],
-			freeChoiceSkills: [],
-			otherSkills: [],
-		};
-
-		for (const skill of rawOccupationSkills) {
-			switch (skill.type) {
-				case "fixed":
-				case "fixed_specific": // FixedSpecificSkill も fixedSkills に含める
-					categorized.fixedSkills.push(skill);
-					break;
-				case "customizable":
-					categorized.customizableSkills.push(skill);
-					break;
-				case "choice":
-					categorized.choiceSkills.push(skill);
-					break;
-				case "free_choice":
-					categorized.freeChoiceSkills.push(skill);
-					break;
-				case "other":
-					categorized.otherSkills.push(skill);
-					break;
-				default:
-					break;
-			}
-		}
-		return categorized;
-	}, [rawOccupationSkills]);
-
 	return {
 		skills,
 		setSkills,
 		form,
 		fields,
-		rawOccupationSkills, // 元の配列も必要であれば返す
-		categorizedOccupationSkills, // 分類されたスキルオブジェクト
+		definedOccupationSkills,
 	};
 }
