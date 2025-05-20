@@ -126,9 +126,15 @@ function OtherSKillItem({ otherSkill }: { otherSkill: OtherSkill }) {
 }
 
 // 選択スキルを表示するコンポーネント(モーダル)
+/*
+ * 
+ * 
+ */
 function ChoiceSkillModal() {
   return (
-    <div>選択スキル</div>
+    <Dialog>
+
+    </Dialog>
   )
 }
 
