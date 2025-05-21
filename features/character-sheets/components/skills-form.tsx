@@ -23,7 +23,6 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
 
 export function SkillsForm() {
   const { nextStep, prevStep } = useCharacterSheet();
@@ -57,7 +56,6 @@ export function SkillsForm() {
           )}
         </form>
       </CardContent>
-
       <NavigationButton nextStep={nextStep} prevStep={prevStep} />
     </Card>
   );
@@ -74,7 +72,7 @@ function FixedSkillItem({ fixedSkill }: { fixedSkill: FixedSkill }) {
    *  1つの職業でskill nameは重複しないため
    */
   return (
-    <SkillPointAllocationSelector skillId={fixedSkill.label} />
+    <SkillPointAllocationSelector skillId={fixedSkill.skill} />
   )
 }
 
@@ -93,9 +91,15 @@ function CustomizableSkillItem({ customizableSkill }: { customizableSkill: Custo
     exampleText += " "
   }
   return (
-    <div className="grid w-full max-w-sm items-center gap-1">
-      <Label htmlFor={customizableSkill.skill}>カスタム値を入力</Label>
-      <Input id={customizableSkill.skill} placeholder={exampleText} />
+    <div className="grid sm:grid-cols-2">
+      {/* 補正値選択部分 */}
+      <SkillPointAllocationSelector skillId={customizableSkill.skill} />
+      {/* カスタム値を入力する部分 */}
+      <div className="grid w-full max-w-sm items-center gap-1">
+        <Label htmlFor={customizableSkill.skill}>カスタム値を入力</Label>
+        <Input id={customizableSkill.skill} placeholder={exampleText} />
+      </div>
+
     </div>
   )
 }
@@ -209,9 +213,6 @@ function SkillCard({ children, skillDefinition }: { children: React.ReactNode; s
       <CardHeader className="bg-muted/30 py-3 px-4">
         <CardTitle className="flex items-center">
           {skillDefinition.label}
-          <Badge className="ml-auto text-xs">
-            {GetBudgeNameByType(skillDefinition.type)}
-          </Badge>
         </CardTitle>
       </CardHeader>
       <CardContent>{children}</CardContent>
