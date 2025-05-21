@@ -1,4 +1,4 @@
-import { ChoiceSkill, CustomizableSkill, FixedSkill, OtherSkill } from "../constants/occupation-lists";
+import { ChoiceSkill, CustomizableSkill, FixedSkill, OtherSkill, SkillDefinition } from "../constants/occupation-lists";
 import { useCharacterSheet } from "../hooks/use-character-sheet";
 import { NavigationButton } from "./navigation-button";
 import { useSkillForm } from "../hooks/use-skill-form";
@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 
 export function SkillsForm() {
   const { nextStep, prevStep } = useCharacterSheet();
@@ -31,7 +32,7 @@ export function SkillsForm() {
 
   return (
     <Card className="max-w-4xl mx-auto">
-      <CardHeader>
+      <CardHeader >
         <CardTitle className="text-2xl">スキルフォーム</CardTitle>
         <CardDescription>スキルポイントを自動生成する際に使用する補正値を選択してください</CardDescription>
       </CardHeader>
@@ -44,24 +45,12 @@ export function SkillsForm() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* 職業スキルを grid 形式で表示する */}
-              {/* 固定スキル */}
               {definedOccupationSkills.map((skillDefinition, index) => {
                 const key = `${skillDefinition.type}-${skillDefinition.label}-${index}`;
 
-                switch (skillDefinition.type) {
-                  case "fixed":
-                    return <FixedSkillItem key={key} fixedSkill={skillDefinition} />
-                  case "customizable":
-                    return <CustomizableSkillItem key={key} customizableSkill={skillDefinition} />
-                  case "other":
-                    return <OtherSKillItem key={key} otherSkill={skillDefinition} />
-                  case "choice":
-                    return <ChoiceSkillItem key={key} choiceSkill={skillDefinition} />
-                  case "free_choice":
-                    return <FreeChoiceSkillModal key={key} />
-                  default:
-                    return null;
-                }
+                return (
+                  <SkillCard key={key} skillDefinition={skillDefinition}>{GetSkillItemByType(skillDefinition)}</SkillCard>
+                )
               })}
 
             </div>
@@ -85,12 +74,7 @@ function FixedSkillItem({ fixedSkill }: { fixedSkill: FixedSkill }) {
    *  1つの職業でskill nameは重複しないため
    */
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{fixedSkill.label}</CardTitle>
-      </CardHeader>
-      <CardContent><SkillPointAllocationSelector skillId={fixedSkill.label} /></CardContent>
-    </Card>
+    <SkillPointAllocationSelector skillId={fixedSkill.label} />
   )
 }
 
@@ -109,25 +93,17 @@ function CustomizableSkillItem({ customizableSkill }: { customizableSkill: Custo
     exampleText += " "
   }
   return (
-    <Card>
-      <CardHeader><CardTitle>{customizableSkill.label}</CardTitle></CardHeader>
-      <CardContent>
-        <div className="grid w-full max-w-sm items-center gap-1">
-          <Label htmlFor={customizableSkill.skill}>カスタム値を入力</Label>
-          <Input id={customizableSkill.skill} placeholder={exampleText} />
-        </div>
-      </CardContent>
-    </Card>
+    <div className="grid w-full max-w-sm items-center gap-1">
+      <Label htmlFor={customizableSkill.skill}>カスタム値を入力</Label>
+      <Input id={customizableSkill.skill} placeholder={exampleText} />
+    </div>
   )
 }
 
 // その他スキルを表示するコンポーネント
 function OtherSKillItem({ otherSkill }: { otherSkill: OtherSkill }) {
   return (
-    <Card>
-      <CardHeader><CardTitle>{otherSkill.label}</CardTitle></CardHeader>
-      <SkillPointAllocationSelector skillId={otherSkill.label} />
-    </Card>
+    <SkillPointAllocationSelector skillId={otherSkill.label} />
   )
 }
 
@@ -141,73 +117,80 @@ function OtherSKillItem({ otherSkill }: { otherSkill: OtherSkill }) {
  * 
  */
 function ChoiceSkillItem({ choiceSkill }: { choiceSkill: ChoiceSkill }) {
+  const [selectedSkills, setSelectedSkills] = useState<ChoiceSkill["options"][0][]>([]);
+
+  // スキルが選択されているかチェックする関数  
+  const isSelected = (skill: ChoiceSkill["options"][0]) => {
+    return selectedSkills.some(selected => selected.label === skill.label);
+  };
+
+  // チェックボックスの状態変更ハンドラー  
+  const handleCheckedChange = (checked: boolean, skill: ChoiceSkill["options"][0]) => {
+    if (checked) {
+      // 選択上限をチェック  
+      if (selectedSkills.length < choiceSkill.count) {
+        setSelectedSkills([...selectedSkills, skill]);
+      }
+    } else {
+      setSelectedSkills(selectedSkills.filter(selected => selected.label !== skill.label));
+    }
+  };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{choiceSkill.label}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="outline" className="w-full justify-start">
-              <span className="truncate">スキルを選択してください</span>
-              <span className="ml-auto text-xs text-muted-foreground">0/{choiceSkill.count}</span>
-            </Button>
-          </DialogTrigger>
-          {/* ダイアログのコンテンツ */}
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>スキル選択</DialogTitle>
-              <DialogDescription>{choiceSkill.label}から{choiceSkill.count}つ選択してください</DialogDescription>
-            </DialogHeader>
-            {/* スキルを選択するスクロールエリア */}
-            <ScrollArea className="h-[300px] p-3">
-              <div className="space-y-2">
-                {choiceSkill.options.map((optionSkill, index) => {
-                  return (
-                    <div className="flex items-center space-x-2 rounded-md border p-3" key={`${optionSkill.label}-${index}`} >
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline" className="w-full justify-start">
+          <span className="truncate">スキルを選択してください</span>
+          <span className="ml-auto text-xs text-muted-foreground">0/{choiceSkill.count}</span>
+        </Button>
+      </DialogTrigger>
+      {/* ダイアログのコンテンツ */}
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>スキル選択</DialogTitle>
+          <DialogDescription>{choiceSkill.label}から{choiceSkill.count}つ選択してください</DialogDescription>
+        </DialogHeader>
+        {/* スキルを選択するスクロールエリア */}
+        <ScrollArea className="h-[300px] p-3">
+          <div className="space-y-2">
+            {choiceSkill.options.map((optionSkill, index) => {
+              const isChecked = isSelected(optionSkill);
+              return (
+                <div className="rounded-md border p-3" key={`${optionSkill.label}-${index}`}>
+                  <div className="flex items-start">
+                    {/* 左側: チェックボックスとラベル */}
+                    <div className="flex items-center space-x-2">
                       <Checkbox
                         id={`skill-option-${index}`}
                         checked={isSelected(optionSkill)}
-                        onCheckedChange={ }
+                        onCheckedChange={(checked) =>
+                          handleCheckedChange(!!checked, optionSkill)
+                        }
                       />
-                      <div className="flex-1">
-                        <Label htmlFor={`skill-option-${index}`} className="text-sm font-medium cursor-pointer" >
-                          {optionSkill.label}
-                        </Label>
-                      </div>
-                      {/* チェックされたスキルに応じたコンポーネントを表示するエリア */}
-                      {isChecked && (
-                        <div className="flex w-full ">
-                          {(() => {
-                            switch (optionSkill.type) {
-                              case "fixed":
-                                return <FixedSkillItem fixedSkill={optionSkill} />
-                              case "customizable":
-                                return <CustomizableSkillItem customizableSkill={optionSkill} />
-                              case "other":
-                                return <OtherSKillItem otherSkill={optionSkill} />
-                              default:
-                                return null;
-                            }
-                          })()}
-                        </div>
-                      )}
+                      <Label htmlFor={`skill-option-${index}`} className="text-sm font-medium cursor-pointer">
+                        {optionSkill.label}
+                      </Label>
                     </div>
-                  )
-                })}
-              </div>
-            </ScrollArea>
-            {/* ダイアログのフッター */}
-            <DialogFooter className="flex items-center justify-between">
-              <div className="text-sm text-muted-foreground">選択済み 0 / ...</div>
-              <Button type="button">選択を確定</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </CardContent>
-    </Card>
+
+                    {/* 右側: チェックされた場合のスキル設定部分 */}
+                    {isChecked && (
+                      <div className="ml-auto pl-4">
+                        {GetSkillItemByType(optionSkill)}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </ScrollArea>
+        {/* ダイアログのフッター */}
+        <DialogFooter className="flex items-center justify-between">
+          <div className="text-sm text-muted-foreground">選択済み 0 / ...</div>
+          <Button type="button">選択を確定</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }
 
@@ -218,6 +201,25 @@ function FreeChoiceSkillModal() {
     <div>自由選択スキル</div>
   )
 }
+
+// 各スキルを表示する際に使用する共通カードコンポーネント
+function SkillCard({ children, skillDefinition }: { children: React.ReactNode; skillDefinition: SkillDefinition }) {
+  return (
+    <Card className="overflow-hidden hover:shadow transition-shadow">
+      <CardHeader className="bg-muted/30 py-3 px-4">
+        <CardTitle className="flex items-center">
+          {skillDefinition.label}
+          <Badge className="ml-auto text-xs">
+            {GetBudgeNameByType(skillDefinition.type)}
+          </Badge>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>{children}</CardContent>
+    </Card>
+  )
+}
+
+
 
 // 全スキルで使用する補正値選択のラジオボタン
 function SkillPointAllocationSelector({ skillId }: { skillId: string }) {
@@ -237,4 +239,40 @@ function SkillPointAllocationSelector({ skillId }: { skillId: string }) {
       </div>
     </RadioGroup>
   )
+}
+
+// スキルタイプに応じたコンポーネントを表示する関数
+function GetSkillItemByType(skillDefinition: SkillDefinition) {
+  switch (skillDefinition.type) {
+    case "fixed":
+      return <FixedSkillItem fixedSkill={skillDefinition} />
+    case "customizable":
+      return <CustomizableSkillItem customizableSkill={skillDefinition} />
+    case "other":
+      return <OtherSKillItem otherSkill={skillDefinition} />
+    case "choice":
+      return <ChoiceSkillItem choiceSkill={skillDefinition} />
+    case "free_choice":
+      return <FreeChoiceSkillModal />
+    default:
+      return null;
+  }
+}
+
+// スキルタイプに応じたバッジ名を取得する関数
+function GetBudgeNameByType(skillDefinitionType: SkillDefinition["type"]) {
+  switch (skillDefinitionType) {
+    case "fixed":
+      return "固定";
+    case "customizable":
+      return "カスタム"
+    case "other":
+      return "その他";
+    case "choice":
+      return "選択"
+    case "free_choice":
+      return "自由選択"
+    default:
+      return "";
+  }
 }
