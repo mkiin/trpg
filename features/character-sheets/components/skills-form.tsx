@@ -25,7 +25,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
-import { SKILL_CATEGORY_LIST } from "../constants/skills-list";
+import { SKILL_CATEGORY_LIST, SKILL_LIST } from "../constants/skills-list";
 
 export function SkillsForm() {
   const { nextStep, prevStep } = useCharacterSheet();
@@ -206,12 +206,15 @@ function ChoiceSkillItem({ choiceSkill }: { choiceSkill: ChoiceSkill }) {
 function FreeChoiceSkillModal() {
   return (
     <Dialog>
-      <DialogTrigger>
-
+      <DialogTrigger asChild>
+        <Button variant="outline" className="w-full justify-start">
+          <span className="truncate">スキルを選択してください</span>
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
+        <DialogHeader><DialogTitle /></DialogHeader>
         {/* タブによりスキル表示 */}
-
+        {FreeChoiceSkillTabs()}
       </DialogContent>
     </Dialog>
   )
@@ -225,6 +228,7 @@ function FreeChoiceSkillModal() {
  * 選択されたスキルは補正, カスタムスキルの場合追加でカスタム値を入力できる
  */
 function FreeChoiceSkillTabs() {
+
   return (
     <Tabs>
       <TabsList>
@@ -234,7 +238,34 @@ function FreeChoiceSkillTabs() {
         })}
       </TabsList>
       {/* タブのコンテンツ */}
+      {SKILL_CATEGORY_LIST.map((skillCategory) => {
+        return (
+          <TabsContent key={skillCategory.category} value={skillCategory.category}>
+            <ScrollArea className="h-[300px] p-3">
+              <div className="space-y-2">
+                {SKILL_LIST[skillCategory.category].map((skill, index) => {
+                  return (
+                    // 各スキルのラベルと各種入力項目のボックス
+                    // チェックボックス, ラベル
+                    <div key={`${skillCategory.category}-${skill.label}`} className="border rounded-md p-3">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id={`${skillCategory.category}-${skill.label}-${index}`}
 
+                        />
+                        <Label htmlFor={`skill-option-${index}`} className="text-sm font-medium cursor-pointer">
+                          {skill.label}
+                        </Label>
+                      </div>
+
+                    </div>
+                  )
+                })}
+              </div>
+            </ScrollArea>
+          </TabsContent>
+        )
+      })}
     </Tabs>
   )
 }
