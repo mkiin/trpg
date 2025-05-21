@@ -1,6 +1,3 @@
-// カテゴリの種類
-export type SKILL_POINT_ALLOCATION_CATEGORY = "high" | "medium" | "low";
-
 // ラベルの種類
 export type SKILL_POINT_ALLOCATION_LABEL = "高" | "中" | "小";
 

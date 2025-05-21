@@ -15,6 +15,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
 
 import { getFormProps } from "@conform-to/react";
 import { SKILL_POINT_ALLOCATION_VALUES } from "../constants/skill-correction-value";
@@ -23,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
+import { SKILL_CATEGORY_LIST } from "../constants/skills-list";
 
 export function SkillsForm() {
   const { nextStep, prevStep } = useCharacterSheet();
@@ -202,7 +205,37 @@ function ChoiceSkillItem({ choiceSkill }: { choiceSkill: ChoiceSkill }) {
 // 全スキルを選択するコンポーネント(モーダル)
 function FreeChoiceSkillModal() {
   return (
-    <div>自由選択スキル</div>
+    <Dialog>
+      <DialogTrigger>
+
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
+        {/* タブによりスキル表示 */}
+
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+// タブ表示でスキル選択
+/**
+ * 戦闘技能,探索技能,行動技能,交渉技能,知識技能の5つのタブ
+ * スロールエリアによりスキル表示
+ * checkboxによりスキル選択
+ * 選択されたスキルは補正, カスタムスキルの場合追加でカスタム値を入力できる
+ */
+function FreeChoiceSkillTabs() {
+  return (
+    <Tabs>
+      <TabsList>
+        {/* 切り替えタブ (戦闘技能,探索技能,行動技能,交渉技能,知識技能) */}
+        {SKILL_CATEGORY_LIST.map((skillCategory) => {
+          return (<TabsTrigger value={skillCategory.category} key={skillCategory.category}>{skillCategory.label}</TabsTrigger>)
+        })}
+      </TabsList>
+      {/* タブのコンテンツ */}
+
+    </Tabs>
   )
 }
 
@@ -219,8 +252,6 @@ function SkillCard({ children, skillDefinition }: { children: React.ReactNode; s
     </Card>
   )
 }
-
-
 
 // 全スキルで使用する補正値選択のラジオボタン
 function SkillPointAllocationSelector({ skillId }: { skillId: string }) {
@@ -260,20 +291,20 @@ function GetSkillItemByType(skillDefinition: SkillDefinition) {
   }
 }
 
-// スキルタイプに応じたバッジ名を取得する関数
-function GetBudgeNameByType(skillDefinitionType: SkillDefinition["type"]) {
-  switch (skillDefinitionType) {
-    case "fixed":
-      return "固定";
-    case "customizable":
-      return "カスタム"
-    case "other":
-      return "その他";
-    case "choice":
-      return "選択"
-    case "free_choice":
-      return "自由選択"
-    default:
-      return "";
-  }
-}
+// // スキルタイプに応じたバッジ名を取得する関数
+// function GetBudgeNameByType(skillDefinitionType: SkillDefinition["type"]) {
+//   switch (skillDefinitionType) {
+//     case "fixed":
+//       return "固定";
+//     case "customizable":
+//       return "カスタム"
+//     case "other":
+//       return "その他";
+//     case "choice":
+//       return "選択"
+//     case "free_choice":
+//       return "自由選択"
+//     default:
+//       return "";
+//   }
+// }

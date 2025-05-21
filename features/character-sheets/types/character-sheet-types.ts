@@ -44,7 +44,7 @@ export type CharacterAbilities = {
 };
 
 // 技能
-export interface CharacterSkills {
+export type CharacterSkills = {
 	// 戦闘技能
 	combat: {
 		dodge: number; // 回避 (DEX×2%)
@@ -81,6 +81,7 @@ export interface CharacterSkills {
 	action: {
 		drive: {
 			label: string;
+			customString: string;
 			value: number;
 		}; // 運転 (20)
 		mechanicalRepair: number; // 機械修理 (20)
@@ -89,10 +90,12 @@ export interface CharacterSkills {
 		swim: number; // 水泳 (25)
 		craft: {
 			label: string;
+			customString: string;
 			value: number;
 		}; // 製作 (5)
 		pilot: {
 			label: string;
+			customString: string;
 			value: number;
 		}; // 操縦 (1)
 		jump: number; // 跳躍 (25)
@@ -109,6 +112,7 @@ export interface CharacterSkills {
 		bargain: number; // 値切り (5)
 		nativeLanguage: {
 			label: string;
+			customString: string;
 			value: number;
 		};
 	};
@@ -121,6 +125,7 @@ export interface CharacterSkills {
 		cthulhuMythos: number; // クトゥルフ神話 (0)
 		art: {
 			label: string;
+			customString: string;
 			value: number;
 		}; // 芸術 (5)
 		accounting: number; // 経理 (10)
@@ -138,7 +143,8 @@ export interface CharacterSkills {
 		pharmacy: number; // 薬学 (1)
 		history: number; // 歴史 (20)
 	};
-}
+	other: Array<{ skill: string; value: number }>;
+};
 
 // キャラクターシート全体
 export type CharacterSheet = {
