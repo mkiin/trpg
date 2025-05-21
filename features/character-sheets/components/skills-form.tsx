@@ -1,4 +1,4 @@
-import { ChoiceSkill, CustomizableSkill, FixedSkill, FixedSpecificSkill, OtherSkill } from "../constants/occupation-lists";
+import { ChoiceSkill, CustomizableSkill, FixedSkill, OtherSkill } from "../constants/occupation-lists";
 import { useCharacterSheet } from "../hooks/use-character-sheet";
 import { NavigationButton } from "./navigation-button";
 import { useSkillForm } from "../hooks/use-skill-form";
@@ -22,6 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useState } from "react";
 
 export function SkillsForm() {
   const { nextStep, prevStep } = useCharacterSheet();
@@ -49,7 +50,6 @@ export function SkillsForm() {
 
                 switch (skillDefinition.type) {
                   case "fixed":
-                  case "fixed_specific":
                     return <FixedSkillItem key={key} fixedSkill={skillDefinition} />
                   case "customizable":
                     return <CustomizableSkillItem key={key} customizableSkill={skillDefinition} />
@@ -80,7 +80,7 @@ export function SkillsForm() {
   スキル名を表示するラベル
   補正値を選択するラジオボタン
  */
-function FixedSkillItem({ fixedSkill }: { fixedSkill: FixedSkill | FixedSpecificSkill }) {
+function FixedSkillItem({ fixedSkill }: { fixedSkill: FixedSkill }) {
   /** skill id にはskill nameを指定
    *  1つの職業でskill nameは重複しないため
    */
@@ -136,18 +136,18 @@ function OtherSKillItem({ otherSkill }: { otherSkill: OtherSkill }) {
    - label 
  * - optionプロパティ内のスキルごとの表示
    - count分、optionプロパティ内のスキルを選択
-   - 選択したスキルのみ、補正値、カスタムスキルの内容を保持するようにしたい。
+   - 選択したスキルのみ、ラジオボタンによって補正値、カスタムスキルの内容を保持するようにしたい。
 
  * 
  */
 function ChoiceSkillItem({ choiceSkill }: { choiceSkill: ChoiceSkill }) {
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>{choiceSkill.label}</CardTitle>
       </CardHeader>
       <CardContent>
-
         <Dialog>
           <DialogTrigger asChild>
             <Button variant="outline" className="w-full justify-start">
@@ -162,17 +162,38 @@ function ChoiceSkillItem({ choiceSkill }: { choiceSkill: ChoiceSkill }) {
               <DialogDescription>{choiceSkill.label}から{choiceSkill.count}つ選択してください</DialogDescription>
             </DialogHeader>
             {/* スキルを選択するスクロールエリア */}
-            <ScrollArea className="h-[300px]">
-              <div className="space-y-2 ">
+            <ScrollArea className="h-[300px] p-3">
+              <div className="space-y-2">
                 {choiceSkill.options.map((optionSkill, index) => {
                   return (
                     <div className="flex items-center space-x-2 rounded-md border p-3" key={`${optionSkill.label}-${index}`} >
-                      <Checkbox />
+                      <Checkbox
+                        id={`skill-option-${index}`}
+                        checked={isSelected(optionSkill)}
+                        onCheckedChange={ }
+                      />
                       <div className="flex-1">
                         <Label htmlFor={`skill-option-${index}`} className="text-sm font-medium cursor-pointer" >
                           {optionSkill.label}
                         </Label>
                       </div>
+                      {/* チェックされたスキルに応じたコンポーネントを表示するエリア */}
+                      {isChecked && (
+                        <div className="flex w-full ">
+                          {(() => {
+                            switch (optionSkill.type) {
+                              case "fixed":
+                                return <FixedSkillItem fixedSkill={optionSkill} />
+                              case "customizable":
+                                return <CustomizableSkillItem customizableSkill={optionSkill} />
+                              case "other":
+                                return <OtherSKillItem otherSkill={optionSkill} />
+                              default:
+                                return null;
+                            }
+                          })()}
+                        </div>
+                      )}
                     </div>
                   )
                 })}

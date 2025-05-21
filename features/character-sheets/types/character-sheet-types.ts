@@ -107,11 +107,10 @@ export interface CharacterSkills {
 		credit: number; // 信用 (15)
 		persuade: number; // 説得 (15)
 		bargain: number; // 値切り (5)
-		nativeLanguage: number; // 母国語 (EDU×5%)
-		otherLanguage: {
+		nativeLanguage: {
 			label: string;
 			value: number;
-		}; // 他の言語 (1%)
+		};
 	};
 
 	// 知識技能
