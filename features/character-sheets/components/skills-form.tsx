@@ -161,7 +161,7 @@ function ChoiceSkillItem({ choiceSkill }: { choiceSkill: ChoiceSkill }) {
               const isChecked = isSelected(optionSkill);
               return (
                 <div className="rounded-md border p-3" key={`${optionSkill.label}-${index}`}>
-                  <div className="flex items-start">
+                  <div className="flex">
                     {/* 左側: チェックボックスとラベル */}
                     <div className="flex items-center space-x-2">
                       <Checkbox
@@ -178,7 +178,7 @@ function ChoiceSkillItem({ choiceSkill }: { choiceSkill: ChoiceSkill }) {
 
                     {/* 右側: チェックされた場合のスキル設定部分 */}
                     {isChecked && (
-                      <div className="ml-auto pl-4">
+                      <div className="pl-4">
                         {GetSkillItemByType(optionSkill)}
                       </div>
                     )}
@@ -227,7 +227,7 @@ function SkillPointAllocationSelector({ skillId }: { skillId: string }) {
   return (
     // 画面がmdより大きい場合は3列で, それ以外は1列で表示
     <RadioGroup name={`skill-${skillId}`} defaultChecked defaultValue="medium">
-      <div className="grid grid-cols-1 md:grid-cols-3">
+      <div className="grid grid-cols-3">
         {SKILL_POINT_ALLOCATION_VALUES.map((skillPoint) => {
           const id = `${skillId}-${skillPoint.category}`;
           return (
