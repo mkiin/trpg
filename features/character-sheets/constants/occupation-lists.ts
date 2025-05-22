@@ -1,6 +1,6 @@
 //職業リスト
 
-import { CharacterSkills } from "../types/character-sheet-types";
+import { SkillKey } from "../types/character-sheet-types";
 
 export const OCCUPATION_GROUPS = [
 	{
@@ -158,18 +158,11 @@ export type OccupationValue =
 
 /** 任意の値を持つ技能のキー (例: 運転の種類、言語の種類など) */
 export type CustomizableSkillKey =
-	| "nativeLanguage"
+	| "otherLanguage"
 	| "drive"
 	| "craft"
 	| "pilot"
 	| "art";
-
-export type SkillKey =
-	| keyof CharacterSkills["combat"]
-	| keyof CharacterSkills["investigation"]
-	| keyof CharacterSkills["action"]
-	| keyof CharacterSkills["negotiation"]
-	| keyof CharacterSkills["knowledge"];
 
 /**
  * 1. 固定された基本技能 (詳細指定が不要なもの)
@@ -188,7 +181,7 @@ export interface FixedSkill {
 
 /**
  * 3. ユーザーが詳細を指定するカスタマイズ可能技能
- * 例: 芸術(任意) (art), 他の言語(英語など) (nativeLanguage)
+ * 例: 芸術(任意) (art), 他の言語(英語など) (otherLanguage)
  */
 export interface CustomizableSkill {
 	type: "customizable";
@@ -244,7 +237,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 	// 医師グループ
 	doctor: [
 		{ type: "fixed", skill: "medicine", label: "医学" },
-		{ type: "fixed", skill: "firstAid", label: "応急手当" }, // 元のマークダウンでは occult になっていましたが、firstAid が適切と思われます
+		{ type: "fixed", skill: "firstAid", label: "応急手当" },
 		{ type: "fixed", skill: "accounting", label: "経理" },
 		{ type: "fixed", skill: "credit", label: "信用" },
 		{ type: "fixed", skill: "biology", label: "生物学" },
@@ -252,11 +245,12 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "pharmacy", label: "薬学" },
 		{
 			type: "customizable",
-			skill: "nativeLanguage",
-			label: "母国語",
+			skill: "otherLanguage",
+			label: "その他の言語",
 			examples: ["英語", "ラテン語", "ドイツ語"],
 		},
 	],
+	// アニマルセラピスト
 	animal_therapist: [
 		{ type: "fixed", skill: "listen", label: "聞き耳" },
 		{ type: "fixed", skill: "psychology", label: "心理学" },
@@ -267,6 +261,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "naturalHistory", label: "博物学" },
 		{ type: "free_choice", label: "個人的な関心のある技能１つ", count: 1 },
 	],
+	// 看護師
 	nurse: [
 		{ type: "fixed", skill: "chemistry", label: "化学" },
 		{ type: "fixed", skill: "biology", label: "生物学" },
@@ -285,6 +280,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "listen", label: "聞き耳" },
 		{ type: "fixed", skill: "spot", label: "目星" },
 	],
+	// 救急救命士
 	paramedic: [
 		{ type: "fixed", skill: "medicine", label: "医学" },
 		{ type: "fixed", skill: "firstAid", label: "応急手当" },
@@ -294,6 +290,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "electricalRepair", label: "電気修理" },
 		{ type: "fixed", skill: "climb", label: "登攀" },
 	],
+	// 形成外科医
 	plastic_surgeon: [
 		{ type: "fixed", skill: "medicine", label: "医学" },
 		{ type: "fixed", skill: "firstAid", label: "応急手当" },
@@ -304,11 +301,12 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "pharmacy", label: "薬学" },
 		{
 			type: "customizable",
-			skill: "nativeLanguage",
-			label: "母国語",
+			skill: "otherLanguage",
+			label: "その他の言語",
 			examples: ["英語"],
 		},
 	],
+	// 精神科医
 	psychiatrist: [
 		{ type: "fixed", skill: "medicine", label: "医学" },
 		{ type: "fixed", skill: "chemistry", label: "化学" },
@@ -317,8 +315,9 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "biology", label: "生物学" },
 		{ type: "fixed", skill: "persuade", label: "説得" },
 		{ type: "fixed", skill: "pharmacy", label: "薬学" },
-		{ type: "customizable", skill: "nativeLanguage", label: "母国語" },
+		{ type: "customizable", skill: "otherLanguage", label: "その他の言語" },
 	],
+	// 闇医者
 	underground_doctor: [
 		{ type: "fixed", skill: "medicine", label: "医学" },
 		{ type: "fixed", skill: "firstAid", label: "応急手当" },
@@ -326,7 +325,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "persuade", label: "説得" },
 		{ type: "fixed", skill: "law", label: "法律" },
 		{ type: "fixed", skill: "pharmacy", label: "薬学" },
-		{ type: "customizable", skill: "nativeLanguage", label: "母国語" },
+		{ type: "customizable", skill: "otherLanguage", label: "その他の言語" },
 		{ type: "free_choice", label: "個人的な関心のある技能１つ", count: 1 },
 	],
 
@@ -340,8 +339,8 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "physics", label: "物理学" },
 		{
 			type: "customizable",
-			skill: "nativeLanguage",
-			label: "母国語",
+			skill: "otherLanguage",
+			label: "その他の言語",
 			examples: ["英語"],
 		},
 		{
@@ -365,8 +364,8 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "library", label: "図書館" },
 		{
 			type: "customizable",
-			skill: "nativeLanguage",
-			label: "母国語",
+			skill: "otherLanguage",
+			label: "その他の言語",
 			examples: ["英語", "中国語", "朝鮮語", "ロシア語"],
 		},
 		{
@@ -452,7 +451,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "climb", label: "登攀" },
 		{ type: "fixed", skill: "navigate", label: "ナビゲート" },
 		{ type: "other", label: "サバイバル（山）" },
-		{ type: "customizable", skill: "nativeLanguage", label: "母国語" },
+		{ type: "customizable", skill: "otherLanguage", label: "その他の言語" },
 	],
 	private_detective: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
@@ -663,8 +662,8 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 				},
 				{
 					type: "customizable",
-					skill: "nativeLanguage",
-					label: "母国語",
+					skill: "otherLanguage",
+					label: "その他の言語",
 					examples: ["英語"],
 				},
 				{ type: "other", label: "グレネード・ランチャー" },
@@ -754,8 +753,8 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		},
 		{
 			type: "customizable",
-			skill: "nativeLanguage",
-			label: "母国語",
+			skill: "otherLanguage",
+			label: "その他の言語",
 			examples: ["英語", "漢文", "ラテン語"],
 		},
 		{ type: "customizable", skill: "art", label: "芸術（任意）" },
@@ -770,8 +769,8 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "physics", label: "物理学" },
 		{
 			type: "customizable",
-			skill: "nativeLanguage",
-			label: "母国語",
+			skill: "otherLanguage",
+			label: "その他の言語",
 			examples: ["英語"],
 		},
 	],
@@ -789,8 +788,8 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		},
 		{
 			type: "customizable",
-			skill: "nativeLanguage",
-			label: "母国語",
+			skill: "otherLanguage",
+			label: "その他の言語",
 			examples: ["英語"],
 		},
 	],
@@ -809,7 +808,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 				{ type: "fixed", skill: "sneak", label: "忍び歩き" },
 				{ type: "fixed", skill: "swim", label: "水泳" },
 				{ type: "fixed", skill: "climb", label: "登攀" },
-				{ type: "customizable", skill: "nativeLanguage", label: "母国語" },
+				{ type: "customizable", skill: "otherLanguage", label: "その他の言語" },
 				{ type: "fixed", skill: "operateHeavyMachinery", label: "重機械操作" },
 				{ type: "other", label: "パラシュート" },
 				{ type: "other", label: "砲" },
@@ -879,7 +878,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 				{ type: "fixed", skill: "firstAid", label: "応急手当" },
 				{ type: "fixed", skill: "mechanicalRepair", label: "機械修理" },
 				{ type: "other", label: "サバイバル（山、砂漠）" },
-				{ type: "customizable", skill: "nativeLanguage", label: "母国語" },
+				{ type: "customizable", skill: "otherLanguage", label: "その他の言語" },
 			],
 			count: 2,
 		},
@@ -892,8 +891,8 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "library", label: "図書館" },
 		{
 			type: "customizable",
-			skill: "nativeLanguage",
-			label: "母国語",
+			skill: "otherLanguage",
+			label: "その他の言語",
 			examples: ["英語"],
 		},
 		{ type: "fixed", skill: "history", label: "歴史" },
@@ -914,8 +913,8 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 				{ type: "fixed", skill: "credit", label: "信用" },
 				{
 					type: "customizable",
-					skill: "nativeLanguage",
-					label: "母国語",
+					skill: "otherLanguage",
+					label: "その他の言語",
 					examples: ["漢文", "ラテン語"],
 				},
 			],
@@ -945,8 +944,8 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "bargain", label: "値切り" },
 		{
 			type: "customizable",
-			skill: "nativeLanguage",
-			label: "母国語",
+			skill: "otherLanguage",
+			label: "その他の言語",
 			examples: ["英語"],
 		},
 		{
@@ -975,7 +974,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "jump", label: "跳躍" },
 		{ type: "fixed", skill: "climb", label: "登攀" },
 		{ type: "fixed", skill: "library", label: "図書館" },
-		{ type: "customizable", skill: "nativeLanguage", label: "母国語" },
+		{ type: "customizable", skill: "otherLanguage", label: "その他の言語" },
 		{
 			type: "choice",
 			label: "次の技能から専門的研究分野として２つ選択",
@@ -1019,8 +1018,8 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "disguise", label: "変装" },
 		{
 			type: "customizable",
-			skill: "nativeLanguage",
-			label: "母国語",
+			skill: "otherLanguage",
+			label: "その他の言語",
 			examples: ["英語"],
 		},
 	],
@@ -1139,8 +1138,8 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "library", label: "図書館" },
 		{
 			type: "customizable",
-			skill: "nativeLanguage",
-			label: "母国語",
+			skill: "otherLanguage",
+			label: "その他の言語",
 			examples: ["英語", "ラテン語"],
 		},
 		{ type: "fixed", skill: "history", label: "歴史" },
@@ -1188,8 +1187,8 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "law", label: "法律" },
 		{
 			type: "customizable",
-			skill: "nativeLanguage",
-			label: "母国語",
+			skill: "otherLanguage",
+			label: "その他の言語",
 			examples: ["英語"],
 		},
 		{
@@ -1274,8 +1273,8 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "physics", label: "物理学" },
 		{
 			type: "customizable",
-			skill: "nativeLanguage",
-			label: "母国語",
+			skill: "otherLanguage",
+			label: "その他の言語",
 			examples: ["英語"],
 		},
 	],
@@ -1289,8 +1288,8 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "law", label: "法律" },
 		{
 			type: "customizable",
-			skill: "nativeLanguage",
-			label: "母国語",
+			skill: "otherLanguage",
+			label: "その他の言語",
 			examples: ["英語"],
 		},
 	],
@@ -1328,7 +1327,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "accounting", label: "経理" },
 		{ type: "fixed", skill: "psychology", label: "心理学" },
 		{ type: "fixed", skill: "spot", label: "目星" },
-		{ type: "customizable", skill: "nativeLanguage", label: "母国語" },
+		{ type: "customizable", skill: "otherLanguage", label: "その他の言語" },
 	],
 	salesman: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
@@ -1386,8 +1385,8 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 				},
 				{
 					type: "customizable",
-					skill: "nativeLanguage",
-					label: "母国語",
+					skill: "otherLanguage",
+					label: "その他の言語",
 					examples: ["英語"],
 				},
 			],
@@ -1442,8 +1441,8 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "bargain", label: "値切り" },
 		{
 			type: "customizable",
-			skill: "nativeLanguage",
-			label: "母国語",
+			skill: "otherLanguage",
+			label: "その他の言語",
 			examples: ["英語"],
 		},
 	],
@@ -1462,8 +1461,8 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "law", label: "法律" },
 		{
 			type: "customizable",
-			skill: "nativeLanguage",
-			label: "母国語",
+			skill: "otherLanguage",
+			label: "その他の言語",
 			examples: ["英語", "ドイツ語"],
 		},
 	],
@@ -1480,8 +1479,8 @@ export const MOCK_OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "pharmacy", label: "薬学" },
 		{
 			type: "customizable",
-			skill: "nativeLanguage",
-			label: "母国語",
+			skill: "otherLanguage",
+			label: "その他の言語",
 			examples: ["英語", "ラテン語", "ドイツ語"],
 		},
 	],
@@ -1510,7 +1509,7 @@ export const MOCK_OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "persuade", label: "説得" },
 		{ type: "fixed", skill: "law", label: "法律" },
 		{ type: "fixed", skill: "pharmacy", label: "薬学" },
-		{ type: "customizable", skill: "nativeLanguage", label: "母国語" },
+		{ type: "customizable", skill: "otherLanguage", label: "その他の言語" },
 		{ type: "free_choice", label: "個人的な関心のある技能１つ", count: 1 },
 	],
 };

@@ -1,16 +1,14 @@
 import { CharacterSkills } from "../types/character-sheet-types";
-import { SkillKey } from "./occupation-lists";
+import { SkillKey } from "../types/character-sheet-types";
 
 type SkillCategory = Exclude<keyof CharacterSkills, "other">;
 
 type SkillListDetail = {
-	skill: SkillKey;
+	id: SkillKey;
 	label: string;
 };
 
-type SkillList = {
-	readonly [CategoryKey in SkillCategory]: ReadonlyArray<SkillListDetail>;
-};
+type SkillList = Record<SkillKey, SkillListDetail>;
 
 // スキルカテゴリから対応するラベル名を取得する型関数
 type GetLabelFromCategory<L extends SkillCategory> = L extends "combat"
@@ -43,6 +41,7 @@ export const SKILL_CATEGORY_LIST = [
 
 // 全スキルを種類ごとに定義
 // labelはUI表示に使用
+
 export const SKILL_LIST = {
 	combat: [
 		{ skill: "dodge", label: "回避" },
@@ -123,3 +122,5 @@ export const SKILL_LIST = {
 		{ skill: "history", label: "歴史" },
 	],
 } as const satisfies SkillList;
+
+export const MOCK_LIST = {};

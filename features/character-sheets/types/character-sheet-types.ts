@@ -43,7 +43,15 @@ export type CharacterAbilities = {
 	damageBonus: number; // ダメージボーナス (strength + size)
 };
 
-// 技能
+// 技能名リストの型
+export type SkillKey =
+	| keyof CharacterSkills["combat"]
+	| keyof CharacterSkills["investigation"]
+	| keyof CharacterSkills["action"]
+	| keyof CharacterSkills["negotiation"]
+	| keyof CharacterSkills["knowledge"];
+
+// 技能値管理する型
 export type CharacterSkills = {
 	// 戦闘技能
 	combat: {
@@ -119,8 +127,10 @@ export type CharacterSkills = {
 		credit: number; // 信用 (15)
 		persuade: number; // 説得 (15)
 		bargain: number; // 値切り (5)
-		nativeLanguage: {
-			customString: string;
+		nativeLanguage: number; // 母国語 EDU*5
+		otherLanguage: {
+			// その他の言語 EDU*1
+			customString: number;
 			value: number;
 		};
 	};
