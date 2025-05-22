@@ -34,7 +34,6 @@ export const OCCUPATION_GROUPS = [
 	{
 		label: "芸術家",
 		options: [
-			{ label: "芸術家", value: "artist" },
 			{ label: "芸術家（基本）", value: "artist_basic" },
 			{ label: "ダンサー", value: "dancer" },
 			{ label: "デザイナー", value: "designer" },
@@ -158,11 +157,12 @@ export type OccupationValue =
 
 /** 任意の値を持つ技能のキー (例: 運転の種類、言語の種類など) */
 export type CustomizableSkillKey =
-	| "otherLanguage"
 	| "drive"
 	| "craft"
 	| "pilot"
-	| "art";
+	| "survival"
+	| "art"
+	| "otherLanguage";
 
 /**
  * 1. 固定された基本技能 (詳細指定が不要なもの)
@@ -178,6 +178,12 @@ export interface FixedSkill {
  * 2. 固定された詳細を持つカスタマイズ可能技能
  * 例: 運転(自動車) (drive, specification: "自動車"), 芸術(ダンス) (art, specification: "ダンス")
  */
+export interface FixedSpecificSkill {
+	type: "fixedSpecific";
+	skill: CustomizableSkillKey;
+	label: string;
+	specificLabels: Array<string>;
+}
 
 /**
  * 3. ユーザーが詳細を指定するカスタマイズ可能技能
@@ -197,7 +203,7 @@ export interface CustomizableSkill {
 export interface ChoiceSkill {
 	type: "choice";
 	label: string;
-	options: Array<FixedSkill | CustomizableSkill | OtherSkill>;
+	options: Array<FixedSkill | CustomizableSkill | FixedSpecificSkill>;
 	count: number;
 }
 
@@ -210,22 +216,13 @@ export interface FreeChoiceSkill {
 	count: number;
 }
 
-/**
- * 6. CharacterSkills に定義されていないその他の技能 (ハウスルールや特定の武器など)
- * 例: 日本刀, サバイバル（海）
- */
-export interface OtherSkill {
-	type: "other";
-	label: string;
-}
-
 /** 職業技能の各項目の詳細を表現する型 */
 export type SkillDefinition =
 	| FixedSkill
+	| FixedSpecificSkill
 	| CustomizableSkill
 	| ChoiceSkill
-	| FreeChoiceSkill
-	| OtherSkill;
+	| FreeChoiceSkill;
 
 /** 職業ごとの技能リストをマッピングする型 */
 export type OccupationSkillsMapType = Record<
@@ -338,10 +335,10 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "library", label: "図書館" },
 		{ type: "fixed", skill: "physics", label: "物理学" },
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "otherLanguage",
 			label: "その他の言語",
-			examples: ["英語"],
+			specificLabels: ["英語"],
 		},
 		{
 			type: "choice",
@@ -378,13 +375,12 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 				{ type: "fixed", skill: "pharmacy", label: "薬学" },
 				{ type: "fixed", skill: "rifle", label: "ライフル" },
 				{ type: "fixed", skill: "shotgun", label: "ショットガン" },
-				{ type: "other", label: "スタンガン" },
 			],
 			count: 2,
 		},
 	],
 
-	// 警察官グループ
+	// 警察官
 	police_officer: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
 		{ type: "fixed", skill: "listen", label: "聞き耳" },
@@ -406,33 +402,39 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 				{ type: "fixed", skill: "credit", label: "信用" },
 				{ type: "fixed", skill: "grapple", label: "組みつき" },
 				{
-					type: "customizable",
-					skill: "art",
-					label: "芸術",
-					examples: ["柔道"],
+					type: "fixed",
+					skill: "budo",
+					label: "武道",
 				},
 				{ type: "fixed", skill: "handgun", label: "拳銃" },
-				{ type: "other", label: "日本刀" },
-				{ type: "other", label: "杖" },
+				{ type: "fixed", skill: "katana", label: "日本刀" },
+				{ type: "fixed", skill: "staff", label: "杖" },
 			],
 			count: 1,
 		},
 	],
+	//海上保安官
 	coast_guard_officer: [
 		{ type: "fixed", skill: "mechanicalRepair", label: "機械修理" },
 		{ type: "fixed", skill: "operateHeavyMachinery", label: "重機械操作" },
 		{ type: "fixed", skill: "credit", label: "信用" },
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "pilot",
 			label: "操縦",
-			examples: ["船舶"],
+			specificLabels: ["船舶"],
 		},
 		{ type: "fixed", skill: "climb", label: "登攀" },
 		{ type: "fixed", skill: "navigate", label: "ナビゲート" },
 		{ type: "fixed", skill: "law", label: "法律" },
-		{ type: "other", label: "サバイバル" },
+		{
+			type: "fixedSpecific",
+			skill: "survival",
+			label: "サバイバル",
+			specificLabels: ["海"],
+		},
 	],
+	// 科学捜査研究員
 	forensic_scientist: [
 		{ type: "fixed", skill: "medicine", label: "医学" },
 		{ type: "fixed", skill: "chemistry", label: "化学" },
@@ -443,6 +445,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "law", label: "法律" },
 		{ type: "fixed", skill: "pharmacy", label: "薬学" },
 	],
+	// 山岳救助隊員
 	mountain_rescue_member: [
 		{ type: "fixed", skill: "firstAid", label: "応急手当" },
 		{ type: "fixed", skill: "listen", label: "聞き耳" },
@@ -450,35 +453,21 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "track", label: "追跡" },
 		{ type: "fixed", skill: "climb", label: "登攀" },
 		{ type: "fixed", skill: "navigate", label: "ナビゲート" },
-		{ type: "other", label: "サバイバル（山）" },
+		{
+			type: "fixedSpecific",
+			skill: "survival",
+			label: "サバイバル（山）",
+			specificLabels: ["山"],
+		},
 		{ type: "customizable", skill: "otherLanguage", label: "その他の言語" },
 	],
-	private_detective: [
-		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
-		{ type: "fixed", skill: "locksmith", label: "鍵開け" },
-		{ type: "fixed", skill: "psychology", label: "心理学" },
-		{ type: "fixed", skill: "track", label: "追跡" },
-		{ type: "fixed", skill: "library", label: "図書館" },
-		{ type: "fixed", skill: "law", label: "法律" },
-		{ type: "fixed", skill: "spot", label: "目星" },
-		{
-			type: "choice",
-			label: "次の技能から１つ選択",
-			options: [
-				{ type: "fixed", skill: "listen", label: "聞き耳" },
-				{ type: "fixed", skill: "photography", label: "写真術" },
-				{ type: "fixed", skill: "bargain", label: "値切り" },
-				{ type: "other", label: "スタンガン" },
-			],
-			count: 1,
-		},
-	],
+	// 消防士
 	firefighter: [
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "drive",
-			label: "運転",
-			examples: ["自動車"],
+			label: "運転 (自動車)",
+			specificLabels: ["自動車"],
 		},
 		{ type: "fixed", skill: "firstAid", label: "応急手当" },
 		{ type: "fixed", skill: "dodge", label: "回避" },
@@ -488,8 +477,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "throw", label: "投擲" },
 		{ type: "fixed", skill: "climb", label: "登攀" },
 	],
-
-	// 芸術家グループ
+	// 芸術家
 	artist: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
 		{ type: "customizable", skill: "art", label: "芸術（任意）" },
@@ -500,6 +488,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "spot", label: "目星" },
 		{ type: "fixed", skill: "history", label: "歴史" },
 	],
+	// 芸術家 基本
 	artist_basic: [
 		{
 			type: "choice",
@@ -512,7 +501,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		},
 		{
 			type: "choice",
-			label: "芸術（任意） or 製作（任意）",
+			label: "芸術（任意）or 製作（任意）",
 			options: [
 				{ type: "customizable", skill: "art", label: "芸術（任意）" },
 				{ type: "customizable", skill: "craft", label: "製作（任意）" },
@@ -538,19 +527,20 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 				{ type: "fixed", skill: "photography", label: "写真術" },
 				{ type: "fixed", skill: "biology", label: "生物学" },
 				{ type: "fixed", skill: "astronomy", label: "天文学" },
-				{ type: "customizable", skill: "art", label: "芸術（任意）" }, // 選択肢内でさらに任意指定
-				{ type: "customizable", skill: "craft", label: "製作（任意）" }, // 選択肢内でさらに任意指定
+				{ type: "customizable", skill: "art", label: "芸術（任意）" },
+				{ type: "customizable", skill: "craft", label: "製作（任意）" },
 			],
 			count: 3,
 		},
 	],
+	// ダンサー
 	dancer: [
 		{ type: "fixed", skill: "dodge", label: "回避" },
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "art",
-			label: "芸術",
-			examples: ["ダンス"],
+			label: "芸術 (ダンス)",
+			specificLabels: ["ダンス"],
 		},
 		{ type: "fixed", skill: "sneak", label: "忍び歩き" },
 		{ type: "fixed", skill: "jump", label: "跳躍" },
@@ -558,6 +548,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "spot", label: "目星" },
 		{ type: "free_choice", label: "個人的な関心のある技能２つ", count: 2 },
 	],
+	// デザイナー
 	designer: [
 		{
 			type: "choice",
@@ -583,6 +574,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "spot", label: "目星" },
 		{ type: "free_choice", label: "個人的な関心のある技能２つ", count: 2 },
 	],
+	//ファッション系芸術家
 	fashion_artist: [
 		{
 			type: "choice",
@@ -608,22 +600,80 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "spot", label: "目星" },
 		{ type: "free_choice", label: "個人的な関心のある技能２つ", count: 2 },
 	],
+	// 古物研究科
+	antiquarian: [
+		{ type: "fixed", skill: "computer", label: "コンピューター" },
+		{ type: "fixed", skill: "library", label: "図書館" },
+		{ type: "fixed", skill: "bargain", label: "値切り" },
+		{ type: "fixed", skill: "spot", label: "目星" },
+		{ type: "fixed", skill: "history", label: "歴史" },
+		{
+			type: "customizable",
+			skill: "craft",
+			label: "製作",
+			examples: ["古書修復", "古美術修復"],
+		},
+		{
+			type: "customizable",
+			skill: "otherLanguage",
+			label: "その他の言語",
+			examples: ["英語", "漢文", "ラテン語"],
+		},
+		{ type: "customizable", skill: "art", label: "芸術（任意）" },
+	],
+	// コンピュータ技術者
+	computer_technician: [
+		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
+		{ type: "fixed", skill: "accounting", label: "経理" },
+		{ type: "fixed", skill: "computer", label: "コンピューター" },
+		{ type: "fixed", skill: "electricalRepair", label: "電気修理" },
+		{ type: "fixed", skill: "electronics", label: "電子工学" },
+		{ type: "fixed", skill: "library", label: "図書館" },
+		{ type: "fixed", skill: "physics", label: "物理学" },
+		{
+			type: "fixedSpecific",
+			skill: "otherLanguage",
+			label: "その他の言語",
+			specificLabels: ["英語"],
+		},
+	],
+	// 作家
+	writer: [
+		{ type: "fixed", skill: "occult", label: "オカルト" },
+		{ type: "fixed", skill: "psychology", label: "心理学" },
+		{ type: "fixed", skill: "persuade", label: "説得" },
+		{ type: "fixed", skill: "library", label: "図書館" },
+		{ type: "fixed", skill: "history", label: "歴史" },
+		{ type: "fixed", skill: "nativeLanguage", label: "母国語" },
+		{
+			type: "fixedSpecific",
+			skill: "art",
+			label: "芸術（トリビア知識、詩的表現）",
+			specificLabels: ["トリビア知識", "詩的表現"],
+		},
+		{
+			type: "customizable",
+			skill: "otherLanguage",
+			label: "その他の言語",
+			examples: ["英語"],
+		},
+	],
 	// 自衛官
 	self_defense_official: [
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "drive",
 			label: "運転",
-			examples: ["自動車"],
+			specificLabels: ["自動車"],
 		},
 		{ type: "fixed", skill: "firstAid", label: "応急手当" },
 		{ type: "fixed", skill: "mechanicalRepair", label: "機械修理" },
 		{ type: "fixed", skill: "operateHeavyMachinery", label: "重機械操作" },
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "pilot",
 			label: "操縦",
-			examples: [
+			specificLabels: [
 				"船舶",
 				"潜水艦",
 				"戦車",
@@ -654,152 +704,31 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 				{ type: "fixed", skill: "submachineGun", label: "サブマシンガン" },
 				{ type: "fixed", skill: "rifle", label: "ライフル" },
 				{ type: "fixed", skill: "handgun", label: "拳銃" },
-				{
-					type: "customizable",
-					skill: "art",
-					label: "芸術",
-					examples: ["武道"],
-				},
+				{ type: "fixed", skill: "budo", label: "武道" },
 				{
 					type: "customizable",
 					skill: "otherLanguage",
 					label: "その他の言語",
 					examples: ["英語"],
 				},
-				{ type: "other", label: "グレネード・ランチャー" },
-				{ type: "other", label: "砲" },
+				{ type: "fixed", skill: "cannon", label: "砲" },
 			],
 			count: 2,
 		},
 	],
-
-	// スポーツ選手
-	athlete: [
-		{ type: "fixed", skill: "dodge", label: "回避" },
-		{ type: "fixed", skill: "jump", label: "跳躍" },
-		{ type: "fixed", skill: "throw", label: "投擲" },
-		{ type: "fixed", skill: "climb", label: "登攀" },
-		{
-			type: "customizable",
-			skill: "art",
-			label: "芸術（任意のスポーツ）",
-			examples: ["サッカー", "野球"],
-		},
-		{
-			type: "choice",
-			label: "次の技能から３つ選択",
-			options: [
-				{ type: "fixed", skill: "firstAid", label: "応急手当" },
-				{ type: "fixed", skill: "ride", label: "乗馬" },
-				{ type: "fixed", skill: "swim", label: "水泳" },
-				{ type: "fixed", skill: "punch", label: "こぶし/パンチ" },
-				{ type: "fixed", skill: "kick", label: "キック" },
-				{ type: "fixed", skill: "grapple", label: "組みつき" },
-				{ type: "fixed", skill: "handgun", label: "拳銃" },
-				{ type: "fixed", skill: "rifle", label: "ライフル" },
-				{ type: "fixed", skill: "shotgun", label: "ショットガン" },
-				{
-					type: "customizable",
-					skill: "art",
-					label: "芸術",
-					examples: ["武道"],
-				}, // 武道（任意）
-				{ type: "other", label: "日本刀" },
-				{ type: "other", label: "薙刀" },
-				{ type: "other", label: "杖" },
-				{ type: "other", label: "弓" },
-				{ type: "other", label: "競技用アーチェリー" },
-			],
-			count: 3,
-		},
-	],
-
-	// 商店主／店員
-	shopkeeper_clerk: [
-		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
-		{ type: "fixed", skill: "listen", label: "聞き耳" },
-		{ type: "fixed", skill: "accounting", label: "経理" },
-		{ type: "fixed", skill: "psychology", label: "心理学" },
-		{ type: "fixed", skill: "credit", label: "信用" },
-		{ type: "fixed", skill: "bargain", label: "値切り" },
-		{
-			type: "choice",
-			label: "次の技能から１つ選択",
-			options: [
-				{ type: "fixed", skill: "computer", label: "コンピューター" },
-				{
-					type: "customizable",
-					skill: "drive",
-					label: "運転",
-					examples: ["自動車", "二輪車"],
-				},
-			],
-			count: 1,
-		},
-		{ type: "free_choice", label: "商品知識から好きな技能を１つ", count: 1 }, // 商品知識は自由選択として解釈
-	],
-
-	antiquarian: [
-		{ type: "fixed", skill: "computer", label: "コンピューター" },
-		{ type: "fixed", skill: "library", label: "図書館" },
-		{ type: "fixed", skill: "bargain", label: "値切り" },
-		{ type: "fixed", skill: "spot", label: "目星" },
-		{ type: "fixed", skill: "history", label: "歴史" },
-		{
-			type: "customizable",
-			skill: "craft",
-			label: "製作",
-			examples: ["古書修復", "古美術修復"],
-		},
-		{
-			type: "customizable",
-			skill: "otherLanguage",
-			label: "その他の言語",
-			examples: ["英語", "漢文", "ラテン語"],
-		},
-		{ type: "customizable", skill: "art", label: "芸術（任意）" },
-	],
-	computer_technician: [
-		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
-		{ type: "fixed", skill: "accounting", label: "経理" },
-		{ type: "fixed", skill: "computer", label: "コンピューター" },
-		{ type: "fixed", skill: "electricalRepair", label: "電気修理" },
-		{ type: "fixed", skill: "electronics", label: "電子工学" },
-		{ type: "fixed", skill: "library", label: "図書館" },
-		{ type: "fixed", skill: "physics", label: "物理学" },
-		{
-			type: "customizable",
-			skill: "otherLanguage",
-			label: "その他の言語",
-			examples: ["英語"],
-		},
-	],
-	writer: [
-		{ type: "fixed", skill: "occult", label: "オカルト" },
-		{ type: "fixed", skill: "psychology", label: "心理学" },
-		{ type: "fixed", skill: "persuade", label: "説得" },
-		{ type: "fixed", skill: "library", label: "図書館" },
-		{ type: "fixed", skill: "history", label: "歴史" },
-		{
-			type: "customizable",
-			skill: "art",
-			label: "芸術（トリビア知識、詩的表現など）",
-			examples: ["トリビア知識", "詩的表現"],
-		},
-		{
-			type: "customizable",
-			skill: "otherLanguage",
-			label: "その他の言語",
-			examples: ["英語"],
-		},
-	],
+	// 陸上自衛隊
 	jgsdf_personnel: [
 		{ type: "fixed", skill: "firstAid", label: "応急手当" },
 		{ type: "fixed", skill: "dodge", label: "回避" },
 		{ type: "fixed", skill: "conceal", label: "隠れる" },
-		{ type: "other", label: "サバイバル（山、砂漠）" },
-		{ type: "other", label: "任意の近接戦技能" },
-		{ type: "other", label: "任意の火器技能" },
+		{
+			type: "fixedSpecific",
+			skill: "survival",
+			label: "サバイバル（山・砂漠）",
+			specificLabels: ["山", "砂漠"],
+		},
+		{ type: "fixed", skill: "knife", label: "ナイフ" },
+		{ type: "fixed", skill: "rifle", label: "ライフル" },
 		{
 			type: "choice",
 			label: "次の技能から２つ選択",
@@ -808,54 +737,67 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 				{ type: "fixed", skill: "sneak", label: "忍び歩き" },
 				{ type: "fixed", skill: "swim", label: "水泳" },
 				{ type: "fixed", skill: "climb", label: "登攀" },
-				{ type: "customizable", skill: "otherLanguage", label: "その他の言語" },
+				{
+					type: "customizable",
+					skill: "otherLanguage",
+					label: "その他の言語",
+					examples: ["英語", "中国語"],
+				},
+				{ type: "fixed", skill: "parachute", label: "パラシュート" },
 				{ type: "fixed", skill: "operateHeavyMachinery", label: "重機械操作" },
-				{ type: "other", label: "パラシュート" },
-				{ type: "other", label: "砲" },
+				{ type: "fixed", skill: "cannon", label: "砲" },
 			],
 			count: 2,
 		},
 	],
+	// 海上自衛隊 (艦上勤務)
 	jmsdf_shipboard_personnel: [
 		{ type: "fixed", skill: "firstAid", label: "応急手当" },
 		{ type: "fixed", skill: "operateHeavyMachinery", label: "重機械操作" },
 		{ type: "fixed", skill: "swim", label: "水泳" },
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "pilot",
-			label: "操縦",
-			examples: ["ボート"],
+			label: "操縦 (ボート)",
+			specificLabels: ["ボート"],
 		},
 		{ type: "fixed", skill: "navigate", label: "ナビゲート" },
-		{ type: "other", label: "サバイバル（海）" },
+		{
+			type: "fixedSpecific",
+			skill: "survival",
+			label: "サバイバル（海）",
+			specificLabels: ["海"],
+		},
 		{
 			type: "choice",
 			label: "次の技能から２つ選択",
 			options: [
 				{ type: "fixed", skill: "mechanicalRepair", label: "機械修理" },
 				{ type: "fixed", skill: "electricalRepair", label: "電気修理" },
-				{ type: "other", label: "任意の近接戦技能" },
-				{ type: "other", label: "任意の火器技能" },
-				{ type: "other", label: "砲" },
+				{ type: "fixed", skill: "knife", label: "ナイフ" },
+				{ type: "fixed", skill: "rifle", label: "ライフル" },
+				{ type: "fixed", skill: "cannon", label: "砲" },
 			],
 			count: 2,
 		},
 	],
+	// 自衛隊パイロット (陸海空)
 	jsdf_pilot: [
 		{ type: "fixed", skill: "mechanicalRepair", label: "機械修理" },
 		{ type: "fixed", skill: "operateHeavyMachinery", label: "重機械操作" },
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "pilot",
-			label: "操縦",
-			examples: ["戦闘機", "大型機", "ヘリコプター"],
+			label: "操縦 (戦闘機, 大型機, ヘリコプター)",
+			specificLabels: ["戦闘機", "大型機", "ヘリコプター"],
 		},
 		{ type: "fixed", skill: "electricalRepair", label: "電気修理" },
 		{ type: "fixed", skill: "astronomy", label: "天文学" },
 		{ type: "fixed", skill: "navigate", label: "ナビゲート" },
+		{ type: "fixed", skill: "parachute", label: "パラシュート" },
 		{ type: "free_choice", label: "個人的な関心のある技能１つ", count: 1 },
-		{ type: "other", label: "パラシュート" },
 	],
+	// 民間軍事会社メンバー
 	pmc_member: [
 		{ type: "fixed", skill: "dodge", label: "回避" },
 		{ type: "fixed", skill: "conceal", label: "隠れる" },
@@ -869,20 +811,31 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 			],
 			count: 1,
 		},
-		{ type: "other", label: "任意の近接戦技能" },
-		{ type: "other", label: "任意の火器技能" },
+		{ type: "fixed", skill: "knife", label: "ナイフ" },
+		{ type: "fixed", skill: "rifle", label: "ライフル" },
 		{
 			type: "choice",
 			label: "次の技能から２つ選択",
 			options: [
 				{ type: "fixed", skill: "firstAid", label: "応急手当" },
 				{ type: "fixed", skill: "mechanicalRepair", label: "機械修理" },
-				{ type: "other", label: "サバイバル（山、砂漠）" },
-				{ type: "customizable", skill: "otherLanguage", label: "その他の言語" },
+				{
+					type: "fixedSpecific",
+					skill: "survival",
+					label: "サバイバル（山、砂漠）",
+					specificLabels: ["山", "砂漠"],
+				},
+				{
+					type: "customizable",
+					skill: "otherLanguage",
+					label: "その他の言語",
+					examples: ["英語"],
+				},
 			],
 			count: 2,
 		},
 	],
+	// ジャーナリスト
 	journalist: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
 		{ type: "fixed", skill: "photography", label: "写真術" },
@@ -897,6 +850,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		},
 		{ type: "fixed", skill: "history", label: "歴史" },
 	],
+	// 宗教家
 	religious_figure: [
 		{ type: "fixed", skill: "occult", label: "オカルト" },
 		{ type: "fixed", skill: "listen", label: "聞き耳" },
@@ -921,21 +875,110 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 			count: 1,
 		},
 	],
+	// 商店主／店員
+	shopkeeper_clerk: [
+		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
+		{ type: "fixed", skill: "listen", label: "聞き耳" },
+		{ type: "fixed", skill: "accounting", label: "経理" },
+		{ type: "fixed", skill: "psychology", label: "心理学" },
+		{ type: "fixed", skill: "credit", label: "信用" },
+		{ type: "fixed", skill: "bargain", label: "値切り" },
+		{
+			type: "choice",
+			label: "次の技能から１つ選択",
+			options: [
+				{ type: "fixed", skill: "computer", label: "コンピューター" },
+				{
+					type: "fixedSpecific",
+					skill: "drive",
+					label: "運転 (自動車, 二輪車)",
+					specificLabels: ["自動車", "二輪車"],
+				},
+			],
+			count: 1,
+		},
+		{ type: "free_choice", label: "商品知識から好きな技能を１つ", count: 1 },
+	],
+	// 私立探偵
+	private_detective: [
+		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
+		{ type: "fixed", skill: "locksmith", label: "鍵開け" },
+		{ type: "fixed", skill: "psychology", label: "心理学" },
+		{ type: "fixed", skill: "track", label: "追跡" },
+		{ type: "fixed", skill: "library", label: "図書館" },
+		{ type: "fixed", skill: "law", label: "法律" },
+		{ type: "fixed", skill: "spot", label: "目星" },
+		{
+			type: "choice",
+			label: "次の技能から１つ選択",
+			options: [
+				{ type: "fixed", skill: "listen", label: "聞き耳" },
+				{ type: "fixed", skill: "photography", label: "写真術" },
+				{ type: "fixed", skill: "bargain", label: "値切り" },
+			],
+			count: 1,
+		},
+	],
+	// 水産業従事者
 	fishery_worker: [
 		{ type: "fixed", skill: "mechanicalRepair", label: "機械修理" },
 		{ type: "fixed", skill: "operateHeavyMachinery", label: "重機械操作" },
 		{ type: "fixed", skill: "swim", label: "水泳" },
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "pilot",
-			label: "操縦",
-			examples: ["船舶"],
+			label: "操縦 (船舶)",
+			specificLabels: ["船舶"],
 		},
 		{ type: "fixed", skill: "astronomy", label: "天文学" },
 		{ type: "fixed", skill: "navigate", label: "ナビゲート" },
 		{ type: "fixed", skill: "naturalHistory", label: "博物学" },
 		{ type: "fixed", skill: "spot", label: "目星" },
 	],
+	// スポーツ選手
+	athlete: [
+		{ type: "fixed", skill: "dodge", label: "回避" },
+		{ type: "fixed", skill: "jump", label: "跳躍" },
+		{ type: "fixed", skill: "throw", label: "投擲" },
+		{ type: "fixed", skill: "climb", label: "登攀" },
+		{
+			type: "customizable",
+			skill: "art",
+			label: "芸術（任意のスポーツ）",
+			examples: ["サッカー", "陸上"],
+		},
+		{
+			type: "choice",
+			label: "次の技能から３つ選択",
+			options: [
+				{ type: "fixed", skill: "firstAid", label: "応急手当" },
+				{ type: "fixed", skill: "ride", label: "乗馬" },
+				{ type: "fixed", skill: "swim", label: "水泳" },
+				{ type: "fixed", skill: "punch", label: "こぶし/パンチ" },
+				{ type: "fixed", skill: "kick", label: "キック" },
+				{ type: "fixed", skill: "grapple", label: "組みつき" },
+				{ type: "fixed", skill: "handgun", label: "拳銃" },
+				{ type: "fixed", skill: "rifle", label: "ライフル" },
+				{ type: "fixed", skill: "shotgun", label: "ショットガン" },
+				{
+					type: "fixed",
+					skill: "budo",
+					label: "武道",
+				},
+				{ type: "fixed", skill: "katana", label: "日本刀" },
+				{ type: "fixed", skill: "naginata", label: "薙刀" },
+				{ type: "fixed", skill: "staff", label: "杖" },
+				{ type: "fixed", skill: "bow", label: "弓" },
+				{
+					type: "fixed",
+					skill: "competitionArchery",
+					label: "競技用アーチェリー",
+				},
+			],
+			count: 3,
+		},
+	],
+	// 大学教授
 	university_professor: [
 		{ type: "fixed", skill: "credit", label: "信用" },
 		{ type: "fixed", skill: "psychology", label: "心理学" },
@@ -968,13 +1011,19 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 			count: 2,
 		},
 	],
+	// 冒険家教授
 	adventurer_professor: [
 		{ type: "fixed", skill: "firstAid", label: "応急手当" },
 		{ type: "fixed", skill: "persuade", label: "説得" },
 		{ type: "fixed", skill: "jump", label: "跳躍" },
 		{ type: "fixed", skill: "climb", label: "登攀" },
 		{ type: "fixed", skill: "library", label: "図書館" },
-		{ type: "customizable", skill: "otherLanguage", label: "その他の言語" },
+		{
+			type: "customizable",
+			skill: "otherLanguage",
+			label: "その他の言語",
+			examples: ["英語"],
+		},
 		{
 			type: "choice",
 			label: "次の技能から専門的研究分野として２つ選択",
@@ -986,12 +1035,14 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 			count: 2,
 		},
 	],
+	//評論家
 	critic: [
 		{ type: "fixed", skill: "credit", label: "信用" },
 		{ type: "fixed", skill: "psychology", label: "心理学" },
 		{ type: "fixed", skill: "persuade", label: "説得" },
 		{ type: "fixed", skill: "library", label: "図書館" },
 		{ type: "fixed", skill: "bargain", label: "値切り" },
+		{ type: "fixed", skill: "nativeLanguage", label: "母国語" },
 		{
 			type: "choice",
 			label: "次の技能から専門的研究分野として２つ選択",
@@ -1003,6 +1054,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 			count: 2,
 		},
 	],
+	// タレント
 	talent: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
 		{ type: "fixed", skill: "listen", label: "聞き耳" },
@@ -1013,64 +1065,69 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 			type: "customizable",
 			skill: "art",
 			label: "芸術（何かの音楽演奏、歌唱、ダンス、演技、司会など）",
-			examples: ["音楽演奏", "歌唱", "ダンス", "演技", "司会"],
+			examples: ["歌唱", "ダンス", "演技", "司会"],
 		},
 		{ type: "fixed", skill: "disguise", label: "変装" },
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "otherLanguage",
 			label: "その他の言語",
-			examples: ["英語"],
+			specificLabels: ["英語"],
 		},
 	],
+	// アイドル・音楽タレント
 	idol_music_talent: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "art",
-			label: "芸術",
-			examples: ["歌唱", "ダンス"],
+			label: "芸術 (歌唱 or ダンス)",
+			specificLabels: ["歌唱", "ダンス"],
 		},
 		{ type: "fixed", skill: "psychology", label: "心理学" },
 		{ type: "fixed", skill: "persuade", label: "説得" },
 		{ type: "fixed", skill: "disguise", label: "変装" },
-		{ type: "free_choice", label: "個人的な関心のある技能２つ", count: 2 },
+		{ type: "free_choice", label: "個人的な関心のある技能２つ", count: 3 },
 	],
+	// アナウンサー
 	announcer: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
 		{ type: "fixed", skill: "credit", label: "信用" },
 		{ type: "fixed", skill: "psychology", label: "心理学" },
 		{ type: "fixed", skill: "persuade", label: "説得" },
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "art",
-			label: "芸術",
-			examples: ["アナウンス"],
+			label: "芸術 (アナウンス) ",
+			specificLabels: ["アナウンス"],
 		},
 		{ type: "fixed", skill: "library", label: "図書館" },
+		{ type: "fixed", skill: "nativeLanguage", label: "母国語" },
 		{ type: "free_choice", label: "個人的な関心のある技能１つ", count: 1 },
 	],
+	// コメディアン
 	comedian: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
 		{ type: "fixed", skill: "listen", label: "聞き耳" },
 		{ type: "fixed", skill: "psychology", label: "心理学" },
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "art",
-			label: "芸術",
-			examples: ["物語", "話術", "演劇"],
+			label: "芸術 (物語 or 演劇)",
+			specificLabels: ["物語", "演劇"],
 		},
 		{ type: "fixed", skill: "disguise", label: "変装" },
-		{ type: "free_choice", label: "個人的な関心のある技能２つ", count: 2 },
+		{ type: "free_choice", label: "個人的な関心のある技能２つ", count: 3 },
 	],
+	// スポーツタレント
 	sports_talent: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
 		{ type: "fixed", skill: "psychology", label: "心理学" },
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "art",
 			label: "芸術",
-			examples: ["演劇"],
+			specificLabels: ["演劇"],
 		},
 		{
 			type: "choice",
@@ -1082,9 +1139,10 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 			count: 1,
 		},
 		{ type: "fixed", skill: "disguise", label: "変装" },
-		{ type: "other", label: "任意の素手の近接戦技能" },
+		{ type: "fixed", skill: "punch", label: "こぶし" },
 		{ type: "free_choice", label: "個人的な関心のある技能２つ", count: 2 },
 	],
+	//テレビ・コメンテーター
 	tv_commentator: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
 		{ type: "fixed", skill: "listen", label: "聞き耳" },
@@ -1095,32 +1153,34 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "bargain", label: "値切り" },
 		{ type: "free_choice", label: "＋個人的な専門の技能１つ", count: 1 },
 	],
+	// 俳優
 	actor: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "drive",
 			label: "運転",
-			examples: ["自動車"],
+			specificLabels: ["自動車"],
 		},
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "art",
 			label: "芸術",
-			examples: ["演劇"],
+			specificLabels: ["演劇"],
 		},
 		{ type: "fixed", skill: "psychology", label: "心理学" },
 		{ type: "fixed", skill: "persuade", label: "説得" },
 		{ type: "fixed", skill: "disguise", label: "変装" },
 		{ type: "free_choice", label: "個人的な関心のある技能２つ", count: 2 },
 	],
+	// プロデューサー・マネージャー
 	producer_manager: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "drive",
 			label: "運転",
-			examples: ["自動車"],
+			specificLabels: ["自動車"],
 		},
 		{ type: "fixed", skill: "conceal", label: "隠れる" },
 		{ type: "fixed", skill: "listen", label: "聞き耳" },
@@ -1129,6 +1189,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "law", label: "法律" },
 		{ type: "free_choice", label: "個人的な関心のある技能１つ", count: 1 },
 	],
+	// 超心理学者
 	parapsychologist: [
 		{ type: "fixed", skill: "occult", label: "オカルト" },
 		{ type: "fixed", skill: "anthropology", label: "人類学" },
@@ -1144,6 +1205,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		},
 		{ type: "fixed", skill: "history", label: "歴史" },
 	],
+	// ゴーストハンター
 	ghost_hunter: [
 		{ type: "fixed", skill: "occult", label: "オカルト" },
 		{ type: "fixed", skill: "chemistry", label: "化学" },
@@ -1154,14 +1216,15 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "electricalRepair", label: "電気修理" },
 		{ type: "fixed", skill: "physics", label: "物理学" },
 	],
+	// 占い師・スピリチュアリスト・霊媒師
 	fortune_teller_spiritualist_medium: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
 		{ type: "fixed", skill: "occult", label: "オカルト" },
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "art",
 			label: "芸術",
-			examples: ["演劇"],
+			specificLabels: ["演劇"],
 		},
 		{ type: "fixed", skill: "credit", label: "信用" },
 		{ type: "fixed", skill: "psychology", label: "心理学" },
@@ -1169,18 +1232,19 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "bargain", label: "値切り" },
 		{ type: "free_choice", label: "個人的な関心のある技能１つ", count: 1 },
 	],
+	// ディレッタント
 	dilettante: [
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "drive",
 			label: "運転",
-			examples: ["自動車"],
+			specificLabels: ["自動車"],
 		},
 		{
 			type: "customizable",
 			skill: "art",
 			label: "芸術",
-			examples: ["音楽", "美術", "文学", "ダンス", "スポーツ"],
+			examples: ["音楽", "美術", "文学", "ダンス"],
 		},
 		{ type: "fixed", skill: "credit", label: "信用" },
 		{ type: "fixed", skill: "library", label: "図書館" },
@@ -1198,25 +1262,26 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 				{ type: "fixed", skill: "ride", label: "乗馬" },
 				{ type: "fixed", skill: "photography", label: "写真術" },
 				{
-					type: "customizable",
+					type: "fixedSpecific",
 					skill: "pilot",
-					label: "操縦",
-					examples: ["航空機", "船舶"],
+					label: "操縦 (航空機 or 船舶)",
+					specificLabels: ["航空機", "船舶"],
 				},
 				{ type: "fixed", skill: "handgun", label: "拳銃" },
 				{ type: "fixed", skill: "rifle", label: "ライフル" },
 				{ type: "fixed", skill: "shotgun", label: "ショットガン" },
-				{ type: "customizable", skill: "art", label: "芸術（武道：任意）" },
+				{ type: "fixed", skill: "budo", label: "武道" },
 			],
 			count: 2,
 		},
 	],
+	// ドライバー
 	driver: [
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "drive",
-			label: "運転（自動車、二輪車）",
-			examples: ["自動車", "二輪車"],
+			label: "運転（自動車 or 二輪車）",
+			specificLabels: ["自動車", "二輪車"],
 		},
 		{ type: "fixed", skill: "mechanicalRepair", label: "機械修理" },
 		{ type: "fixed", skill: "listen", label: "聞き耳" },
@@ -1226,6 +1291,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "bargain", label: "値切り" },
 		{ type: "fixed", skill: "spot", label: "目星" },
 	],
+	// 農林業従業者
 	agriculture_forestry_worker: [
 		{ type: "fixed", skill: "firstAid", label: "応急手当" },
 		{ type: "fixed", skill: "mechanicalRepair", label: "機械修理" },
@@ -1245,21 +1311,21 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 			options: [
 				{ type: "fixed", skill: "rifle", label: "ライフル" },
 				{ type: "fixed", skill: "shotgun", label: "ショットガン" },
-				{ type: "other", label: "チェーンソー" },
-				{ type: "other", label: "杖" },
+				{ type: "fixed", skill: "staff", label: "杖" },
 			],
 			count: 1,
 		},
 	],
+	// パイロット
 	pilot: [
 		{ type: "fixed", skill: "mechanicalRepair", label: "機械修理" },
 		{ type: "fixed", skill: "operateHeavyMachinery", label: "重機械操作" },
 		{ type: "fixed", skill: "electricalRepair", label: "電気修理" },
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "pilot",
 			label: "操縦",
-			examples: [
+			specificLabels: [
 				"民間プロペラ機",
 				"民間ジェット機",
 				"定期旅客機",
@@ -1278,6 +1344,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 			examples: ["英語"],
 		},
 	],
+	// ビジネスマン
 	businessman: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
 		{ type: "fixed", skill: "accounting", label: "経理" },
@@ -1293,6 +1360,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 			examples: ["英語"],
 		},
 	],
+	// メイド
 	butler_maid: [
 		{
 			type: "choice",
@@ -1306,42 +1374,35 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "firstAid", label: "応急手当" },
 		{ type: "fixed", skill: "listen", label: "聞き耳" },
 		{
-			type: "choice",
-			label: "芸術 or 製作（ワインの鑑定、料理、裁縫、掃除など）",
-			options: [
-				{
-					type: "customizable",
-					skill: "art",
-					label: "芸術（ワイン鑑定、料理など）",
-					examples: ["ワイン鑑定", "料理"],
-				}, // 例を追加
-				{
-					type: "customizable",
-					skill: "craft",
-					label: "製作",
-					examples: ["裁縫", "掃除"],
-				}, // 例を追加
-			],
-			count: 1,
+			type: "fixedSpecific",
+			skill: "art",
+			label: "芸術 (ワインの鑑定 or 料理 ...)",
+			specificLabels: ["ワインの鑑定", "料理", "裁縫", "掃除"],
 		},
 		{ type: "fixed", skill: "accounting", label: "経理" },
 		{ type: "fixed", skill: "psychology", label: "心理学" },
 		{ type: "fixed", skill: "spot", label: "目星" },
-		{ type: "customizable", skill: "otherLanguage", label: "その他の言語" },
+		{
+			type: "customizable",
+			skill: "otherLanguage",
+			label: "その他の言語",
+			examples: ["英語"],
+		},
 	],
+	// セールスマン
 	salesman: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "drive",
 			label: "運転",
-			examples: ["自動車"],
+			specificLabels: ["自動車"],
 		},
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "art",
 			label: "芸術",
-			examples: ["演劇"],
+			specificLabels: ["演劇"],
 		},
 		{ type: "fixed", skill: "accounting", label: "経理" },
 		{ type: "fixed", skill: "psychology", label: "心理学" },
@@ -1349,6 +1410,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "bargain", label: "値切り" },
 		{ type: "free_choice", label: "個人的な関心のある技能１つ", count: 1 },
 	],
+	// 法律家
 	legal_professional: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
 		{ type: "fixed", skill: "accounting", label: "経理" },
@@ -1359,6 +1421,7 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 		{ type: "fixed", skill: "bargain", label: "値切り" },
 		{ type: "fixed", skill: "law", label: "法律" },
 	],
+	// 放浪者
 	wanderer: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
 		{ type: "fixed", skill: "conceal", label: "隠れる" },
@@ -1372,16 +1435,16 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 			label: "次の技能から１つ選択",
 			options: [
 				{
-					type: "customizable",
+					type: "fixedSpecific",
 					skill: "drive",
 					label: "運転",
-					examples: ["自動車", "二輪車"],
+					specificLabels: ["自動車", "二輪車"],
 				},
 				{
-					type: "customizable",
+					type: "fixedSpecific",
 					skill: "art",
 					label: "芸術",
-					examples: ["ギャンブル"],
+					specificLabels: ["ギャンブル"],
 				},
 				{
 					type: "customizable",
@@ -1393,14 +1456,15 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 			count: 1,
 		},
 	],
+	// 暴力団員
 	gang_member: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
 		{ type: "fixed", skill: "hide", label: "隠す" },
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "art",
-			label: "芸術（刺青彫り、イカサマ）",
-			examples: ["刺青彫り", "イカサマ"],
+			label: "芸術（刺青彫 or イカサマ）",
+			specificLabels: ["刺青彫り", "イカサマ"],
 		},
 		{ type: "fixed", skill: "psychology", label: "心理学" },
 		{ type: "fixed", skill: "bargain", label: "値切り" },
@@ -1414,27 +1478,28 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 				{ type: "fixed", skill: "kick", label: "キック" },
 				{ type: "fixed", skill: "grapple", label: "組みつき" },
 				{ type: "fixed", skill: "handgun", label: "拳銃" },
-				{ type: "customizable", skill: "art", label: "芸術（武道：任意）" },
-				{ type: "other", label: "日本刀" },
-				{ type: "other", label: "ナイフ" },
+				{ type: "fixed", skill: "budo", label: "武道" },
+				{ type: "fixed", skill: "katana", label: "日本刀" },
+				{ type: "fixed", skill: "knife", label: "ナイフ" },
 			],
 			count: 2,
 		},
 	],
+	// ミュージシャン
 	musician: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
 		{ type: "fixed", skill: "listen", label: "聞き耳" },
 		{
 			type: "customizable",
 			skill: "art",
-			label: "芸術（歌唱、何かの音楽演奏）",
-			examples: ["歌唱", "音楽演奏"],
+			label: "芸術（歌唱 or 何かの音楽演奏）",
+			examples: ["歌唱"],
 		},
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "craft",
 			label: "製作",
-			examples: ["作詞", "作曲"],
+			specificLabels: ["作詞", "作曲"],
 		},
 		{ type: "fixed", skill: "persuade", label: "説得" },
 		{ type: "fixed", skill: "psychology", label: "心理学" },
@@ -1446,13 +1511,14 @@ export const OCCUPATION_SKILL_MAP: OccupationSkillsMapType = {
 			examples: ["英語"],
 		},
 	],
+	// メンタルセラピスト
 	mental_therapist: [
 		{ type: "fixed", skill: "fastTalk", label: "言いくるめ" },
 		{
-			type: "customizable",
+			type: "fixedSpecific",
 			skill: "art",
 			label: "芸術（絵画、音楽演奏、歌唱、アロマなど）",
-			examples: ["絵画", "音楽演奏", "歌唱", "アロマ"],
+			specificLabels: ["絵画", "音楽演奏", "歌唱", "アロマ"],
 		},
 		{ type: "fixed", skill: "credit", label: "信用" },
 		{ type: "fixed", skill: "psychology", label: "心理学" },

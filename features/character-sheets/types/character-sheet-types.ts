@@ -115,6 +115,7 @@ export type CharacterSkills = {
 		electricalRepair: number; // 電気修理 (10)
 		navigate: number; // ナビゲート (10)
 		disguise: number; // 変装 (1)
+		parachute: number; // パラシュート (1)
 		survival: {
 			customString: string;
 			value: number;

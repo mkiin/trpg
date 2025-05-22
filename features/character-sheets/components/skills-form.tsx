@@ -212,6 +212,7 @@ function FreeChoiceSkillModal() {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
+        {/* dialogではtitleを入れないとエラーが出るため */}
         <DialogHeader><DialogTitle /></DialogHeader>
         {/* タブによりスキル表示 */}
         {FreeChoiceSkillTabs()}
@@ -247,10 +248,10 @@ function FreeChoiceSkillTabs() {
                   return (
                     // 各スキルのラベルと各種入力項目のボックス
                     // チェックボックス, ラベル
-                    <div key={`${skillCategory.category}-${skill.skill}`} className="border rounded-md p-3">
+                    <div key={`${skillCategory.category}-${skill.id}`} className="border rounded-md p-3">
                       <div className="flex items-center space-x-2">
                         <Checkbox
-                          id={`${skillCategory.category}-${skill.skill}`}
+                          id={`${skillCategory.category}-${skill.id}`}
                         />
                         <Label htmlFor={`skill-option-${index}`} className="text-sm font-medium cursor-pointer">
                           {skill.label}
