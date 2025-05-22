@@ -53,12 +53,20 @@ export type CharacterSkills = {
 		punch: number; // こぶし(パンチ) (50)
 		headbutt: number; // 頭突き (10)
 		throw: number; // 投擲 (25)
+		staff: number; // 杖 (25)
+		knife: number; // ナイフ (25)
+		naginata: number; // 薙刀 (10)
+		katana: number; // 日本刀 (15)
+		budo: number; // 武道 (1)
 		martialArts: number; // マーシャルアーツ (1)
 		handgun: number; // 拳銃 (20)
 		submachineGun: number; // サブマシンガン (15)
 		shotgun: number; // ショットガン (30)
 		machineGun: number; // マシンガン (15)
 		rifle: number; // ライフル (25)
+		competitionArchery: number; // 競技用アーチェリー (15)
+		cannon: number; // 砲 (1)
+		bow: number; // 弓 (15)
 	};
 
 	// 探索技能
@@ -80,7 +88,6 @@ export type CharacterSkills = {
 	// 行動技能
 	action: {
 		drive: {
-			label: string;
 			customString: string;
 			value: number;
 		}; // 運転 (20)
@@ -89,12 +96,10 @@ export type CharacterSkills = {
 		ride: number; // 乗馬 (5)
 		swim: number; // 水泳 (25)
 		craft: {
-			label: string;
 			customString: string;
 			value: number;
 		}; // 製作 (5)
 		pilot: {
-			label: string;
 			customString: string;
 			value: number;
 		}; // 操縦 (1)
@@ -102,6 +107,10 @@ export type CharacterSkills = {
 		electricalRepair: number; // 電気修理 (10)
 		navigate: number; // ナビゲート (10)
 		disguise: number; // 変装 (1)
+		survival: {
+			customString: string;
+			value: number;
+		}; // サバイバル (10)
 	};
 
 	// 交渉技能
@@ -111,7 +120,6 @@ export type CharacterSkills = {
 		persuade: number; // 説得 (15)
 		bargain: number; // 値切り (5)
 		nativeLanguage: {
-			label: string;
 			customString: string;
 			value: number;
 		};
@@ -124,7 +132,6 @@ export type CharacterSkills = {
 		chemistry: number; // 化学 (1)
 		cthulhuMythos: number; // クトゥルフ神話 (0)
 		art: {
-			label: string;
 			customString: string;
 			value: number;
 		}; // 芸術 (5)

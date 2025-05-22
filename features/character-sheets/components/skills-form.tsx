@@ -3,7 +3,7 @@ import { useCharacterSheet } from "../hooks/use-character-sheet";
 import { NavigationButton } from "./navigation-button";
 import { useSkillForm } from "../hooks/use-skill-form";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label";
 import {
@@ -48,10 +48,8 @@ export function SkillsForm() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* 職業スキルを grid 形式で表示する */}
               {definedOccupationSkills.map((skillDefinition, index) => {
-                const key = `${skillDefinition.type}-${skillDefinition.label}-${index}`;
-
                 return (
-                  <SkillCard key={key} skillDefinition={skillDefinition}>{GetSkillItemByType(skillDefinition)}</SkillCard>
+                  <SkillCard key={`${skillDefinition.type}-${index}`} skillDefinition={skillDefinition}>{GetSkillItemByType(skillDefinition)}</SkillCard>
                 )
               })}
 
@@ -59,7 +57,9 @@ export function SkillsForm() {
           )}
         </form>
       </CardContent>
-      <NavigationButton nextStep={nextStep} prevStep={prevStep} />
+      <CardFooter>
+        <NavigationButton nextStep={nextStep} prevStep={prevStep} />
+      </CardFooter>
     </Card>
   );
 }
@@ -247,11 +247,10 @@ function FreeChoiceSkillTabs() {
                   return (
                     // 各スキルのラベルと各種入力項目のボックス
                     // チェックボックス, ラベル
-                    <div key={`${skillCategory.category}-${skill.label}`} className="border rounded-md p-3">
+                    <div key={`${skillCategory.category}-${skill.skill}`} className="border rounded-md p-3">
                       <div className="flex items-center space-x-2">
                         <Checkbox
-                          id={`${skillCategory.category}-${skill.label}-${index}`}
-
+                          id={`${skillCategory.category}-${skill.skill}`}
                         />
                         <Label htmlFor={`skill-option-${index}`} className="text-sm font-medium cursor-pointer">
                           {skill.label}
