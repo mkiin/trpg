@@ -1,10 +1,35 @@
 // キャラクターシート生成のためのAIプロンプト
 
-export const createCharacterBasicInfoPrompt = (occupationLabel: string) => `
+export const createCharacterBasicInfoPrompt = (
+	occupationLabel: string,
+	abilities?: import("../types/character-sheet-types").Abilities,
+	skillDetails?: import("../types/skill-details-types").SkillDetails,
+) => `
 あなたはTRPGのキャラクターシート作成を支援するAIアシスタントです。
 以下の職業に基づいて、クトゥルフ神話TRPGのキャラクターの基本情報を生成してください。
 
 職業: ${occupationLabel}
+
+${abilities ? `
+能力値情報:
+- STR（筋力）: ${abilities.strength}
+- CON（体力）: ${abilities.constitution}
+- POW（精神力）: ${abilities.power}
+- DEX（機敏）: ${abilities.dexterity}
+- APP（外見）: ${abilities.appearance}
+- SIZ（体格）: ${abilities.size}
+- INT（知性）: ${abilities.intelligence}
+- EDU（教養）: ${abilities.education}
+` : ''}
+
+${skillDetails ? `
+特徴的な技能:
+${skillDetails.drive ? `- 運転: ${skillDetails.drive}` : ''}
+${skillDetails.pilot ? `- 操縦: ${skillDetails.pilot}` : ''}
+${skillDetails.art ? `- 芸術: ${skillDetails.art}` : ''}
+${skillDetails.craft ? `- 製作: ${skillDetails.craft}` : ''}
+${skillDetails.otherLanguage ? `- 外国語: ${skillDetails.otherLanguage}` : ''}
+` : ''}
 
 生成する項目：
 - 名前: 日本人の名前（姓名）
@@ -13,8 +38,13 @@ export const createCharacterBasicInfoPrompt = (occupationLabel: string) => `
 - 身長: 日本人の平均的な身長（cm）
 - 体重: 身長に対して適切な体重（kg）
 - 出身地: 日本の都道府県または市町村
-- 背景情報: キャラクターの生い立ちや経歴、職業に就いた理由など（200-300文字）
-- 行動パターン: 性格や行動の特徴、癖など（100-200文字）
+- 背景情報: キャラクターの生い立ちや経歴、職業に就いた理由など（180-320文字程度）
+- 行動パターン: 性格や行動の特徴、癖など（80-220文字程度）
 
 職業に合った現実的で説得力のあるキャラクターを作成してください。
+上記の能力値と技能情報を参考にして、一貫性のあるキャラクター設定を作成してください。
+
+重要：
+- 背景情報は必ず180文字以上320文字以内で記述してください
+- 行動パターンは必ず80文字以上220文字以内で記述してください
 `;

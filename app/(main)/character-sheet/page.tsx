@@ -1,4 +1,3 @@
-import { CharacterSheetProvider } from "@/features/character-sheets/components/character-sheet-context";
 import { CharacterSheetForm } from "@/features/character-sheets/components/character-sheet-form";
 
 export const metadata = {
@@ -8,8 +7,6 @@ export const metadata = {
 
 export default function CharacterSheetPage() {
   return (
-    <CharacterSheetProvider>
-      <CharacterSheetForm />
-    </CharacterSheetProvider>
+    <CharacterSheetForm />
   );
 }

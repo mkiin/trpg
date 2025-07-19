@@ -4,8 +4,9 @@ import { google } from "@ai-sdk/google";
 import { generateObject } from "ai";
 import { basicInfoSchema } from "../types/schemas/basic-info-schema";
 import type { Abilities, BasicInfo } from "../types/character-sheet-types";
-import { OCCUPATIONS } from "../constants/occupation-lists";
+import { OCCUPATIONS, type OccupationValue } from "../constants/occupation-lists";
 import { createCharacterBasicInfoPrompt } from "../constants/character-sheet-prompts";
+import { generateSkills } from "../utils/skill-allocation";
 
 // ダイスロール関数
 function rollDice(count: number, sides: number): number {
@@ -71,12 +72,14 @@ export async function generateAbilities(): Promise<Abilities> {
 // 基本情報をAIで生成
 export async function generateBasicInfo(
 	occupation: string,
+	abilities?: Abilities,
+	skillDetails?: import("../types/skill-details-types").SkillDetails,
 ): Promise<BasicInfo> {
 	try {
 		const occupationLabel =
 			OCCUPATIONS.find((occ) => occ.value === occupation)?.label || occupation;
 
-		const prompt = createCharacterBasicInfoPrompt(occupationLabel);
+		const prompt = createCharacterBasicInfoPrompt(occupationLabel, abilities, skillDetails);
 
 		const result = await generateObject({
 			model: google("gemini-1.5-flash"),
@@ -97,6 +100,10 @@ export async function generateBasicInfo(
 		};
 	} catch (error) {
 		console.error("基本情報生成エラー:", error);
+		// エラーの詳細を含めて再スロー
+		if (error instanceof Error) {
+			throw new Error(`キャラクター基本情報の生成に失敗しました: ${error.message}`);
+		}
 		throw new Error("キャラクター基本情報の生成に失敗しました");
 	}
 }
@@ -113,100 +120,37 @@ export async function generateCharacterSheet(formData: FormData) {
 			};
 		}
 
-		// 基本情報と能力値を並行して生成
-		const [basicInfo, abilities] = await Promise.all([
-			generateBasicInfo(occupation),
-			generateAbilities(),
-		]);
+		// まず能力値を生成
+		const abilities = await generateAbilities();
 
-		// TODO: スキルの自動割り振りを実装
-		// 現時点では初期値のみを返す
-		const skills = {
-			combat: {
-				dodge: abilities.dexterity * 2, // DEX×2
-				kick: 25,
-				grapple: 25,
-				punch: 50,
-				headbutt: 10,
-				throw: 25,
-				martialArts: 1,
-				handgun: 20,
-				submachineGun: 15,
-				shotgun: 30,
-				machineGun: 15,
-				rifle: 25,
-			},
-			investigation: {
-				firstAid: 30,
-				locksmith: 1,
-				hide: 15,
-				conceal: 10,
-				listen: 25,
-				sneak: 10,
-				photography: 10,
-				psychoanalysis: 1,
-				track: 10,
-				climb: 40,
-				library: 25,
-				spot: 25,
-			},
-			action: {
-				drive: 20,
-				mechanicalRepair: 20,
-				operateHeavyMachinery: 1,
-				ride: 5,
-				swim: 25,
-				craft: 5,
-				pilot: 1,
-				jump: 25,
-				electricalRepair: 10,
-				navigate: 10,
-				disguise: 1,
-			},
-			negotiation: {
-				fastTalk: 5,
-				credit: 15,
-				persuade: 15,
-				bargain: 5,
-				nativeLanguage: abilities.education * 5, // EDU×5
-				otherLanguage: 1,
-			},
-			knowledge: {
-				medicine: 5,
-				occult: 5,
-				chemistry: 1,
-				cthulhuMythos: 0,
-				art: 5,
-				accounting: 10,
-				archaeology: 1,
-				computer: 1,
-				psychology: 5,
-				anthropology: 1,
-				biology: 1,
-				geology: 1,
-				electronics: 1,
-				astronomy: 1,
-				naturalHistory: 10,
-				physics: 1,
-				law: 5,
-				pharmacy: 1,
-				history: 20,
-			},
-		};
+		// 次にスキルを生成
+		const skillsResult = generateSkills(
+			occupation as OccupationValue,
+			abilities,
+			{ name: "", occupation, age: 30, gender: "man", height: 170, weight: 60, birthplace: "", background: "", behavior: "" }, // 仮の基本情報
+		);
+
+		// 最後に能力値と技能情報を基に基本情報を生成
+		const basicInfo = await generateBasicInfo(
+			occupation,
+			abilities,
+			skillsResult.skillDetails,
+		);
 
 		return {
 			success: true,
 			data: {
 				basic: basicInfo,
 				ability: abilities,
-				skills,
+				skills: skillsResult.skills,
+				skillDetails: skillsResult.skillDetails,
 			},
 		};
 	} catch (error) {
 		console.error("キャラクターシート生成エラー:", error);
 		return {
 			success: false,
-			error: "キャラクターシートの生成に失敗しました",
+			error: error instanceof Error ? error.message : "キャラクターシートの生成に失敗しました",
 		};
 	}
 }

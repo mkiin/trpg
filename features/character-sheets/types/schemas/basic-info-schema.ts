@@ -15,8 +15,8 @@ export const basicInfoSchema = z
 		height: z.number(),
 		weight: z.number(),
 		birthplace: z.string(),
-		background: z.string().min(200).max(300),
-		behavior: z.string().min(100).max(200),
+		background: z.string().min(180).max(320),
+		behavior: z.string().min(80).max(220),
 	})
 	.required();
 
