@@ -28,7 +28,6 @@ export function useSkillForm() {
 	// 職業に応じた選択可能なスキルリスト
 	const definedOccupationSkills = useMemo(() => {
 		if (!basicInfo?.occupation) return [];
-		// OccupationValue 型にキャストして安全性を高める
 		const occupationKey = basicInfo.occupation;
 		return OCCUPATION_SKILL_MAP[occupationKey] || [];
 	}, [basicInfo?.occupation]);
