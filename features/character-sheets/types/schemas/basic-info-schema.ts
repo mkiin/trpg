@@ -19,4 +19,5 @@ export const basicInfoSchema = z
 		behavior: z.string().min(100).max(200),
 	})
 	.required();
+
 export type BasicInfoFormSchema = z.infer<typeof basicInfoFormSchema>;
