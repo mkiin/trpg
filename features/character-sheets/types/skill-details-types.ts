@@ -1,3 +1,5 @@
+import type { BasicInfo, Abilities, Skills } from "./character-sheet-types";
+
 // 技能の詳細情報を格納する型
 export interface SkillDetails {
 	drive?: string; // 運転の対象（自動車、バイクなど）
@@ -9,8 +11,8 @@ export interface SkillDetails {
 
 // 完全なキャラクターシート（技能詳細付き）
 export interface CharacterSheetWithDetails {
-	basic: import("./character-sheet-types").BasicInfo;
-	ability: import("./character-sheet-types").Abilities;
-	skills: import("./character-sheet-types").Skills;
+	basic: BasicInfo;
+	ability: Abilities;
+	skills: Skills;
 	skillDetails: SkillDetails;
 }

@@ -12,11 +12,11 @@ importers:
         specifier: ^1.2.18
         version: 1.2.18(zod@3.24.4)
       '@conform-to/react':
-        specifier: ^1.5.0
-        version: 1.5.0(react@19.1.0)
+        specifier: ^1.8.2
+        version: 1.8.2(react@19.1.0)
       '@conform-to/zod':
-        specifier: ^1.5.0
-        version: 1.5.0(zod@3.24.4)
+        specifier: ^1.8.2
+        version: 1.8.2(zod@3.24.4)
       '@hono/zod-validator':
         specifier: ^0.4.3
         version: 0.4.3(hono@4.7.9)(zod@3.24.4)
@@ -273,18 +273,18 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@conform-to/dom@1.5.0':
-    resolution: {integrity: sha512-7cbIjD3SZzidTzQTLqDhcu2FtkB1l/ZwPlv/mlZgBiezyHd//gBoauGygemcOToEqHahRYFLYwovmKqdjTMARA==}
+  '@conform-to/dom@1.8.2':
+    resolution: {integrity: sha512-5eDqI9366+23Fl/E5zxebuy2FCebJKpSrdE/c6PZQ5Ul59BYQ17pBmkLkvxAKjPXW+Qq77BJyjGjuklwmqN08A==}
 
-  '@conform-to/react@1.5.0':
-    resolution: {integrity: sha512-j6fq1UTJ8rLxT4hMZRj9Qyi1lYrALsuno3024/nORYjmqThm2K7wsB1Aaox67SxcR5p4fpva4d8pOkzOSBYN2g==}
+  '@conform-to/react@1.8.2':
+    resolution: {integrity: sha512-AJuHH4YY64o+VP3qsXd7bqlqCJYefTcEVj6mOiQr/m9iQV785gPtGE31jdmipvQ3ZHQE0Lp4e4th7kN/xo46qg==}
     peerDependencies:
       react: '>=18'
 
-  '@conform-to/zod@1.5.0':
-    resolution: {integrity: sha512-bk+S0sFSfyVL7UVbHAjComnGq4p4vGMtfyyxFB8116XTnxQVyk88dXhj/ApxPQTktWn+OukDWyz5TQ92t/qo+A==}
+  '@conform-to/zod@1.8.2':
+    resolution: {integrity: sha512-uYipAoNByusRji7j84o40r9IvYmsV84utfCfvqr2b746/8JnBuoO6C90yltan5D9OVAJMIKejXW4T1XfOsaMWg==}
     peerDependencies:
-      zod: ^3.21.0
+      zod: ^3.21.0 || ^4.0.0
 
   '@drizzle-team/brocli@0.10.2':
     resolution: {integrity: sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w==}
@@ -2675,16 +2675,16 @@ snapshots:
   '@biomejs/cli-win32-x64@1.9.4':
     optional: true
 
-  '@conform-to/dom@1.5.0': {}
+  '@conform-to/dom@1.8.2': {}
 
-  '@conform-to/react@1.5.0(react@19.1.0)':
+  '@conform-to/react@1.8.2(react@19.1.0)':
     dependencies:
-      '@conform-to/dom': 1.5.0
+      '@conform-to/dom': 1.8.2
       react: 19.1.0
 
-  '@conform-to/zod@1.5.0(zod@3.24.4)':
+  '@conform-to/zod@1.8.2(zod@3.24.4)':
     dependencies:
-      '@conform-to/dom': 1.5.0
+      '@conform-to/dom': 1.8.2
       zod: 3.24.4
 
   '@drizzle-team/brocli@0.10.2': {}

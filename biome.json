@@ -9,12 +9,22 @@
 		"ignoreUnknown": false,
 		"ignore": []
 	},
-	"formatter": {
-		"enabled": true,
-		"indentStyle": "tab"
-	},
 	"organizeImports": {
 		"enabled": true
+	},
+	"formatter": {
+		"enabled": true,
+		"formatWithErrors": false,
+		"indentStyle": "space",
+		"indentWidth": 2,
+		"lineWidth": 100,
+		"lineEnding": "lf",
+		"include": [
+			"**",
+			"!**/node_modules",
+			"!**/pnpm-lock.yaml",
+			"!**/package-lock.json"
+		]
 	},
 	"linter": {
 		"enabled": true,
@@ -26,16 +36,35 @@
 				"noUnusedImports": "error"
 			},
 			"style": {
-				"useImportType": "off"
+				"noParameterAssign": "error",
+				"useAsConstAssertion": "error",
+				"useDefaultParameterLast": "error",
+				"useEnumInitializers": "error",
+				"useSelfClosingElements": "error",
+				"useSingleVarDeclarator": "error",
+				"noUnusedTemplateLiteral": "error",
+				"useNumberNamespace": "error",
+				"noInferrableTypes": "error",
+				"noUselessElse": "error"
 			}
 		}
 	},
 	"javascript": {
 		"formatter": {
-			"quoteStyle": "double",
-			"attributePosition": "multiline",
-			"bracketSameLine": false,
-			"semicolons": "always"
+			"arrowParentheses": "always",
+			"jsxQuoteStyle": "double",
+			"quoteProperties": "asNeeded",
+			"semicolons": "always",
+			"trailingCommas": "all",
+			"attributePosition": "auto",
+			"bracketSpacing": true,
+			"bracketSameLine": false
+		}
+	},
+	"json": {
+		"formatter": {
+			"enabled": true,
+			"indentStyle": "space"
 		}
 	}
 }

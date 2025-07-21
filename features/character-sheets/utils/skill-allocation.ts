@@ -68,8 +68,8 @@ const SKILL_INITIAL_VALUES: Skills = {
 		credit: 15,
 		persuade: 15,
 		bargain: 5,
-		nativeLanguage: 0, // EDU×5で計算
-		otherLanguage: 1,
+		nativeLanguage: 0,
+		otherLanguage: 0,
 	},
 	knowledge: {
 		medicine: 5,
@@ -107,7 +107,9 @@ function resolveVariableSkill(skill: VariableSkill): {
 		if (random <= cumulative) {
 			// 特殊なケース：art、craft、pilot、otherLanguage、driveなど
 			if (
-				["art", "craft", "pilot", "otherLanguage", "drive"].includes(skill.skillName)
+				["art", "craft", "pilot", "otherLanguage", "drive"].includes(
+					skill.skillName,
+				)
 			) {
 				return {
 					skillName: skill.skillName,
@@ -122,7 +124,9 @@ function resolveVariableSkill(skill: VariableSkill): {
 
 	// フォールバック
 	if (
-		["art", "craft", "pilot", "otherLanguage", "drive"].includes(skill.skillName)
+		["art", "craft", "pilot", "otherLanguage", "drive"].includes(
+			skill.skillName,
+		)
 	) {
 		return {
 			skillName: skill.skillName,
@@ -173,12 +177,9 @@ export function allocateVocationalSkillPoints(
 	);
 	const skillDetails: SkillDetails = {};
 
-	// 回避とnativeLanguageの初期値を設定
+	// 回避の初期値を設定
 	if (allocatedSkills.combat) {
 		allocatedSkills.combat.dodge = abilities.dexterity * 2;
-	}
-	if (allocatedSkills.negotiation) {
-		allocatedSkills.negotiation.nativeLanguage = abilities.education * 5;
 	}
 
 	let totalOverflow = 0;
@@ -186,29 +187,53 @@ export function allocateVocationalSkillPoints(
 	// 必須技能（各20%）
 	const essentialPoints = Math.floor(vocationalSkillPoints * 0.2);
 	for (const skill of distribution.essential) {
-		const overflow = allocatePointsWithDetails(allocatedSkills, skill, essentialPoints, skillDetails);
+		const overflow = allocatePointsWithDetails(
+			allocatedSkills,
+			skill,
+			essentialPoints,
+			skillDetails,
+		);
 		totalOverflow += overflow;
 	}
 
 	// 推奨技能（各15%）
 	const recommendedPoints = Math.floor(vocationalSkillPoints * 0.15);
 	for (const skill of distribution.recommended) {
-		const overflow = allocatePointsWithDetails(allocatedSkills, skill, recommendedPoints, skillDetails);
+		const overflow = allocatePointsWithDetails(
+			allocatedSkills,
+			skill,
+			recommendedPoints,
+			skillDetails,
+		);
 		totalOverflow += overflow;
 	}
 
 	// 基本技能（各5%）
 	const basicPoints = Math.floor(vocationalSkillPoints * 0.05);
 	for (const skill of distribution.basic) {
-		const overflow = allocatePointsWithDetails(allocatedSkills, skill, basicPoints, skillDetails);
+		const overflow = allocatePointsWithDetails(
+			allocatedSkills,
+			skill,
+			basicPoints,
+			skillDetails,
+		);
 		totalOverflow += overflow;
 	}
 
 	// オーバーフローポイントがある場合、他の技能に再配分
 	if (totalOverflow > 0) {
 		// 必須→推奨→基本の順で再配分を試行
-		const allSkills = [...distribution.essential, ...distribution.recommended, ...distribution.basic];
-		redistributeOverflowPoints(allocatedSkills, skillDetails, totalOverflow, allSkills);
+		const allSkills = [
+			...distribution.essential,
+			...distribution.recommended,
+			...distribution.basic,
+		];
+		redistributeOverflowPoints(
+			allocatedSkills,
+			skillDetails,
+			totalOverflow,
+			allSkills,
+		);
 	}
 
 	return { skills: allocatedSkills, skillDetails };
@@ -237,7 +262,11 @@ export function allocateHobbySkillPoints(
 			distribution.weaknesses.severe[
 				Math.floor(Math.random() * distribution.weaknesses.severe.length)
 			];
-		const overflow = allocatePoints(allocatedSkills, selectedSkill, weakness1Points);
+		const overflow = allocatePoints(
+			allocatedSkills,
+			selectedSkill,
+			weakness1Points,
+		);
 		totalOverflow += overflow;
 		redistributionSkills.push(...distribution.weaknesses.severe);
 	}
@@ -249,7 +278,11 @@ export function allocateHobbySkillPoints(
 			distribution.weaknesses.moderate[
 				Math.floor(Math.random() * distribution.weaknesses.moderate.length)
 			];
-		const overflow = allocatePoints(allocatedSkills, selectedSkill, weakness2Points);
+		const overflow = allocatePoints(
+			allocatedSkills,
+			selectedSkill,
+			weakness2Points,
+		);
 		totalOverflow += overflow;
 		redistributionSkills.push(...distribution.weaknesses.moderate);
 	}
@@ -259,7 +292,11 @@ export function allocateHobbySkillPoints(
 	// ここではランダムに選択（実際はAIで背景に基づいて選択すべき）
 	const allSkills = Object.entries(SKILL_NAME_MAP).map(([key]) => key);
 	const randomSkill = allSkills[Math.floor(Math.random() * allSkills.length)];
-	const backgroundOverflow = allocatePoints(allocatedSkills, randomSkill, backgroundPoints);
+	const backgroundOverflow = allocatePoints(
+		allocatedSkills,
+		randomSkill,
+		backgroundPoints,
+	);
 	totalOverflow += backgroundOverflow;
 	redistributionSkills.push(...allSkills);
 
@@ -267,12 +304,16 @@ export function allocateHobbySkillPoints(
 	if (totalOverflow > 0) {
 		// 利用可能な全ての技能から再配分
 		const allAvailableSkills = [...new Set(redistributionSkills)]; // 重複を除去
-		redistributeOverflowPoints(allocatedSkills, {}, totalOverflow, allAvailableSkills);
+		redistributeOverflowPoints(
+			allocatedSkills,
+			{},
+			totalOverflow,
+			allAvailableSkills,
+		);
 	}
 
 	return allocatedSkills;
 }
-
 
 // オーバーフローポイントを他の技能に再配分する関数
 function redistributeOverflowPoints(
@@ -302,7 +343,7 @@ function redistributeOverflowPoints(
 		if (!categoryAndKey) continue;
 
 		const { category, key } = categoryAndKey;
-		
+
 		// 現在の値を取得
 		let currentValue = 0;
 		if (category === "combat" && skills.combat) {
@@ -326,14 +367,15 @@ function redistributeOverflowPoints(
 		if (currentValue < MAX_SKILL_VALUE) {
 			const maxAllowablePoints = MAX_SKILL_VALUE - currentValue;
 			const pointsToAllocate = Math.min(remainingPoints, maxAllowablePoints);
-			
+
 			// 再帰的にallocatePointsWithDetailsを呼ばず、直接値を更新
 			if (category === "combat" && skills.combat) {
 				const combatKey = key as keyof CombatSkills;
 				skills.combat[combatKey] = currentValue + pointsToAllocate;
 			} else if (category === "investigation" && skills.investigation) {
 				const investigationKey = key as keyof InvestigationSkills;
-				skills.investigation[investigationKey] = currentValue + pointsToAllocate;
+				skills.investigation[investigationKey] =
+					currentValue + pointsToAllocate;
 			} else if (category === "action" && skills.action) {
 				const actionKey = key as keyof ActionSkills;
 				skills.action[actionKey] = currentValue + pointsToAllocate;

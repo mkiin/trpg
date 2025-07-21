@@ -4,9 +4,13 @@ import { google } from "@ai-sdk/google";
 import { generateObject } from "ai";
 import { basicInfoSchema } from "../types/schemas/basic-info-schema";
 import type { Abilities, BasicInfo } from "../types/character-sheet-types";
-import { OCCUPATIONS, type OccupationValue } from "../constants/occupation-lists";
+import {
+	OCCUPATIONS,
+	type OccupationValue,
+} from "../constants/occupation-lists";
 import { createCharacterBasicInfoPrompt } from "../constants/character-sheet-prompts";
 import { generateSkills } from "../utils/skill-allocation";
+import type { SkillDetails } from "../types/skill-details-types";
 
 // ダイスロール関数
 function rollDice(count: number, sides: number): number {
@@ -69,17 +73,61 @@ export async function generateAbilities(): Promise<Abilities> {
 	};
 }
 
-// 基本情報をAIで生成
+// フォールバック用の基本情報生成
+function generateFallbackBasicInfo(
+	occupation: string,
+	abilities?: Abilities,
+): BasicInfo {
+	const occupationLabel =
+		OCCUPATIONS.find((occ) => occ.value === occupation)?.label || occupation;
+
+	// ランダムな基本情報を生成（多様な文化背景）
+	const names = [
+		"田中太郎", "佐藤花子", "鈴木一郎", "高橋美咲", "渡辺健太",
+		"John Smith", "Emily Johnson", "Maria Rodriguez", "Ahmed Hassan", "Li Wei",
+		"Anna Kowalski", "Jean Dubois", "Olga Petrov", "Marco Rossi", "Kim Min-jun"
+	];
+	const genders: Array<"man" | "woman" | "else"> = ["man", "woman"];
+	const cities = [
+		"東京", "大阪", "名古屋", "横浜", "神戸", "福岡", "札幌", "仙台",
+		"ニューヨーク", "ロンドン", "パリ", "ベルリン", "シドニー", "トロント", "モスクワ", "ソウル"
+	];
+	
+	const selectedGender = genders[Math.floor(Math.random() * genders.length)];
+	const baseHeight = selectedGender === "man" ? 170 : 160;
+	const height = baseHeight + Math.floor(Math.random() * 20) - 10;
+	const weight = Math.floor(height * 0.7) + Math.floor(Math.random() * 20) - 10;
+
+	return {
+		name: names[Math.floor(Math.random() * names.length)],
+		age: 25 + Math.floor(Math.random() * 30),
+		gender: selectedGender,
+		height,
+		weight,
+		birthplace: cities[Math.floor(Math.random() * cities.length)],
+		background: `${occupationLabel}として活動している。詳細な背景情報は後で設定してください。`,
+		behavior: "一般的な性格。詳細な行動パターンは後で設定してください。",
+		occupation,
+	};
+}
+
+// 基本情報をAIで生成（フォールバック付き）
 export async function generateBasicInfo(
 	occupation: string,
 	abilities?: Abilities,
-	skillDetails?: import("../types/skill-details-types").SkillDetails,
+	skillDetails?: SkillDetails,
+	additionalContext?: string,
 ): Promise<BasicInfo> {
 	try {
 		const occupationLabel =
 			OCCUPATIONS.find((occ) => occ.value === occupation)?.label || occupation;
 
-		const prompt = createCharacterBasicInfoPrompt(occupationLabel, abilities, skillDetails);
+		const prompt = createCharacterBasicInfoPrompt(
+			occupationLabel,
+			abilities,
+			skillDetails,
+			additionalContext,
+		);
 
 		const result = await generateObject({
 			model: google("gemini-1.5-flash"),
@@ -100,11 +148,10 @@ export async function generateBasicInfo(
 		};
 	} catch (error) {
 		console.error("基本情報生成エラー:", error);
-		// エラーの詳細を含めて再スロー
-		if (error instanceof Error) {
-			throw new Error(`キャラクター基本情報の生成に失敗しました: ${error.message}`);
-		}
-		throw new Error("キャラクター基本情報の生成に失敗しました");
+		console.log("フォールバック基本情報を使用します");
+		
+		// APIエラーの場合はフォールバック情報を返す
+		return generateFallbackBasicInfo(occupation, abilities);
 	}
 }
 
@@ -112,6 +159,7 @@ export async function generateBasicInfo(
 export async function generateCharacterSheet(formData: FormData) {
 	try {
 		const occupation = formData.get("occupation") as string;
+		const additionalContext = formData.get("additionalContext") as string | null;
 
 		if (!occupation) {
 			return {
@@ -127,7 +175,17 @@ export async function generateCharacterSheet(formData: FormData) {
 		const skillsResult = generateSkills(
 			occupation as OccupationValue,
 			abilities,
-			{ name: "", occupation, age: 30, gender: "man", height: 170, weight: 60, birthplace: "", background: "", behavior: "" }, // 仮の基本情報
+			{
+				name: "",
+				occupation,
+				age: 30,
+				gender: "man",
+				height: 170,
+				weight: 60,
+				birthplace: "",
+				background: "",
+				behavior: "",
+			}, // 仮の基本情報
 		);
 
 		// 最後に能力値と技能情報を基に基本情報を生成
@@ -135,6 +193,7 @@ export async function generateCharacterSheet(formData: FormData) {
 			occupation,
 			abilities,
 			skillsResult.skillDetails,
+			additionalContext || undefined,
 		);
 
 		return {
@@ -148,9 +207,20 @@ export async function generateCharacterSheet(formData: FormData) {
 		};
 	} catch (error) {
 		console.error("キャラクターシート生成エラー:", error);
+		
+		// 重要なエラー（能力値生成やスキル生成の失敗）の場合はthrow
+		if (error instanceof Error && 
+			(error.message.includes("能力値") || error.message.includes("スキル"))) {
+			throw error; // Error Boundaryに捕捉させる
+		}
+		
+		// それ以外は通常のエラーレスポンス
 		return {
 			success: false,
-			error: error instanceof Error ? error.message : "キャラクターシートの生成に失敗しました",
+			error:
+				error instanceof Error
+					? error.message
+					: "キャラクターシートの生成に失敗しました",
 		};
 	}
 }
