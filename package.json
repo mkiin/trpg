@@ -18,7 +18,8 @@
     "db:seed": "npx tsx lib/db/seed.ts"
   },
   "dependencies": {
-    "@ai-sdk/google": "^1.2.18",
+    "@ai-sdk/google": "1.2.22",
+    "@ai-sdk/react": "1.2.12",
     "@conform-to/react": "^1.8.2",
     "@conform-to/zod": "^1.8.2",
     "@hono/zod-validator": "^0.4.3",
@@ -34,8 +35,8 @@
     "@radix-ui/react-tabs": "^1.1.11",
     "@radix-ui/react-toast": "^1.2.13",
     "@radix-ui/react-tooltip": "^1.2.6",
-    "@t3-oss/env-nextjs": "^0.12.0",
-    "ai": "^4.3.15",
+    "@t3-oss/env-nextjs": "^0.13.8",
+    "ai": "4.3.19",
     "better-auth": "^1.2.7",
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.39.3",
@@ -56,7 +57,7 @@
     "remark-gfm": "^4.0.1",
     "server-only": "^0.0.1",
     "sonner": "^2.0.3",
-    "zod": "^3.24.4"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
